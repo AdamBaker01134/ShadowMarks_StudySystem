@@ -16,6 +16,10 @@ app.get("/northpole", (req, res) => {
     res.sendFile("shadow-marks.html", { root: __dirname });
 });
 
+app.get("/southpole", (req, res) => {
+    res.sendFile("shadow-marks.html", { root: __dirname });
+});
+
 app.listen(PORT, () => {
     console.log("Express server is running.");
     console.log(`Access northpole example at http://localhost:${PORT}/northpole`);

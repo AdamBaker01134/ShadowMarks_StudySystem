@@ -8,7 +8,16 @@ function View(model) {
 View.prototype.draw = function () {
     clear();
     if (this.model.percentLoaded === 100) {
-
+        let x = 0;
+        let y = 0;
+        this.model.videos.forEach(video => {
+            image(video.images[video.index], x, y, video.width, video.height);
+            x += video.width;
+            if (x + video.width > width) {
+                x = 0;
+                y += video.height;
+            }
+        });
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);

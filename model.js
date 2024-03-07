@@ -3,7 +3,7 @@
 
 function Model() {
     this.subscribers = [];
-    this.percentLoaded = 100;
+    this.percentLoaded = 0;
     this.videos = [];
 }
 
@@ -13,7 +13,7 @@ Model.prototype.setPercentLoaded = function (percent) {
 }
 
 Model.prototype.addVideo = function (video) {
-    this.videos.push(video);
+    this.videos.push(new Video(video));
     this.notifySubscribers();
 }
 
