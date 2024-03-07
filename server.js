@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.static(__dirname));
 
 app.get("/northpole", (req, res) => {
-    res.sendFile("northpole.html", { root: __dirname });
+    res.sendFile("shadow-marks.html", { root: __dirname });
 });
 
 app.listen(PORT, () => {
