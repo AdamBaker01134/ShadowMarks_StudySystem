@@ -25,9 +25,10 @@ View.prototype.draw = function () {
         });
 
         // Draw model scrollbar
-        fill(101);
+        stroke(0,0,0,this.model.scrollbarHighlighted ? 255 : 100)
+        fill(101, 101, 101, this.model.scrollbarHighlighted ? 255 : 100);
         rect(this.model.getScrollbarX(), this.model.getScrollbarY(), this.model.getScrollbarWidth(), this.model.getScrollbarHeight(), 20);
-        fill(151);
+        fill(151, 151, 151, this.model.scrollbarHighlighted ? 255 : 100);
         circle(this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth(), this.model.getScrollbarY() + this.model.getScrollbarHeight() / 2, 30);
     } else {
         let txt = this.model.percentLoaded + "%";

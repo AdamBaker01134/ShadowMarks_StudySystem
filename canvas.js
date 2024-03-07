@@ -42,7 +42,11 @@ function draw() {}
 
 function mouseMoved(event) { controller.handleMouseMoved(event) }
 
+function mouseDragged(event) { controller.handleMouseDragged(event) }
+
 function mousePressed(event) { controller.handleMousePressed(event) }
+
+function mouseReleased(event) { controller.handleMouseReleased(event) }
 
 function keyPressed(event) { controller.handleKeyPressed(event) }
 

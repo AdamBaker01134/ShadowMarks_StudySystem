@@ -12,12 +12,40 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
-    if (this.model.checkScrollbarHit()) {
-        this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+    this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
+}
+
+Controller.prototype.handleMouseDragged = function (event) {
+    switch (this.currentState) {
+        case STATE.NAVIGATING:
+            this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+            break;
+        default:
+            break;
     }
 }
 
 Controller.prototype.handleMousePressed = function (event) {
+    switch (this.currentState) {
+        case STATE.READY:
+            if (this.model.checkScrollbarHit()) {
+                this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+                this.currentState = STATE.NAVIGATING;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+Controller.prototype.handleMouseReleased = function (event) {
+    switch (this.currentState) {
+        case STATE.NAVIGATING:
+            this.currentState = STATE.READY;
+            break;
+        default:
+            break;
+    }
 }
 
 Controller.prototype.handleKeyPressed = function (event) {

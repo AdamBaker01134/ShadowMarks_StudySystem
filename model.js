@@ -7,6 +7,7 @@ function Model() {
     this.videos = [];
 
     this.index = 0;
+    this.scrollbarHighlighted = false;
 }
 
 Model.prototype.setPercentLoaded = function (percent) {
@@ -74,6 +75,13 @@ Model.prototype.checkScrollbarHit = function () {
 Model.prototype.setIndex = function (index) {
     this.index = index;
     this.notifySubscribers();
+}
+
+Model.prototype.setScrollbarHighlighted = function (highlighted) {
+    if (this.scrollbarHighlighted != highlighted) {
+        this.scrollbarHighlighted = highlighted;
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
