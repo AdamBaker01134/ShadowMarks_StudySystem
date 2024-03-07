@@ -3,12 +3,15 @@
 
 const STATE = {
     READY: "ready",
-    NAVIGATING: "navigating"
+    NAVIGATING: "navigating",
+    PLAYING: "playing",
 }
 
 function Controller(model) {
     this.model = model;
     this.currentState = STATE.READY;
+    this.savedState = STATE.READY;
+    this.timer = null;
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
@@ -28,8 +31,10 @@ Controller.prototype.handleMouseDragged = function (event) {
 Controller.prototype.handleMousePressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
+        case STATE.PLAYING:
             if (this.model.checkScrollbarHit()) {
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+                this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             }
             break;
@@ -41,7 +46,7 @@ Controller.prototype.handleMousePressed = function (event) {
 Controller.prototype.handleMouseReleased = function (event) {
     switch (this.currentState) {
         case STATE.NAVIGATING:
-            this.currentState = STATE.READY;
+            this.currentState = this.savedState;
             break;
         default:
             break;
@@ -51,15 +56,44 @@ Controller.prototype.handleMouseReleased = function (event) {
 Controller.prototype.handleKeyPressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
+        case STATE.PLAYING:
             if (event.ctrlKey && keyCode === 187) {
+                // Handle ctrl + "+" pressed
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.zoomIn();
             }
             if (event.ctrlKey && keyCode === 189) {
+                // Handle ctrl + "-" pressed
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.zoomOut();
+            }
+            if (keyCode === 32) {
+                // Handle spacebar pressed
+                event.preventDefault();
+                event.stopPropagation();
+                if (this.currentState === STATE.PLAYING) {
+                    clearInterval(this.timer);
+                    this.currentState = STATE.READY;
+                } else {
+                    if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
+                        this.model.setIndex(0);
+                    }
+                    this.timer = setInterval(() => {
+                        switch(this.currentState) {
+                            case STATE.READY:
+                            case STATE.PLAYING:
+                                if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
+                                    clearInterval(this.timer);
+                                    this.currentState = STATE.READY;
+                                } else {
+                                    this.model.setIndex(this.model.index + 1);
+                                }
+                        }
+                    }, 50);
+                    this.currentState = STATE.PLAYING;
+                }
             }
             break;
         default:
