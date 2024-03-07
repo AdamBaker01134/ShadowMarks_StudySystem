@@ -3,14 +3,9 @@
 
 function Video(images) {
     this.images = images;
-    this.index = 0;
     this.aspectRatio = this.images[0].width / this.images[0].height;
     this.width = width / 10;
     this.height = this.width / this.aspectRatio;
-}
-
-Video.prototype.setIndex = function(index) {
-    this.index = index;
 }
 
 Video.prototype.getWidth = function() {

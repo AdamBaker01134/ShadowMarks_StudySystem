@@ -3,11 +3,18 @@
 
 const STATE = {
     READY: "ready",
+    NAVIGATING: "navigating"
 }
 
 function Controller(model) {
     this.model = model;
     this.currentState = STATE.READY;
+}
+
+Controller.prototype.handleMouseMoved = function (event) {
+    if (this.model.checkScrollbarHit()) {
+        this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+    }
 }
 
 Controller.prototype.handleMousePressed = function (event) {
@@ -30,6 +37,10 @@ Controller.prototype.handleKeyPressed = function (event) {
         default:
             break;
     }
+}
+
+Controller.prototype.handleScroll = function() {
+    this.model.notifySubscribers();
 }
 
 Controller.prototype.handleLoadNorthpole = async function () {

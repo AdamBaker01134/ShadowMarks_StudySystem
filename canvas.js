@@ -32,6 +32,7 @@ async function preload() {
 function setup() {
     createCanvas(windowWidth * 0.98,windowHeight*0.98);
 
+    attachUserEventListeners();
     model.addSubscriber(view);
 
     noLoop();
@@ -39,6 +40,12 @@ function setup() {
 
 function draw() {}
 
+function mouseMoved(event) { controller.handleMouseMoved(event) }
+
 function mousePressed(event) { controller.handleMousePressed(event) }
 
 function keyPressed(event) { controller.handleKeyPressed(event) }
+
+function attachUserEventListeners() {
+    document.addEventListener("scroll", e => controller.handleScroll());
+}

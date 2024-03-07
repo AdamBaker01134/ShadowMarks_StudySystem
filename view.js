@@ -10,8 +10,10 @@ View.prototype.draw = function () {
     if (this.model.percentLoaded === 100) {
         let x = 0;
         let y = 0;
+
+        // Draw videos from the model
         this.model.videos.forEach(video => {
-            image(video.images[video.index], x, y, video.width, video.height);
+            image(video.images[this.model.index], x, y, video.width, video.height);
             noFill();
             stroke(0);
             rect(x, y, video.width, video.height);
@@ -21,6 +23,12 @@ View.prototype.draw = function () {
                 y += video.height;
             }
         });
+
+        // Draw model scrollbar
+        fill(101);
+        rect(this.model.getScrollbarX(), this.model.getScrollbarY(), this.model.getScrollbarWidth(), this.model.getScrollbarHeight(), 20);
+        fill(151);
+        circle(this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth(), this.model.getScrollbarY() + this.model.getScrollbarHeight() / 2, 30);
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);
