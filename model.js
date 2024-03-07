@@ -17,6 +17,28 @@ Model.prototype.addVideo = function (video) {
     this.notifySubscribers();
 }
 
+Model.prototype.zoomIn = function () {
+    this.videos.forEach(video => {
+        const vWidth = video.getWidth();
+        const vHeight = video.getHeight();
+        const aspectRatio = vWidth / vHeight;
+        video.setWidth(vWidth + 20 * aspectRatio);
+        video.setHeight(vHeight + 20);
+    });
+    this.notifySubscribers();
+}
+
+Model.prototype.zoomOut = function () {
+    this.videos.forEach(video => {
+        const vWidth = video.getWidth();
+        const vHeight = video.getHeight();
+        const aspectRatio = vWidth / vHeight;
+        video.setWidth(vWidth - 20 * aspectRatio);
+        video.setHeight(vHeight - 20);
+    });
+    this.notifySubscribers();
+}
+
 Model.prototype.addSubscriber = function (subscriber) {
     this.subscribers.push(subscriber);
     this.notifySubscribers();

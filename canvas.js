@@ -30,7 +30,7 @@ async function preload() {
 }
 
 function setup() {
-    createCanvas(windowWidth * 0.9,windowHeight*0.9);
+    createCanvas(windowWidth * 0.98,windowHeight*0.98);
 
     model.addSubscriber(view);
 
@@ -40,3 +40,5 @@ function setup() {
 function draw() {}
 
 function mousePressed(event) { controller.handleMousePressed(event) }
+
+function keyPressed(event) { controller.handleKeyPressed(event) }

@@ -12,6 +12,9 @@ View.prototype.draw = function () {
         let y = 0;
         this.model.videos.forEach(video => {
             image(video.images[video.index], x, y, video.width, video.height);
+            noFill();
+            stroke(0);
+            rect(x, y, video.width, video.height);
             x += video.width;
             if (x + video.width > width) {
                 x = 0;

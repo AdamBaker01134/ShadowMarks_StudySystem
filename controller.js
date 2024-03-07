@@ -1,11 +1,35 @@
 /* Application Controller */
 "use strict";
 
+const STATE = {
+    READY: "ready",
+}
+
 function Controller(model) {
     this.model = model;
+    this.currentState = STATE.READY;
 }
 
 Controller.prototype.handleMousePressed = function (event) {
+}
+
+Controller.prototype.handleKeyPressed = function (event) {
+    switch (this.currentState) {
+        case STATE.READY:
+            if (event.ctrlKey && keyCode === 187) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.model.zoomIn();
+            }
+            if (event.ctrlKey && keyCode === 189) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.model.zoomOut();
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 Controller.prototype.handleLoadNorthpole = async function () {
