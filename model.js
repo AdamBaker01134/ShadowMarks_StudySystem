@@ -15,8 +15,8 @@ Model.prototype.setPercentLoaded = function (percent) {
     this.notifySubscribers();
 }
 
-Model.prototype.addVideo = function (video) {
-    this.videos.push(new Video(video));
+Model.prototype.addVideo = function (video, name) {
+    this.videos.push(new Video(video, name));
     this.notifySubscribers();
 }
 

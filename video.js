@@ -1,8 +1,9 @@
 /* Application Video Object */
 "use strict";
 
-function Video(images) {
+function Video(images, name) {
     this.images = images;
+    this.name = name;
     this.aspectRatio = this.images[0].width / this.images[0].height;
     this.width = width / 10;
     this.height = this.width / this.aspectRatio;

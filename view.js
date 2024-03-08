@@ -14,6 +14,10 @@ View.prototype.draw = function () {
         // Draw videos from the model
         this.model.videos.forEach(video => {
             image(video.images[this.model.index], x, y, video.width, video.height);
+            stroke(0);
+            fill(255);
+            textSize(16);
+            text(video.name, x+5, y+20);
             noFill();
             stroke(0);
             rect(x, y, video.width, video.height);
@@ -30,6 +34,12 @@ View.prototype.draw = function () {
         rect(this.model.getScrollbarX(), this.model.getScrollbarY(), this.model.getScrollbarWidth(), this.model.getScrollbarHeight(), 20);
         fill(151, 151, 151, this.model.scrollbarHighlighted ? 255 : 100);
         circle(this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth(), this.model.getScrollbarY() + this.model.getScrollbarHeight() / 2, 30);
+        if (this.model.scrollbarHighlighted) {
+            stroke(0);
+            fill(0);
+            textSize(16);
+            text(this.model.index, this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.index.toString()) / 2, this.model.getScrollbarY() - 20);
+        }
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);

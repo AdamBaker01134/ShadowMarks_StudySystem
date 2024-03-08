@@ -119,7 +119,7 @@ Controller.prototype.handleLoadNorthpole = async function () {
                     (err) => { if (++completed >= totalDays) reject(err) }));
             }
         });
-        this.model.addVideo(video);
+        this.model.addVideo(video, year.toString());
         this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
     }
 }
@@ -138,7 +138,7 @@ Controller.prototype.handleLoadSouthpole = async function () {
                     (err) => { if (++completed >= totalDays) reject(err) }));
             }
         });
-        this.model.addVideo(video);
+        this.model.addVideo(video, year.toString());
         this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
     }
 }
