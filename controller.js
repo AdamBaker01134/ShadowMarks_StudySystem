@@ -62,12 +62,14 @@ Controller.prototype.handleKeyPressed = function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.zoomIn();
+                this.model.updateVideoLocations();
             }
             if (event.ctrlKey && keyCode === 189) {
                 // Handle ctrl + "-" pressed
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.zoomOut();
+                this.model.updateVideoLocations();
             }
             if (keyCode === 32) {
                 // Handle spacebar pressed

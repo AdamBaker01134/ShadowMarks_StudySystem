@@ -10,20 +10,44 @@ function Model() {
     this.scrollbarHighlighted = false;
 }
 
+Model.prototype.updateVideoLocations = function () {
+    let x = 0;
+    let y = 0;
+    this.videos.forEach(video => {
+        video.setX(x);
+        video.setY(y);
+        x += video.width;
+        if (x + video.width > width) {
+            x = 0;
+            y += video.height;
+        }
+    });
+    this.notifySubscribers();
+}
+
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
     this.notifySubscribers();
 }
 
 Model.prototype.addVideo = function (video, name) {
-    this.videos.push(new Video(video, name));
+    let x = 0;
+    let y = 0;
+    this.videos.forEach(video => {
+        x += video.width;
+        if (x + video.width > width) {
+            x = 0;
+            y += video.height;
+        }
+    });
+    this.videos.push(new Video(video, name, x, y));
     this.notifySubscribers();
 }
 
 Model.prototype.zoomIn = function () {
     this.videos.forEach(video => {
-        const vWidth = video.getWidth();
-        const vHeight = video.getHeight();
+        const vWidth = video.width;
+        const vHeight = video.height;
         const aspectRatio = vWidth / vHeight;
         video.setWidth(vWidth + 20 * aspectRatio);
         video.setHeight(vHeight + 20);
@@ -33,8 +57,8 @@ Model.prototype.zoomIn = function () {
 
 Model.prototype.zoomOut = function () {
     this.videos.forEach(video => {
-        const vWidth = video.getWidth();
-        const vHeight = video.getHeight();
+        const vWidth = video.width;
+        const vHeight = video.height;
         const aspectRatio = vWidth / vHeight;
         video.setWidth(vWidth - 20 * aspectRatio);
         video.setHeight(vHeight - 20);

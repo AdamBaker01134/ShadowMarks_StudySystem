@@ -8,11 +8,10 @@ function View(model) {
 View.prototype.draw = function () {
     clear();
     if (this.model.percentLoaded === 100) {
-        let x = 0;
-        let y = 0;
-
         // Draw videos from the model
         this.model.videos.forEach(video => {
+            const x = video.x;
+            const y = video.y;
             image(video.images[this.model.index], x, y, video.width, video.height);
             stroke(0);
             fill(255);
@@ -21,11 +20,6 @@ View.prototype.draw = function () {
             noFill();
             stroke(0);
             rect(x, y, video.width, video.height);
-            x += video.width;
-            if (x + video.width > width) {
-                x = 0;
-                y += video.height;
-            }
         });
 
         // Draw model scrollbar
