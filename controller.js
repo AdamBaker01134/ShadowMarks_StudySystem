@@ -5,6 +5,7 @@ const STATE = {
     READY: "ready",
     NAVIGATING: "navigating",
     PLAYING: "playing",
+    MARKING: "marking",
 }
 
 function Controller(model) {
@@ -19,9 +20,15 @@ Controller.prototype.handleMouseMoved = function (event) {
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
+    let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
             this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+            break;
+        case STATE.MARKING:
+            if (this.model.shadowMarkShape === SHAPES.FREEFORM && (hit = this.model.checkVideoHit())) {
+                this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+            }
             break;
         default:
             break;
@@ -29,6 +36,7 @@ Controller.prototype.handleMouseDragged = function (event) {
 }
 
 Controller.prototype.handleMousePressed = function (event) {
+    let hit = null;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -36,6 +44,12 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
+            } else if (hit = this.model.checkVideoHit()) {
+                if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                    this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                }
+                this.savedState = this.currentState;
+                this.currentState = STATE.MARKING;
             }
             break;
         default:
@@ -44,10 +58,20 @@ Controller.prototype.handleMousePressed = function (event) {
 }
 
 Controller.prototype.handleMouseReleased = function (event) {
+    let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
             this.currentState = this.savedState;
             break;
+        case STATE.MARKING:
+            if (hit = this.model.checkVideoHit()) {
+                if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                    this.model.addFreeformPathToShadowMarks();
+                } else {
+                    this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                }
+            }
+            this.currentState = this.savedState;
         default:
             break;
     }
@@ -109,7 +133,7 @@ Controller.prototype.handleScroll = function() {
 
 Controller.prototype.handleLoadNorthpole = async function () {
     console.log("Loading northpole dataset...");
-    const firstYear = 1992, lastYear = 2022;
+    const firstYear = 1992, lastYear = 1995;
     const totalDays = 353;
     for (let year = firstYear; year <= lastYear; year++) {
         let video = [];

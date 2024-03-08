@@ -1,10 +1,23 @@
 /* Application Model */
 "use strict";
 
+const SHAPES = {
+    CROSSHAIR: "crosshair",
+    CROSS: "cross",
+    SQUARE: "square",
+    CIRCLE: "circle",
+    FREEFORM: "freeform",
+}
+
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
     this.videos = [];
+
+    this.shadowMarks = [];
+    this.shadowMarkShape = SHAPES.SQUARE;
+    this.shadowMarkColour = { r: 255, g: 0, b: 0 };
+    this.freeformPath = [];
 
     this.index = 0;
     this.scrollbarHighlighted = false;
@@ -42,6 +55,13 @@ Model.prototype.addVideo = function (video, name) {
     });
     this.videos.push(new Video(video, name, x, y));
     this.notifySubscribers();
+}
+
+Model.prototype.checkVideoHit = function () {
+    for (let i = 0; i < this.videos.length; i++) {
+        if (this.videos[i].checkHit(mouseX, mouseY)) return this.videos[i];
+    }
+    return null;
 }
 
 Model.prototype.zoomIn = function () {
@@ -123,6 +143,32 @@ Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
         idx = 0;
     }
     return idx;
+}
+
+Model.prototype.addShadowMark = function (widthRatio, heightRatio) {
+    this.shadowMarks.push({
+        widthRatio: widthRatio,
+        heightRatio: heightRatio,
+        shape: this.shadowMarkShape,
+    });
+    this.notifySubscribers();
+}
+
+Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
+    this.freeformPath.push({
+        widthRatio: widthRatio,
+        heightRatio: heightRatio,
+    });
+    this.notifySubscribers();
+}
+
+Model.prototype.addFreeformPathToShadowMarks = function () {
+    this.shadowMarks.push({
+        path: this.freeformPath,
+        shape: this.shadowMarkShape,
+    });
+    this.freeformPath = [];
+    this.notifySubscribers();
 }
 
 Model.prototype.addSubscriber = function (subscriber) {

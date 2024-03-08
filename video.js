@@ -26,3 +26,7 @@ Video.prototype.setX = function(x) {
 Video.prototype.setY = function(y) {
     if (y >= 0) this.y = y;
 }
+
+Video.prototype.checkHit = function (mx, my) {
+    return mx > this.x && mx < this.x + this.width && my > this.y && my < this.y + this.height;
+}

@@ -13,6 +13,78 @@ View.prototype.draw = function () {
             const x = video.x;
             const y = video.y;
             image(video.images[this.model.index], x, y, video.width, video.height);
+
+            // Draw shadow marks on each video
+            noFill();
+            const colour = this.model.shadowMarkColour;
+            this.model.shadowMarks.forEach(mark => {
+                stroke(0);
+                strokeWeight(3);
+                const markerX = video.x + video.width * mark.widthRatio;
+                const markerY = video.y + video.height * mark.heightRatio;
+                let maxLength = 16;
+                let markLength = Math.min(video.width, video.height) / 16;
+                if (mark.shape === SHAPES.CROSSHAIR) {
+                    maxLength = 16;
+                    markLength = Math.min(video.width, video.height) / 12;
+                }
+                if (markLength > maxLength) markLength = maxLength;
+                switch(mark.shape) {
+                    case SHAPES.CROSSHAIR:
+                        line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                        line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
+                        stroke(colour.r, colour.g, colour.b);
+                        strokeWeight(1);    
+                        line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                        line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);    
+                        break;
+                    case SHAPES.CROSS:
+                        line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                        line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                        stroke(colour.r, colour.g, colour.b);
+                        strokeWeight(1);  
+                        line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                        line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                        break;
+                    case SHAPES.SQUARE:
+                        square(markerX - markLength / 2, markerY - markLength / 2, markLength);
+                        stroke(colour.r, colour.g, colour.b);
+                        strokeWeight(1); 
+                        square(markerX - markLength / 2, markerY - markLength / 2, markLength);    
+                        break;
+                    case SHAPES.CIRCLE:
+                        ellipse(markerX, markerY, markLength, markLength);
+                        stroke(colour.r, colour.g, colour.b);
+                        strokeWeight(1);
+                        ellipse(markerX, markerY, markLength, markLength);    
+                        break;
+                    case SHAPES.FREEFORM:
+                        stroke(colour.r, colour.g, colour.b);
+                        strokeWeight(2);
+                        for (let i = 0; i < mark.path.length - 1; i++) {
+                            const x1 = video.x + video.width * mark.path[i].widthRatio;
+                            const y1 = video.y + video.height * mark.path[i].heightRatio;
+                            const x2 = video.x + video.width * mark.path[i+1].widthRatio;
+                            const y2 = video.y + video.height * mark.path[i+1].heightRatio;
+                            line(x1, y1, x2, y2);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Draw current freeform path
+            stroke(colour.r, colour.g, colour.b);
+            strokeWeight(2);
+            for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
+                const x1 = video.x + video.width * this.model.freeformPath[i].widthRatio;
+                const y1 = video.y + video.height * this.model.freeformPath[i].heightRatio;
+                const x2 = video.x + video.width * this.model.freeformPath[i+1].widthRatio;
+                const y2 = video.y + video.height * this.model.freeformPath[i+1].heightRatio;
+                line(x1, y1, x2, y2);
+            }
+
             stroke(0);
             fill(255);
             textSize(16);
