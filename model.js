@@ -9,18 +9,34 @@ const SHAPES = {
     FREEFORM: "freeform",
 }
 
+const COLOURS = {
+    WHITE: { r: 255, g: 255, b: 255 },
+    BLACK: { r: 0, g: 0, b: 0 },
+    RED: { r: 255, g: 0, b: 0 },
+    GREEN: { r: 0, g: 255, b: 0 },
+    BLUE: { r: 0, g: 0, b: 255 },
+    YELLOW: { r: 255, g: 255, b: 0 },
+    MAGENTA: { r: 255, g: 0, b: 255},
+    CYAN: { r: 0, g: 255, b: 255 },
+}
+
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
     this.videos = [];
 
     this.shadowMarks = [];
-    this.shadowMarkShape = SHAPES.SQUARE;
-    this.shadowMarkColour = { r: 255, g: 0, b: 0 };
+    this.shadowMarkShape = SHAPES.FREEFORM;
+    this.shadowMarkColour = COLOURS.RED;
     this.freeformPath = [];
 
     this.index = 0;
     this.scrollbarHighlighted = false;
+
+    this.shapeButtonHighlighted = false;
+    this.colourButtonHighlighted = false;
+    this.shapeMenuOpen = false;
+    this.colourMenuOpen = false;
 }
 
 Model.prototype.updateVideoLocations = function () {
@@ -128,6 +144,20 @@ Model.prototype.setScrollbarHighlighted = function (highlighted) {
     }
 }
 
+Model.prototype.setShapeButtonHighlighted = function (highlighted) {
+    if (this.shapeButtonHighlighted != highlighted) {
+        this.shapeButtonHighlighted = highlighted;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.setColourButtonHighlighted = function (highlighted) {
+    if (this.colourButtonHighlighted != highlighted) {
+        this.colourButtonHighlighted = highlighted;
+        this.notifySubscribers();
+    }
+}
+
 Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
     let idx = (int)(map(
         mx,                 // value to map
@@ -150,6 +180,7 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio) {
         widthRatio: widthRatio,
         heightRatio: heightRatio,
         shape: this.shadowMarkShape,
+        colour: this.shadowMarkColour,
     });
     this.notifySubscribers();
 }
@@ -166,8 +197,78 @@ Model.prototype.addFreeformPathToShadowMarks = function () {
     this.shadowMarks.push({
         path: this.freeformPath,
         shape: this.shadowMarkShape,
+        colour: this.shadowMarkColour,
     });
     this.freeformPath = [];
+    this.notifySubscribers();
+}
+
+Model.prototype.checkShapeButtonHit = function () {
+    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
+    const y = this.getScrollbarY() - 60;
+    const length = 50;
+    return mouseX > x && mouseX < x + length && mouseY > y && mouseY < y + length;
+}
+
+Model.prototype.setShapeMenuOpen = function (open) {
+    if (this.shapeMenuOpen != open) {
+        this.shapeMenuOpen = open;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.checkShapeMenuHit = function () {
+    const width = 30 * 3 + 20;
+    const height = 30 * 2 + 20;
+    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25 + 50 - width;
+    const y = this.getScrollbarY() - 60 + 50 - height;
+    const mx = mouseX, my = mouseY;
+    if (mx>x+10 && mx<x+40 && my>y+10 && my<y+40) return SHAPES.CROSSHAIR;
+    else if (mx>x+40 && mx<x+70 && my>y+10 && my<y+40) return SHAPES.CROSS;
+    else if (mx>x+70 && mx<x+100 && my>y+10 && my<y+40) return SHAPES.SQUARE;
+    else if (mx>x+25 && mx<x+55 && my>y+40 && my<y+70) return SHAPES.CIRCLE;
+    else if (mx>x+55 && mx<x+85 && my>y+40 && my<y+70) return SHAPES.FREEFORM;
+    else return null;
+}
+
+Model.prototype.setShape = function (shape) {
+    this.shadowMarkShape = shape;
+    this.notifySubscribers();
+}
+
+Model.prototype.checkColourButtonHit = function () {
+    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
+    const y = this.getScrollbarY();
+    const length = 50;
+    return mouseX > x && mouseX < x + length && mouseY > y && mouseY < y + length;
+}
+
+Model.prototype.setColourMenuOpen = function (open) {
+    if (this.colourMenuOpen != open) {
+        this.colourMenuOpen = open;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.checkColourMenuHit = function () {
+    const width = 30 * 4 + 20;
+    const height = 30 * 2 + 20;
+    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25 + 50 - width;
+    const y = this.getScrollbarY() + 50 - height;
+    const mx = mouseX, my = mouseY;
+    if (mx>x+10 && mx<x+40 && my>y+10 && my<y+40) return COLOURS.BLACK;
+    else if (mx>x+40 && mx<x+70 && my>y+10 && my<y+40) return COLOURS.WHITE;
+    else if (mx>x+70 && mx<x+100 && my>y+10 && my<y+40) return COLOURS.RED;
+    else if (mx>x+100 && mx<x+130 && my>y+10 && my<y+40) return COLOURS.GREEN;
+    else if (mx>x+10 && mx<x+40 && my>y+40 && my<y+70) return COLOURS.BLUE;
+    else if (mx>x+40 && mx<x+70 && my>y+40 && my<y+70) return COLOURS.YELLOW;
+    else if (mx>x+70 && mx<x+100 && my>y+40 && my<y+70) return COLOURS.CYAN;
+    else if (mx>x+100 && mx<x+130 && my>y+40 && my<y+70) return COLOURS.MAGENTA;
+    else return null;
+}
+
+Model.prototype.setColour = function (colour) {
+    this.shadowMarkColour = colour;
     this.notifySubscribers();
 }
 

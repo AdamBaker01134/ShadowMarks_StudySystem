@@ -6,6 +6,8 @@ const STATE = {
     NAVIGATING: "navigating",
     PLAYING: "playing",
     MARKING: "marking",
+    COLOUR_PICKER: "colour_picker",
+    SHAPE_PICKER: "shape_picker",
 }
 
 function Controller(model) {
@@ -16,7 +18,16 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
-    this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
+    switch (this.currentState) {
+        case STATE.READY:
+        case STATE.PLAYING:
+            this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
+            this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
+            this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
+            break;
+        default:
+            break;
+    }
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
@@ -50,8 +61,30 @@ Controller.prototype.handleMousePressed = function (event) {
                 }
                 this.savedState = this.currentState;
                 this.currentState = STATE.MARKING;
+            } else if (this.model.checkShapeButtonHit()) {
+                this.model.setShapeMenuOpen(true);
+                this.savedState = this.currentState;
+                this.currentState = STATE.SHAPE_PICKER;
+            } else if (this.model.checkColourButtonHit()) {
+                this.model.setColourMenuOpen(true);
+                this.savedState = this.currentState;
+                this.currentState = STATE.COLOUR_PICKER;
             }
             break;
+        case STATE.SHAPE_PICKER:
+            let shape = null;
+            if (shape = this.model.checkShapeMenuHit()) {
+                this.model.setShape(shape);
+            }
+            this.model.setShapeMenuOpen(false);
+            this.currentState = this.savedState;
+        case STATE.COLOUR_PICKER:
+            let colour = null;
+            if (colour = this.model.checkColourMenuHit()) {
+                this.model.setColour(colour);
+            }
+            this.model.setColourMenuOpen(false);
+            this.currentState = this.savedState;
         default:
             break;
     }
@@ -110,6 +143,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                         switch(this.currentState) {
                             case STATE.READY:
                             case STATE.PLAYING:
+                            case STATE.MARKING:
                                 if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
                                     clearInterval(this.timer);
                                     this.currentState = STATE.READY;
