@@ -114,6 +114,12 @@ Controller.prototype.handleKeyPressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
+            if (event.ctrlKey && keyCode === 90) {
+                // Handle ctrl + z pressed
+                event.preventDefault();
+                event.stopPropagation();
+                this.model.popLastShadowMark();
+            }
             if (event.ctrlKey && keyCode === 187) {
                 // Handle ctrl + "+" pressed
                 event.preventDefault();

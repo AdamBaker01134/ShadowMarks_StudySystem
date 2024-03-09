@@ -203,6 +203,13 @@ Model.prototype.addFreeformPathToShadowMarks = function () {
     this.notifySubscribers();
 }
 
+Model.prototype.popLastShadowMark = function () {
+    if (this.shadowMarks.length > 0) {
+        this.shadowMarks.pop();
+        this.notifySubscribers();
+    }
+}
+
 Model.prototype.checkShapeButtonHit = function () {
     const x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
     const y = this.getScrollbarY() - 60;
