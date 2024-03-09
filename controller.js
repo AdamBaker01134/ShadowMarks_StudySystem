@@ -173,7 +173,7 @@ Controller.prototype.handleScroll = function() {
 
 Controller.prototype.handleLoadNorthpole = async function () {
     console.log("Loading northpole dataset...");
-    const firstYear = 1992, lastYear = 1995;
+    const firstYear = 1992, lastYear = 2022;
     const totalDays = 353;
     for (let year = firstYear; year <= lastYear; year++) {
         let video = [];
