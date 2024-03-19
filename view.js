@@ -86,6 +86,18 @@ View.prototype.draw = function () {
                 line(x1, y1, x2, y2);
             }
 
+            // Draw shadow cursor
+            if (this.model.shadowing && this.model.hoverTarget != null) {
+                fill(colour.r, colour.g, colour.b);
+                stroke(colour.r, colour.g, colour.b);
+                strokeWeight(2);
+                const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
+                const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
+                const x = video.x + video.width * widthRatio;
+                const y = video.y + video.height * heightRatio;
+                circle(x,y,5);
+            }
+
             stroke(0);
             strokeWeight(1);
             fill(255);

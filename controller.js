@@ -24,6 +24,7 @@ Controller.prototype.handleMouseMoved = function (event) {
             this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
             this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
             this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
+            this.model.setHoverTarget(this.model.checkVideoHit());
             break;
         default:
             break;
@@ -51,6 +52,7 @@ Controller.prototype.handleMousePressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
+            this.model.setShadowing(false);
             if (this.model.checkScrollbarHit()) {
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
                 this.savedState = this.currentState;
@@ -162,6 +164,12 @@ Controller.prototype.handleKeyPressed = function (event) {
                     }, 50);
                     this.currentState = STATE.PLAYING;
                 }
+            }
+            if (event.altKey) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.model.setShadowing(!this.model.shadowing);
+                this.model.setHoverTarget(this.model.checkVideoHit());
             }
             break;
         default:

@@ -38,6 +38,9 @@ function Model() {
     this.colourButtonHighlighted = false;
     this.shapeMenuOpen = false;
     this.colourMenuOpen = false;
+
+    this.shadowing = false;
+    this.hoverTarget = null;
 }
 
 Model.prototype.updateVideoLocations = function () {
@@ -159,6 +162,13 @@ Model.prototype.setColourButtonHighlighted = function (highlighted) {
     }
 }
 
+Model.prototype.setShadowing = function (shadowing) {
+    if (this.shadowing != shadowing) {
+        this.shadowing = shadowing;
+        this.notifySubscribers();
+    }
+}
+
 Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
     let idx = (int)(map(
         mx,                 // value to map
@@ -204,11 +214,16 @@ Model.prototype.addFreeformPathToShadowMarks = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.setFreeformTarget = function (video) {
-    if (this.freeformTarget != video) {
-        this.freeformTarget = video;
+Model.prototype.setFreeformTarget = function (target) {
+    if (this.freeformTarget != target) {
+        this.freeformTarget = target;
         this.notifySubscribers();
     }
+}
+
+Model.prototype.setHoverTarget = function (target) {
+    this.hoverTarget = target;
+    this.notifySubscribers();
 }
 
 Model.prototype.popLastShadowMark = function () {
