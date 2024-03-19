@@ -24,6 +24,9 @@ async function preload() {
         case "southpole":
             await controller.handleLoadSouthpole();
             break;
+        case "arabidopsis":
+            await controller.handleLoadArabidopsis();
+            break;
         default:
             break;
     }

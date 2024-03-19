@@ -208,3 +208,32 @@ Controller.prototype.handleLoadSouthpole = async function () {
         this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
     }
 }
+
+
+Controller.prototype.handleLoadArabidopsis = async function () {
+    console.log("Loading arabidopsis dataset...");
+    const firstPlant = 1, lastPlant = 12;
+    const totalImages = 396;
+    for (let plant = firstPlant; plant <= lastPlant; plant++) {
+        let video = [];
+        await new Promise((resolve, reject) => {
+            let day = 4;
+            let hour = 930;
+            let completed = 0;
+            for (let img = 0; img < totalImages; img++){
+                video.push(loadImage("img/arabidopsis/fov-" + String(plant).padStart(2,"0")+"/2017-02-" + String(day).padStart(2,"0") + "_" + String(hour).padStart(4,"0") + "_ch129-pos" + String(plant).padStart(2,"0") + ".jpg",
+                    () => { if (++completed >= totalImages) resolve() },
+                    (err) => { if (++completed >= totalImages) reject(err) }));
+                if (hour === 1630) {
+                    hour = 900;
+                    day++;
+                } else {
+                    if (hour % 100 === 0) hour += 30;
+                    else hour += 70;
+                }
+            }
+        });
+        this.model.addVideo(video, "Specimen #" + String(plant).padStart(2,"0"));
+        this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
+    }
+}
