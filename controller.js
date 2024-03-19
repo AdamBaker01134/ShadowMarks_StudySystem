@@ -37,7 +37,7 @@ Controller.prototype.handleMouseDragged = function (event) {
             this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
             break;
         case STATE.MARKING:
-            if (this.model.shadowMarkShape === SHAPES.FREEFORM && (hit = this.model.checkVideoHit())) {
+            if (this.model.shadowMarkShape === SHAPES.FREEFORM && (hit = this.model.checkVideoHit()) && hit === this.model.freeformTarget) {
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
             }
             break;
@@ -58,6 +58,7 @@ Controller.prototype.handleMousePressed = function (event) {
             } else if (hit = this.model.checkVideoHit()) {
                 if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                     this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                    this.model.setFreeformTarget(hit);
                 }
                 this.savedState = this.currentState;
                 this.currentState = STATE.MARKING;
@@ -100,6 +101,7 @@ Controller.prototype.handleMouseReleased = function (event) {
             if (hit = this.model.checkVideoHit()) {
                 if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                     this.model.addFreeformPathToShadowMarks();
+                    this.model.setFreeformTarget(null);
                 } else {
                     this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
                 }

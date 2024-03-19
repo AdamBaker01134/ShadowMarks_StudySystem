@@ -29,6 +29,7 @@ function Model() {
     this.shadowMarkShape = SHAPES.FREEFORM;
     this.shadowMarkColour = COLOURS.RED;
     this.freeformPath = [];
+    this.freeformTarget = null;
 
     this.index = 0;
     this.scrollbarHighlighted = false;
@@ -201,6 +202,13 @@ Model.prototype.addFreeformPathToShadowMarks = function () {
     });
     this.freeformPath = [];
     this.notifySubscribers();
+}
+
+Model.prototype.setFreeformTarget = function (video) {
+    if (this.freeformTarget != video) {
+        this.freeformTarget = video;
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.popLastShadowMark = function () {
