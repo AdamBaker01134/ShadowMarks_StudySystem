@@ -247,3 +247,24 @@ Controller.prototype.handleLoadArabidopsis = async function () {
         this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
     }
 }
+
+Controller.prototype.handleLoadStocks = async function () {
+    console.log("Loading stocks dataset...");
+    const stocks = ["AAPL", "AMD", "AMZN", "CSCO", "META", "MSFT", "NFLX", "QCOM", "SBUX", "TSLA"]
+    const firstYear = 2014, lastYear = 2024;
+    const totalImages = 10;
+    for (let i = 0; i < stocks.length; i++) {
+        const stock = stocks[i];
+        let video = [];
+        await new Promise((resolve, reject) => {
+            let completed = 0;
+            for (let year = firstYear; year < lastYear; year++) {
+                video.push(loadImage("img/stocks/" + stock + "/" + year + ".png",
+                    () => { if (++completed >= totalImages) resolve() },
+                    (err) => { if (++completed >= totalImages) reject() }));
+            }
+        });
+        this.model.addVideo(video, stock);
+        this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
+    }
+}
