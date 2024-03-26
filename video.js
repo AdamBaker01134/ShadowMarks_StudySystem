@@ -1,8 +1,9 @@
 /* Application Video Object */
 "use strict";
 
-function Video(images, name, x, y) {
+function Video(images, labels, name, x, y) {
     this.images = images;
+    this.labels = labels;
     this.name = name;
     this.x = x;
     this.y = y;

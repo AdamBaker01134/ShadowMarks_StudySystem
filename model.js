@@ -63,7 +63,7 @@ Model.prototype.setPercentLoaded = function (percent) {
     this.notifySubscribers();
 }
 
-Model.prototype.addVideo = function (video, name) {
+Model.prototype.addVideo = function (video, labels, name) {
     let x = 0;
     let y = 0;
     this.videos.forEach(video => {
@@ -73,7 +73,7 @@ Model.prototype.addVideo = function (video, name) {
             y += video.height;
         }
     });
-    this.videos.push(new Video(video, name, x, y));
+    this.videos.push(new Video(video, labels, name, x, y));
     this.notifySubscribers();
 }
 

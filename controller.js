@@ -187,15 +187,17 @@ Controller.prototype.handleLoadNorthpole = async function () {
     const totalDays = 353;
     for (let year = firstYear; year <= lastYear; year++) {
         let video = [];
+        let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let day = 1; day <= totalDays; day++) {
                 video.push(loadImage("img/northpole/" + year + "/" + year + "" + String(day).padStart(4, "0") + ".png",
                     () => { if (++completed >= totalDays) resolve() },
                     (err) => { if (++completed >= totalDays) reject(err) }));
+                labels.push("Day " + day);
             }
         });
-        this.model.addVideo(video, year.toString());
+        this.model.addVideo(video, labels, year.toString());
         this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
     }
 }
@@ -206,15 +208,17 @@ Controller.prototype.handleLoadSouthpole = async function () {
     const totalDays = 353;
     for (let year = firstYear; year <= lastYear; year++) {
         let video = [];
+        let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let day = 1; day <= totalDays; day++) {
                 video.push(loadImage("img/southpole/" + year + "/" + year + "" + String(day).padStart(4, "0") + ".png",
                     () => { if (++completed >= totalDays) resolve() },
                     (err) => { if (++completed >= totalDays) reject(err) }));
+                labels.push("Day " + day);
             }
         });
-        this.model.addVideo(video, year.toString());
+        this.model.addVideo(video, labels, year.toString());
         this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
     }
 }
@@ -226,6 +230,7 @@ Controller.prototype.handleLoadArabidopsis = async function () {
     const totalImages = 396;
     for (let plant = firstPlant; plant <= lastPlant; plant++) {
         let video = [];
+        let labels = [];
         await new Promise((resolve, reject) => {
             let day = 4;
             let hour = 930;
@@ -234,6 +239,7 @@ Controller.prototype.handleLoadArabidopsis = async function () {
                 video.push(loadImage("img/arabidopsis/fov-" + String(plant).padStart(2,"0")+"/2017-02-" + String(day).padStart(2,"0") + "_" + String(hour).padStart(4,"0") + "_ch129-pos" + String(plant).padStart(2,"0") + ".jpg",
                     () => { if (++completed >= totalImages) resolve() },
                     (err) => { if (++completed >= totalImages) reject(err) }));
+                labels.push("Day " + day + " - " + Math.floor(hour/100).toString().padStart(2,"0") + ":" + (hour%100).toString().padStart(2,"0"));
                 if (hour === 1630) {
                     hour = 900;
                     day++;
@@ -243,7 +249,7 @@ Controller.prototype.handleLoadArabidopsis = async function () {
                 }
             }
         });
-        this.model.addVideo(video, "Specimen #" + String(plant).padStart(2,"0"));
+        this.model.addVideo(video, labels, "Specimen #" + String(plant).padStart(2,"0"));
         this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
     }
 }
@@ -256,15 +262,17 @@ Controller.prototype.handleLoadStocks = async function () {
     for (let i = 0; i < stocks.length; i++) {
         const stock = stocks[i];
         let video = [];
+        let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let year = firstYear; year < lastYear; year++) {
                 video.push(loadImage("img/stocks/" + stock + "/" + year + ".png",
                     () => { if (++completed >= totalImages) resolve() },
                     (err) => { if (++completed >= totalImages) reject() }));
+                labels.push(year.toString());
             }
         });
-        this.model.addVideo(video, stock);
+        this.model.addVideo(video, labels, stock);
         this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
     }
 }
