@@ -41,6 +41,8 @@ function Model() {
 
     this.shadowing = false;
     this.hoverTarget = null;
+
+    this.blockNum = 0;
 }
 
 Model.prototype.updateVideoLocations = function () {
@@ -74,6 +76,11 @@ Model.prototype.addVideo = function (video, labels, name) {
         }
     });
     this.videos.push(new Video(video, labels, name, x, y));
+    this.notifySubscribers();
+}
+
+Model.prototype.clearVideos = function () {
+    this.videos = [];
     this.notifySubscribers();
 }
 
@@ -197,10 +204,20 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio) {
 }
 
 Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
-    this.freeformPath.push({
-        widthRatio: widthRatio,
-        heightRatio: heightRatio,
-    });
+    if (keyIsDown(SHIFT) && this.freeformPath.length > 1) {
+        this.freeformPath = [
+            this.freeformPath[0],
+            {
+                widthRatio: widthRatio,
+                heightRatio: heightRatio,
+            }
+        ];
+    } else {
+        this.freeformPath.push({
+            widthRatio: widthRatio,
+            heightRatio: heightRatio,
+        });
+    }
     this.notifySubscribers();
 }
 

@@ -23,10 +23,10 @@ View.prototype.draw = function () {
                 const markerX = video.x + video.width * mark.widthRatio;
                 const markerY = video.y + video.height * mark.heightRatio;
                 let maxLength = 16;
-                let markLength = Math.min(video.width, video.height) / 16;
+                let markLength = Math.min(video.width, video.height) / 20;
                 if (mark.shape === SHAPES.CROSSHAIR) {
                     maxLength = 16;
-                    markLength = Math.min(video.width, video.height) / 12;
+                    markLength = Math.min(video.width, video.height) / 16;
                 }
                 if (markLength > maxLength) markLength = maxLength;
                 switch(mark.shape) {

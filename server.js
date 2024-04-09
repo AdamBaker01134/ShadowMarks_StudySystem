@@ -15,6 +15,10 @@ app.use(express.static(__dirname));
 
 let datasets = [];
 
+app.get("/", (req, res) => {
+    res.sendFile("shadow-marks.html", { root: __dirname });
+});
+
 fs.readdirSync("./img/").forEach(file => {
     if (fs.lstatSync("./img/" + file).isDirectory()) {
         datasets.push(file);
@@ -25,9 +29,9 @@ fs.readdirSync("./img/").forEach(file => {
 });
 
 app.listen(PORT, () => {
-    console.log("Express server is running.");
+    console.log(`Express server is running on http://localhost:${PORT}`);
     if (datasets.length === 0) console.log("No datasets detected.");
     datasets.forEach(dataset => {
-        console.log(`Access southpole example at http://localhost:${PORT}/` + dataset);
+        console.log(`Access ${dataset} example at http://localhost:${PORT}/${dataset}`);
     })
 });

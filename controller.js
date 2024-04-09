@@ -181,6 +181,28 @@ Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
 
+Controller.prototype.handleLoadBlock = async function () {
+    console.log(`Loading block #${this.model.blockNum}`);
+    const dataset = blockDatasets[this.model.blockNum];
+    const totalFrames = dataset.total;
+    const names = dataset.names;
+    for (let name = 0; name < names.length; name++) {
+        let video = [];
+        let labels = [];
+        await new Promise((resolve, reject) => {
+            let completed = 0;
+            for (let frame = 1; frame <= totalFrames; frame++) {
+                video.push(loadImage(`img/baseball/block${this.model.blockNum}/${names[name]}/img${String(frame).padStart(3,"0")}.jpg`,
+                    () => { if (++completed >= totalFrames) resolve() },
+                    (err) => { if (++completed >= totalFrames) reject(err) }));
+                labels.push("Frame " + frame);
+            }
+        });
+        this.model.addVideo(video, labels, names[name]);
+        this.model.setPercentLoaded(Math.floor(name/(names.length-1)*100));
+    }
+}
+
 Controller.prototype.handleLoadNorthpole = async function () {
     console.log("Loading northpole dataset...");
     const firstYear = 1992, lastYear = 2022;
