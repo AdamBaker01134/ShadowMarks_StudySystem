@@ -110,12 +110,10 @@ View.prototype.draw = function () {
         this.drawScrollbar();
         this.drawMarkModeButton();
         this.drawColourButton();
-        if (this.model.shapeMenuOpen) {
-            this.drawShapeMenu();
-        }
-        if (this.model.colourMenuOpen) {
-            this.drawColourMenu();
-        }
+        this.drawHelpButton();
+        if (this.model.shapeMenuOpen) this.drawShapeMenu();
+        if (this.model.colourMenuOpen) this.drawColourMenu();
+        if (this.model.helpMenuOpen) this.drawHelpMenu();
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);
@@ -271,6 +269,59 @@ View.prototype.drawColourMenu = function () {
     square(x+70,y+40,30);
     fill(COLOURS.MAGENTA.r, COLOURS.MAGENTA.g, COLOURS.MAGENTA.b);
     square(x+100,y+40,30);
+}
+
+View.prototype.drawHelpButton = function () {
+    stroke(0,0,0,this.model.helpButtonHighlighted ? 255 : 100);
+    fill(101, 101, 101, this.model.helpButtonHighlighted ? 255 : 100);
+    const x = this.model.getScrollbarX();
+    const y = height - 15;
+    const w = 50;
+    const h = 25;
+    rect(x, y, w, h, 10);
+    noStroke();
+    fill(255,255,255,this.model.helpButtonHighlighted ? 255 : 100);
+    textSize(12);
+    text("Help", x + (w/2) - textWidth("help")/2, y + (h/2));
+}
+
+View.prototype.drawHelpMenu = function () {
+    stroke(0);
+    fill(101);
+    let helpPoints = [
+        "SYSTEM UTILITIES",
+        "- Drag the scrollbar to play through all videos at once, or press spacebar to auto-play.",
+        "- Press 'Alt' to toggle shadow cursor mode.",
+        "- Zoom in/out with 'CTRL+plus' and 'CTRL+minus'.",
+        "- The buttons to the right of the scrollbar control mark type and colour.",
+        "----------------------------------------------------------------------------------------------------------------------"
+    ];
+    switch (this.model.shadowMarkShape) {
+        case SHAPES.FREEFORM:
+            helpPoints.push("FREEFORM SHADOW MARK");
+            helpPoints.push("- Click and drag on a video to draw a freeform shadow mark.");
+            helpPoints.push("- Press 'SHIFT' while dragging to make a straight line.");
+            break;
+        default:
+            helpPoints.push("SHADOW MARK")
+            helpPoints.push("- Click on a video to place a shadow mark.")
+            break;
+    }
+    helpPoints.push("- Undo last shadow mark you placed with 'CTRL+Z'");
+    textSize(24);
+    const w = Math.max(...helpPoints.map(point => textWidth(point) + 20));
+    const h = helpPoints.reduce((prev, curr) => prev + 30, 0) + 6;
+    const x = this.model.getScrollbarX();
+    const y = height-h-5;
+    rect(x, y, w, h, 10);
+    noStroke();
+    fill(255);
+    let textX = x + 10;
+    let textY = y + 30;
+    helpPoints.forEach(point => {
+        text(point, textX, textY);
+        textY += 30;
+    });
 }
 
 View.prototype.modelChanged = function () {

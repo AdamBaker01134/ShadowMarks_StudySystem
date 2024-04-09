@@ -13,32 +13,32 @@ let model, view, controller;
 const blockDatasets = {
     0: {
         "total": 184,
-        "names": ["bryse_wilson","dean_kremer","domingo_german","felix_bautista","jhony_brito","spencer_strider"],
+        "names": shuffleArray(["bryse_wilson","dean_kremer","domingo_german","felix_bautista","jhony_brito","spencer_strider"]),
         "correct": "felix_bautista",
     },
     1: {
         "total": 179,
-        "names": ["cal_quantrill","chris_bassitt","duane_underwood_jr","mitch_keller","shohei_ohtani","zach_eflin"],
+        "names": shuffleArray(["cal_quantrill","chris_bassitt","duane_underwood_jr","mitch_keller","shohei_ohtani","zach_eflin"]),
         "correct": "chris_bassitt",
     },
     2: {
         "total": 180,
-        "names": ["cal_quantrill","eli_morgan","rico_garcia","shane_bieber","tyler_wells","yennier_cano"],
+        "names": shuffleArray(["cal_quantrill","eli_morgan","rico_garcia","shane_bieber","tyler_wells","yennier_cano"]),
         "correct": "tyler_wells",
     },
     3: {
         "total": 191,
-        "names": ["aaron_civale","carlose_carrasco","edward_cabrera","james_naile","miles_mikolas","paolo_espino"],
+        "names": shuffleArray(["aaron_civale","carlose_carrasco","edward_cabrera","james_naile","miles_mikolas","paolo_espino"]),
         "correct": "aaron_civale",
     },
     4: {
         "total": 188,
-        "names": ["dylan_cease","joe_musgrove","luis_severino","ronel_blanco","seranthony_dominguez","yunior_marte"],
+        "names": shuffleArray(["dylan_cease","joe_musgrove","luis_severino","ronel_blanco","seranthony_dominguez","yunior_marte"]),
         "correct": "ronel_blanco",
     },
     5: {
         "total": 208,
-        "names": ["griffin_jax","michael_fulmer","michael_king","shohei_ohtani","sonny_gray","yency_almonte"],
+        "names": shuffleArray(["griffin_jax","michael_fulmer","michael_king","shohei_ohtani","sonny_gray","yency_almonte"]),
         "correct": "griffin_jax",
     },
 };
@@ -70,7 +70,7 @@ async function preload() {
 }
 
 function setup() {
-    createCanvas(windowWidth * 0.98,windowHeight*0.98);
+    createCanvas(1250, 610);
 
     attachUserEventListeners();
     model.addSubscriber(view);
@@ -92,4 +92,14 @@ function keyPressed(event) { controller.handleKeyPressed(event) }
 
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
+}
+
+function shuffleArray(arr) {
+    for (let i = arr.length-1; i > 0; i--) {
+        let index = Math.floor(Math.random()*(i+1));
+        let temp = arr[index];
+        arr[index] = arr[i];
+        arr[i] = temp;
+    }
+    return arr;
 }

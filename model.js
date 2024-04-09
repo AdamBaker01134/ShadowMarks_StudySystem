@@ -36,8 +36,10 @@ function Model() {
 
     this.shapeButtonHighlighted = false;
     this.colourButtonHighlighted = false;
+    this.helpButtonHighlighted = false;
     this.shapeMenuOpen = false;
     this.colourMenuOpen = false;
+    this.helpMenuOpen = false;
 
     this.shadowing = false;
     this.hoverTarget = null;
@@ -165,6 +167,13 @@ Model.prototype.setShapeButtonHighlighted = function (highlighted) {
 Model.prototype.setColourButtonHighlighted = function (highlighted) {
     if (this.colourButtonHighlighted != highlighted) {
         this.colourButtonHighlighted = highlighted;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.setHelpButtonHighlighted = function (highlighted) {
+    if (this.helpButtonHighlighted != highlighted) {
+        this.helpButtonHighlighted = highlighted;
         this.notifySubscribers();
     }
 }
@@ -317,6 +326,21 @@ Model.prototype.checkColourMenuHit = function () {
 Model.prototype.setColour = function (colour) {
     this.shadowMarkColour = colour;
     this.notifySubscribers();
+}
+
+Model.prototype.setHelpMenuOpen = function (open) {
+    if (this.helpMenuOpen != open) {
+        this.helpMenuOpen = open;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.checkHelpButtonHit = function () {
+    const x = this.getScrollbarX();
+    const y = height - 15;
+    const w = 50;
+    const h = 25;
+    return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
 }
 
 Model.prototype.addSubscriber = function (subscriber) {

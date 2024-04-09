@@ -8,6 +8,7 @@ const STATE = {
     MARKING: "marking",
     COLOUR_PICKER: "colour_picker",
     SHAPE_PICKER: "shape_picker",
+    HELP: "help",
 }
 
 function Controller(model) {
@@ -24,6 +25,7 @@ Controller.prototype.handleMouseMoved = function (event) {
             this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
             this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
             this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
+            this.model.setHelpButtonHighlighted(this.model.checkHelpButtonHit());
             this.model.setHoverTarget(this.model.checkVideoHit());
             break;
         default:
@@ -72,6 +74,10 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.model.setColourMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
+            } else if (this.model.checkHelpButtonHit()) {
+                this.model.setHelpMenuOpen(true);
+                this.savedState = this.currentState;
+                this.currentState = STATE.HELP;
             }
             break;
         case STATE.SHAPE_PICKER:
@@ -81,6 +87,7 @@ Controller.prototype.handleMousePressed = function (event) {
             }
             this.model.setShapeMenuOpen(false);
             this.currentState = this.savedState;
+            break;
         case STATE.COLOUR_PICKER:
             let colour = null;
             if (colour = this.model.checkColourMenuHit()) {
@@ -88,6 +95,11 @@ Controller.prototype.handleMousePressed = function (event) {
             }
             this.model.setColourMenuOpen(false);
             this.currentState = this.savedState;
+            break;
+        case STATE.HELP:
+            this.model.setHelpMenuOpen(false);
+            this.currentState = this.savedState;
+            break;
         default:
             break;
     }
