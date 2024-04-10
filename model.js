@@ -20,6 +20,15 @@ const COLOURS = {
     CYAN: { r: 0, g: 255, b: 255 },
 }
 
+const STAGE = {
+    INTRO: "intro",
+    PRE_TRAINING_BLOCK: "pre_training_block",
+    TRAINING_BLOCK: "training_block",
+    PRE_BLOCK: "pre_block",
+    BLOCK: "block",
+    FINISHED: "finished",
+}
+
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
@@ -44,7 +53,12 @@ function Model() {
     this.shadowing = false;
     this.hoverTarget = null;
 
+    this.selectedVideo = null;
     this.blockNum = 0;
+    this.totalBlocks = 6;
+    this.blockErrors = 0;
+    this.blockStartTime = 0;
+    this.currentStage = STAGE.INTRO;
 }
 
 Model.prototype.updateVideoLocations = function () {
@@ -59,6 +73,29 @@ Model.prototype.updateVideoLocations = function () {
             y += video.height;
         }
     });
+    this.notifySubscribers();
+}
+
+Model.prototype.setStage = function (stage) {
+    if (this.currentStage != stage) {
+        this.currentStage = stage;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.nextBlock = function () {
+    this.blockNum += 1;
+    this.notifySubscribers();
+}
+
+Model.prototype.startBlock = function () {
+    this.blockStartTime = new Date().getTime();
+    this.blockErrors = 0;
+    this.notifySubscribers();
+}
+
+Model.prototype.error = function () {
+    this.blockErrors++;
     this.notifySubscribers();
 }
 
@@ -91,6 +128,13 @@ Model.prototype.checkVideoHit = function () {
         if (this.videos[i].checkHit(mouseX, mouseY)) return this.videos[i];
     }
     return null;
+}
+
+Model.prototype.selectVideo = function (video) {
+    if (video != this.selectedVideo) {
+        this.selectedVideo = video;
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.zoomIn = function () {

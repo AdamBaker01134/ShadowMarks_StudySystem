@@ -5,11 +5,16 @@
 
 const cors = require("cors");
 const express = require("express");
+const bodyParser = require("body-parser");
 const fs = require("fs");
 const app = express();
 const PORT = 3018;
 
 app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname));
 
@@ -26,6 +31,10 @@ fs.readdirSync("./img/").forEach(file => {
             res.sendFile("shadow-marks.html", { root: __dirname });
         });
     }
+});
+
+app.post("/put/data", (req, res) => {
+    console.log(req.body);
 });
 
 app.listen(PORT, () => {
