@@ -166,7 +166,6 @@ Controller.prototype.handleMouseReleased = function (event) {
     switch (this.model.currentStage) {
         case STAGE.TRAINING_BLOCK:
         case STAGE.BLOCK:
-            break;
             let hit = null;
             switch (this.currentState) {
                 case STATE.NAVIGATING:

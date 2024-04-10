@@ -7,12 +7,69 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
+    let messages, y;
     switch (this.model.currentStage) {
         case STAGE.INTRO:
+            messages = [
+                "Welcome to my 811 project evaluation!", 
+                "During this experiment, you will go through multiple stages.",
+                "First, you will work through a training experiment to get you acquainted with the system.",
+                "Then, you will go through 5 blocks. Correct selections in each block will allow you to advance.",
+                "Once you have successfully gone through each block, please fill out the survey linked in the email.",
+                "Press any key to continue.",
+            ];
+            textSize(24);
+            stroke(0);
+            fill(0);
+            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            messages.forEach(message => {
+                let x = width/2 - textWidth(message)/2;
+                text(message, x, y);
+                y += 30;
+            });
             break;
         case STAGE.PRE_TRAINING_BLOCK:
+            messages = [
+                "You are now about to start the training phase.",
+                "In each block, you will be looking at six baseball pitching videos.",
+                "Your objective is to find the pitch that has the largest start-finish location difference.",
+                "For example, in the images below you can see the start and end locations of the ball marked by a '+' symbol.",
+                "You'll be looking for the video with the largest distance between these two points.",
+                "Take some time in the training phase to explore the system. There is a help button in the bottom left.",
+                "To select the video you think is correct, hold CTRL and click on it.",
+                "Press any key to begin the training phase.",
+            ];
+            textSize(24);
+            stroke(0);
+            fill(0);
+            y = height/4 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            messages.forEach(message => {
+                let x = width/2 - textWidth(message)/2;
+                text(message, x, y);
+                y += 30;
+            });
+            if (images[0] && images[1]) {
+                const aspectRatio = images[0].height / images[0].width;
+                const w = width/2;
+                const h = w*aspectRatio;
+                image(images[0], width/2-w-5, y+50, w, h);
+                image(images[1], width/2+5, y+50, w, h);
+            }
             break;
         case STAGE.PRE_BLOCK:
+            messages = [
+                "You are now on block " + this.model.blockNum + ".",
+                "Press any key to begin the next block.",
+            ];
+            textSize(24);
+            stroke(0);
+            fill(0);
+            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            messages.forEach(message => {
+                let x = width/2 - textWidth(message)/2;
+                text(message, x, y);
+                y += 30;
+            });
             break;
         case STAGE.TRAINING_BLOCK:
         case STAGE.BLOCK:
@@ -147,6 +204,21 @@ View.prototype.draw = function () {
             }
             break;
         case STAGE.FINISHED:
+            messages = [
+                "Congrats on successfully finishing the experiment!",
+                "Thank you for your participation!", 
+                "Now, please go through the survey linked in the email.",
+                "Your user id is: " + this.model.id
+            ];
+            textSize(24);
+            stroke(0);
+            fill(0);
+            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            messages.forEach(message => {
+                let x = width/2 - textWidth(message)/2;
+                text(message, x, y);
+                y += 30;
+            });
             break;
     }
 }
@@ -317,6 +389,8 @@ View.prototype.drawHelpMenu = function () {
         "- Press 'Alt/Option' to toggle shadow cursor mode.",
         "- Zoom in/out with 'CTRL+plus' and 'CTRL+minus'.",
         "- The buttons to the right of the scrollbar control mark type and colour.",
+        "- Hold 'CTRL' and click on a video if you think it is correct.",
+        "- On selection, a video will either flash red for wrong or green for correct.",
         "----------------------------------------------------------------------------------------------------------------------"
     ];
     switch (this.model.shadowMarkShape) {

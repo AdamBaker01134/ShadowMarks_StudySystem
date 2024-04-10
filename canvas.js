@@ -10,7 +10,10 @@ p5.disableFriendlyErrors = true;
 
 let model, view, controller;
 
+// const host = "localhost";
 const host = "hci-sandbox.usask.ca";
+
+let images = [];
 
 const blockDatasets = {
     0: {
@@ -73,6 +76,8 @@ async function preload() {
     await fetch(`http://${host}:3018/get/id`)
         .then(response => response.json())
         .then(response => model.setId(response.id));
+
+    images = [ loadImage("one_mark.png", () => model.notifySubscribers()), loadImage("two_mark.png", () => model.notifySubscribers()) ];
 }
 
 function setup() {
