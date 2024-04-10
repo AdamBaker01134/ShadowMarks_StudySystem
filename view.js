@@ -163,11 +163,6 @@ View.prototype.draw = function () {
                             const y = video.y + video.height * heightRatio;
                             circle(x,y,5);
                         }
-                        strokeWeight(1);
-                        this.drawMarkModeButton();
-                        this.drawColourButton();
-                        if (this.model.shapeMenuOpen) this.drawShapeMenu();
-                        if (this.model.colourMenuOpen) this.drawColourMenu();
                     }
         
                     stroke(0);
@@ -193,6 +188,12 @@ View.prototype.draw = function () {
                 this.drawScrollbar();
                 this.drawHelpButton();
                 if (this.model.helpMenuOpen) this.drawHelpMenu();
+                if (this.model.shadowMarksEnabled) {
+                    this.drawMarkModeButton();
+                    this.drawColourButton();
+                    if (this.model.shapeMenuOpen) this.drawShapeMenu();
+                    if (this.model.colourMenuOpen) this.drawColourMenu();
+                }
             } else {
                 let txt = this.model.percentLoaded + "%";
                 fill(0);
