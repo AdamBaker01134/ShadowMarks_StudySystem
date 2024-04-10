@@ -86,6 +86,7 @@ Controller.prototype.handleMousePressed = function (event) {
                                     method: "POST",
                                     body: JSON.stringify({
                                         userId: this.model.id,
+                                        shadowMarksEnabled: this.model.shadowMarksEnabled,
                                         block: this.model.blockNum,
                                         time: time,
                                         errors: this.model.blockErrors,
@@ -111,7 +112,7 @@ Controller.prototype.handleMousePressed = function (event) {
                             } else {
                                 this.model.error();
                             }
-                        } else {
+                        } else if (this.model.shadowMarksEnabled) {
                             if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
                                 this.model.setFreeformTarget(hit);
@@ -119,18 +120,20 @@ Controller.prototype.handleMousePressed = function (event) {
                             this.savedState = this.currentState;
                             this.currentState = STATE.MARKING;
                         }
-                    } else if (this.model.checkShapeButtonHit()) {
-                        this.model.setShapeMenuOpen(true);
-                        this.savedState = this.currentState;
-                        this.currentState = STATE.SHAPE_PICKER;
-                    } else if (this.model.checkColourButtonHit()) {
-                        this.model.setColourMenuOpen(true);
-                        this.savedState = this.currentState;
-                        this.currentState = STATE.COLOUR_PICKER;
                     } else if (this.model.checkHelpButtonHit()) {
                         this.model.setHelpMenuOpen(true);
                         this.savedState = this.currentState;
                         this.currentState = STATE.HELP;
+                    } else if (this.model.shadowMarksEnabled) {
+                        if (this.model.checkShapeButtonHit()) {
+                            this.model.setShapeMenuOpen(true);
+                            this.savedState = this.currentState;
+                            this.currentState = STATE.SHAPE_PICKER;
+                        } else if (this.model.checkColourButtonHit()) {
+                            this.model.setColourMenuOpen(true);
+                            this.savedState = this.currentState;
+                            this.currentState = STATE.COLOUR_PICKER;
+                        }
                     }
                     break;
                 case STATE.SHAPE_PICKER:
@@ -243,7 +246,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.currentState = STATE.PLAYING;
                         }
                     }
-                    if (event.altKey) {
+                    if (event.altKey && this.model.shadowMarksEnabled) {
                         event.preventDefault();
                         event.stopPropagation();
                         this.model.setShadowing(!this.model.shadowing);

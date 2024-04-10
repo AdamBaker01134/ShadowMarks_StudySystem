@@ -55,6 +55,7 @@ function Model() {
 
     this.selectedVideo = null;
     this.id = -1;
+    this.shadowMarksEnabled = false;
     this.blockNum = 0;
     this.totalBlocks = 6;
     this.blockErrors = 0;
@@ -79,6 +80,7 @@ Model.prototype.updateVideoLocations = function () {
 
 Model.prototype.setId = function (id) {
     this.id = id;
+    if (id % 2 == 0) this.shadowMarksEnabled = true;
     this.notifySubscribers();
 }
 

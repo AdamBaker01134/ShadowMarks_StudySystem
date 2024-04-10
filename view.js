@@ -79,89 +79,95 @@ View.prototype.draw = function () {
                     const x = video.x;
                     const y = video.y;
                     image(video.images[this.model.index], x, y, video.width, video.height);
-        
-                    // Draw shadow marks on each video
-                    noFill();
-                    this.model.shadowMarks.forEach(mark => {
-                        const colour = mark.colour;
-                        stroke(0);
-                        strokeWeight(3);
-                        const markerX = video.x + video.width * mark.widthRatio;
-                        const markerY = video.y + video.height * mark.heightRatio;
-                        let maxLength = 16;
-                        let markLength = Math.min(video.width, video.height) / 20;
-                        if (mark.shape === SHAPES.CROSSHAIR) {
-                            maxLength = 16;
-                            markLength = Math.min(video.width, video.height) / 16;
-                        }
-                        if (markLength > maxLength) markLength = maxLength;
-                        switch(mark.shape) {
-                            case SHAPES.CROSSHAIR:
-                                line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
-                                line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
-                                stroke(colour.r, colour.g, colour.b);
-                                strokeWeight(1);    
-                                line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
-                                line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);    
-                                break;
-                            case SHAPES.CROSS:
-                                line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                                line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
-                                stroke(colour.r, colour.g, colour.b);
-                                strokeWeight(1);  
-                                line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                                line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
-                                break;
-                            case SHAPES.SQUARE:
-                                square(markerX - markLength / 2, markerY - markLength / 2, markLength);
-                                stroke(colour.r, colour.g, colour.b);
-                                strokeWeight(1); 
-                                square(markerX - markLength / 2, markerY - markLength / 2, markLength);    
-                                break;
-                            case SHAPES.CIRCLE:
-                                ellipse(markerX, markerY, markLength, markLength);
-                                stroke(colour.r, colour.g, colour.b);
-                                strokeWeight(1);
-                                ellipse(markerX, markerY, markLength, markLength);    
-                                break;
-                            case SHAPES.FREEFORM:
-                                stroke(colour.r, colour.g, colour.b);
-                                strokeWeight(2);
-                                for (let i = 0; i < mark.path.length - 1; i++) {
-                                    const x1 = video.x + video.width * mark.path[i].widthRatio;
-                                    const y1 = video.y + video.height * mark.path[i].heightRatio;
-                                    const x2 = video.x + video.width * mark.path[i+1].widthRatio;
-                                    const y2 = video.y + video.height * mark.path[i+1].heightRatio;
-                                    line(x1, y1, x2, y2);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-        
-                    // Draw current freeform path
-                    const colour = this.model.shadowMarkColour;
-                    stroke(colour.r, colour.g, colour.b);
-                    strokeWeight(2);
-                    for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
-                        const x1 = video.x + video.width * this.model.freeformPath[i].widthRatio;
-                        const y1 = video.y + video.height * this.model.freeformPath[i].heightRatio;
-                        const x2 = video.x + video.width * this.model.freeformPath[i+1].widthRatio;
-                        const y2 = video.y + video.height * this.model.freeformPath[i+1].heightRatio;
-                        line(x1, y1, x2, y2);
-                    }
-        
-                    // Draw shadow cursor
-                    if (this.model.shadowing && this.model.hoverTarget != null) {
-                        fill(colour.r, colour.g, colour.b);
+                    if (this.model.shadowMarksEnabled) {
+                        // Draw shadow marks on each video
+                        noFill();
+                        this.model.shadowMarks.forEach(mark => {
+                            const colour = mark.colour;
+                            stroke(0);
+                            strokeWeight(3);
+                            const markerX = video.x + video.width * mark.widthRatio;
+                            const markerY = video.y + video.height * mark.heightRatio;
+                            let maxLength = 16;
+                            let markLength = Math.min(video.width, video.height) / 20;
+                            if (mark.shape === SHAPES.CROSSHAIR) {
+                                maxLength = 16;
+                                markLength = Math.min(video.width, video.height) / 16;
+                            }
+                            if (markLength > maxLength) markLength = maxLength;
+                            switch(mark.shape) {
+                                case SHAPES.CROSSHAIR:
+                                    line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                                    line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
+                                    stroke(colour.r, colour.g, colour.b);
+                                    strokeWeight(1);    
+                                    line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                                    line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);    
+                                    break;
+                                case SHAPES.CROSS:
+                                    line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                                    line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                                    stroke(colour.r, colour.g, colour.b);
+                                    strokeWeight(1);  
+                                    line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                                    line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                                    break;
+                                case SHAPES.SQUARE:
+                                    square(markerX - markLength / 2, markerY - markLength / 2, markLength);
+                                    stroke(colour.r, colour.g, colour.b);
+                                    strokeWeight(1); 
+                                    square(markerX - markLength / 2, markerY - markLength / 2, markLength);    
+                                    break;
+                                case SHAPES.CIRCLE:
+                                    ellipse(markerX, markerY, markLength, markLength);
+                                    stroke(colour.r, colour.g, colour.b);
+                                    strokeWeight(1);
+                                    ellipse(markerX, markerY, markLength, markLength);    
+                                    break;
+                                case SHAPES.FREEFORM:
+                                    stroke(colour.r, colour.g, colour.b);
+                                    strokeWeight(2);
+                                    for (let i = 0; i < mark.path.length - 1; i++) {
+                                        const x1 = video.x + video.width * mark.path[i].widthRatio;
+                                        const y1 = video.y + video.height * mark.path[i].heightRatio;
+                                        const x2 = video.x + video.width * mark.path[i+1].widthRatio;
+                                        const y2 = video.y + video.height * mark.path[i+1].heightRatio;
+                                        line(x1, y1, x2, y2);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+            
+                        // Draw current freeform path
+                        const colour = this.model.shadowMarkColour;
                         stroke(colour.r, colour.g, colour.b);
                         strokeWeight(2);
-                        const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
-                        const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
-                        const x = video.x + video.width * widthRatio;
-                        const y = video.y + video.height * heightRatio;
-                        circle(x,y,5);
+                        for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
+                            const x1 = video.x + video.width * this.model.freeformPath[i].widthRatio;
+                            const y1 = video.y + video.height * this.model.freeformPath[i].heightRatio;
+                            const x2 = video.x + video.width * this.model.freeformPath[i+1].widthRatio;
+                            const y2 = video.y + video.height * this.model.freeformPath[i+1].heightRatio;
+                            line(x1, y1, x2, y2);
+                        }
+            
+                        // Draw shadow cursor
+                        if (this.model.shadowing && this.model.hoverTarget != null) {
+                            fill(colour.r, colour.g, colour.b);
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(2);
+                            const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
+                            const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
+                            const x = video.x + video.width * widthRatio;
+                            const y = video.y + video.height * heightRatio;
+                            circle(x,y,5);
+                        }
+                        strokeWeight(1);
+                        this.drawMarkModeButton();
+                        this.drawColourButton();
+                        if (this.model.shapeMenuOpen) this.drawShapeMenu();
+                        if (this.model.colourMenuOpen) this.drawColourMenu();
                     }
         
                     stroke(0);
@@ -183,12 +189,9 @@ View.prototype.draw = function () {
                         rect(x+1,y+1,video.width-2,video.height-2);
                     }
                 });
+                strokeWeight(1);
                 this.drawScrollbar();
-                this.drawMarkModeButton();
-                this.drawColourButton();
                 this.drawHelpButton();
-                if (this.model.shapeMenuOpen) this.drawShapeMenu();
-                if (this.model.colourMenuOpen) this.drawColourMenu();
                 if (this.model.helpMenuOpen) this.drawHelpMenu();
             } else {
                 let txt = this.model.percentLoaded + "%";
@@ -393,18 +396,20 @@ View.prototype.drawHelpMenu = function () {
         "- On selection, a video will either flash red for wrong or green for correct.",
         "----------------------------------------------------------------------------------------------------------------------"
     ];
-    switch (this.model.shadowMarkShape) {
-        case SHAPES.FREEFORM:
-            helpPoints.push("FREEFORM SHADOW MARK");
-            helpPoints.push("- Click and drag on a video to draw a freeform shadow mark.");
-            helpPoints.push("- Press 'SHIFT' while dragging to make a straight line.");
-            break;
-        default:
-            helpPoints.push("SHADOW MARK")
-            helpPoints.push("- Click on a video to place a shadow mark.")
-            break;
+    if (this.model.shadowMarksEnabled) {
+        switch (this.model.shadowMarkShape) {
+            case SHAPES.FREEFORM:
+                helpPoints.push("FREEFORM SHADOW MARK");
+                helpPoints.push("- Click and drag on a video to draw a freeform shadow mark.");
+                helpPoints.push("- Press 'SHIFT' while dragging to make a straight line.");
+                break;
+            default:
+                helpPoints.push("SHADOW MARK")
+                helpPoints.push("- Click on a video to place a shadow mark.")
+                break;
+        }
+        helpPoints.push("- Undo last shadow mark you placed with 'CTRL+Z'");
     }
-    helpPoints.push("- Undo last shadow mark you placed with 'CTRL+Z'");
     textSize(24);
     const w = Math.max(...helpPoints.map(point => textWidth(point) + 20));
     const h = helpPoints.reduce((prev, curr) => prev + 30, 0) + 6;
