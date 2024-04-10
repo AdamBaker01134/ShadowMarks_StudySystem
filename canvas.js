@@ -10,6 +10,8 @@ p5.disableFriendlyErrors = true;
 
 let model, view, controller;
 
+const host = "hci-sandbox.usask.ca";
+
 const blockDatasets = {
     0: {
         "total": 184,
@@ -67,6 +69,10 @@ async function preload() {
             await controller.handleLoadBlock();
             break;
     }
+
+    await fetch(`http://${host}:3018/get/id`)
+        .then(response => response.json())
+        .then(response => model.setId(response.id));
 }
 
 function setup() {

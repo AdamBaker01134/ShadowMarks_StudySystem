@@ -82,10 +82,10 @@ Controller.prototype.handleMousePressed = function (event) {
                             this.model.selectVideo(hit);
                             if (this.model.selectedVideo.name === blockDatasets[this.model.blockNum].correct) {
                                 const time = new Date().getTime() - this.model.blockStartTime;
-                                fetch("http://localhost:3018/put/data", {
+                                fetch(`http://${host}:3018/put/data`, {
                                     method: "POST",
                                     body: JSON.stringify({
-                                        userId: 0,
+                                        userId: this.model.id,
                                         block: this.model.blockNum,
                                         time: time,
                                         errors: this.model.blockErrors,

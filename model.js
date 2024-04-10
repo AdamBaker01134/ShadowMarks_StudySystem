@@ -54,6 +54,7 @@ function Model() {
     this.hoverTarget = null;
 
     this.selectedVideo = null;
+    this.id = -1;
     this.blockNum = 0;
     this.totalBlocks = 6;
     this.blockErrors = 0;
@@ -73,6 +74,11 @@ Model.prototype.updateVideoLocations = function () {
             y += video.height;
         }
     });
+    this.notifySubscribers();
+}
+
+Model.prototype.setId = function (id) {
+    this.id = id;
     this.notifySubscribers();
 }
 
@@ -101,7 +107,12 @@ Model.prototype.error = function () {
 
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
-    this.notifySubscribers();
+    if (this.percentLoaded == 100) {
+        // User and percentage bar are racing. Whoever finishes last sets the start block time.
+        this.startBlock();
+    } else {
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.addVideo = function (video, labels, name) {

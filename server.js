@@ -33,8 +33,19 @@ fs.readdirSync("./img/").forEach(file => {
     }
 });
 
+app.get("/get/id", (req, res) => {
+    res.send({ id: Object.keys(JSON.parse(fs.readFileSync("results.json", "utf8"))).length });
+});
+
 app.post("/put/data", (req, res) => {
-    console.log(req.body);
+    let data = req.body;
+    let results = JSON.parse(fs.readFileSync("results.json", "utf8"));
+    if (Object.keys(results).includes(data.userId.toString())) {
+        results[data.userId.toString()].push(data);
+    } else {
+        results[data.userId.toString()] = [ data ];
+    }
+    fs.writeFileSync("results.json", JSON.stringify(results), "utf8");
 });
 
 app.listen(PORT, () => {
