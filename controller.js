@@ -100,6 +100,7 @@ Controller.prototype.handleMousePressed = function (event) {
                                 setTimeout(() => {
                                     this.model.selectVideo(null);
                                     this.model.clearVideos();
+                                    this.model.clearShadowMarks();
                                     this.currentState = STATE.READY;
                                     if (this.model.blockNum === this.model.totalBlocks-1) {
                                         this.model.setStage(STAGE.FINISHED);

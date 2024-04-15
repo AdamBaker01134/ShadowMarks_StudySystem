@@ -35,7 +35,7 @@ function Model() {
     this.videos = [];
 
     this.shadowMarks = [];
-    this.shadowMarkShape = SHAPES.FREEFORM;
+    this.shadowMarkShape = SHAPES.CROSSHAIR;
     this.shadowMarkColour = COLOURS.RED;
     this.freeformPath = [];
     this.freeformTarget = null;
@@ -314,6 +314,11 @@ Model.prototype.popLastShadowMark = function () {
         this.shadowMarks.pop();
         this.notifySubscribers();
     }
+}
+
+Model.prototype.clearShadowMarks = function () {
+    this.shadowMarks = [];
+    this.notifySubscribers();
 }
 
 Model.prototype.checkShapeButtonHit = function () {

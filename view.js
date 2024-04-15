@@ -37,8 +37,11 @@ View.prototype.draw = function () {
                 "You'll be looking for the video with the largest distance between these two points.",
                 "Take some time in the training phase to explore the system. There is a help button in the bottom left.",
                 "To select the video you think is correct, hold CTRL and click on it.",
-                "Press any key to begin the training phase.",
             ];
+            if (this.model.shadowMarksEnabled) {
+                messages.push("You can change mark shape and colour using the menus to the right of the scrollbar.");
+            }
+            messages.push("Press any key to begin the training phase.");
             textSize(24);
             stroke(0);
             fill(0);
