@@ -101,6 +101,9 @@ Controller.prototype.handleMousePressed = function (event) {
                                     this.model.selectVideo(null);
                                     this.model.clearVideos();
                                     this.model.clearShadowMarks();
+                                    this.model.setIndex(0);
+                                    this.model.setShape(SHAPES.CROSSHAIR);
+                                    this.model.setColour(COLOURS.RED);
                                     this.currentState = STATE.READY;
                                     if (this.model.blockNum === this.model.totalBlocks-1) {
                                         this.model.setStage(STAGE.FINISHED);
