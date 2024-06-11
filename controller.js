@@ -30,7 +30,11 @@ Controller.prototype.handleMouseMoved = function (event) {
                     this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
                     this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
                     this.model.setHelpButtonHighlighted(this.model.checkHelpButtonHit());
-                    this.model.setHoverTarget(this.model.checkVideoHit());
+                    const hit = this.model.checkVideoHit();
+                    this.model.setHoverTarget(hit);
+                    if (this.model.gridActive) {
+                        this.model.setGridHighlight(hit);
+                    }
                     break;
                 default:
                     break;
@@ -51,8 +55,13 @@ Controller.prototype.handleMouseDragged = function (event) {
                     this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
                     break;
                 case STATE.MARKING:
-                    if (this.model.shadowMarkShape === SHAPES.FREEFORM && (hit = this.model.checkVideoHit()) && hit === this.model.freeformTarget) {
+                    hit = this.model.checkVideoHit();
+                    if (this.model.shadowMarkShape === SHAPES.FREEFORM && hit && hit === this.model.freeformTarget) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                    }
+                    this.model.setHoverTarget(hit);
+                    if (this.model.gridActive) {
+                        this.model.setGridHighlight(hit);
                     }
                     break;
                 default:
@@ -72,7 +81,6 @@ Controller.prototype.handleMousePressed = function (event) {
             switch (this.currentState) {
                 case STATE.READY:
                 case STATE.PLAYING:
-                    this.model.setShadowing(false);
                     if (this.model.checkScrollbarHit()) {
                         this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
                         this.savedState = this.currentState;
@@ -250,11 +258,21 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.currentState = STATE.PLAYING;
                         }
                     }
-                    if (event.altKey && this.model.shadowMarksEnabled) {
+                    if (event.ctrlKey && keyCode === 67 && this.model.shadowMarksEnabled) {
                         event.preventDefault();
                         event.stopPropagation();
                         this.model.setShadowing(!this.model.shadowing);
                         this.model.setHoverTarget(this.model.checkVideoHit());
+                    }
+                    if (event.ctrlKey && keyCode === 71) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.model.setGridActive(!this.model.gridActive);
+                        const hit = this.model.checkVideoHit();
+                        this.model.setHoverTarget(hit);
+                        if (this.model.gridActive) {
+                            this.model.setGridHighlight(hit);
+                        }
                     }
                     if (keyCode === 37) {
                         // Handle left arrow pressed

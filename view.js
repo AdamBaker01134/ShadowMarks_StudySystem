@@ -169,6 +169,40 @@ View.prototype.draw = function () {
                             line(x, video.y, x, video.y + video.height);
                             line(video.x, y, video.x + width, y);
                         }
+
+                        if (this.model.gridActive) {
+                            let squareSize, numRows = 3, numCols = 3;
+                            if (video.width > video.height) {
+                                squareSize = Math.floor(video.height / 3);
+                                numCols = Math.ceil(video.width/squareSize);
+                            } else {
+                                squareSize = Math.floor(video.width / 3);
+                                numRows = Math.ceil(video.height/squareSize)
+                            }
+                            fill(200,200,200,125);
+                            stroke(200,200,200,125);
+                            strokeWeight(1);
+                            // Draw row lines
+                            for (let i = 1; i < numRows; i++) line(video.x, video.y + squareSize*i, video.x + video.width, video.y + squareSize*i);
+                            // Draw column lines
+                            for (let j = 1; j < numCols; j++) line(video.x + squareSize*j, video.y, video.x + squareSize*j, video.y + video.height);
+                            // Draw highlight, if any
+                            if (this.model.gridHighlight >= 0) {
+                                noFill();
+                                stroke(colour.r, colour.g, colour.b);
+                                strokeWeight(2);
+                                let squareX = video.x + squareSize * (this.model.gridHighlight % numCols);
+                                let squareY = video.y + squareSize * Math.floor(this.model.gridHighlight / numCols);
+                                if (squareX + squareSize > video.x + video.width || squareY + squareSize > video.y + video.height) {
+                                    let squareW = squareSize, squareH = squareSize;
+                                    if (squareX + squareW > video.x + video.width) squareW -= (squareX + squareW - video.x - video.width);
+                                    if (squareY + squareH > video.y + video.height) squareH -= (squareY + squareH - video.y - video.height);
+                                    rect(squareX, squareY, squareW, squareH);
+                                } else {
+                                    square(squareX, squareY, squareSize);
+                                }
+                            }
+                        }
                     }
         
                     stroke(0);

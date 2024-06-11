@@ -51,7 +51,9 @@ function Model() {
     this.helpMenuOpen = false;
 
     this.shadowing = false;
+    this.gridActive = false;
     this.hoverTarget = null;
+    this.gridHighlight = -1;
 
     this.selectedVideo = null;
     this.id = -1;
@@ -238,6 +240,42 @@ Model.prototype.setHelpButtonHighlighted = function (highlighted) {
 Model.prototype.setShadowing = function (shadowing) {
     if (this.shadowing != shadowing) {
         this.shadowing = shadowing;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.setGridActive = function (gridActive) {
+    if (this.gridActive != gridActive) {
+        this.gridActive = gridActive;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.setGridHighlight = function (video) {
+    let index = -1;
+    if (video !== null) {
+        let squareSize, numRows = 3, numCols = 3;
+        if (video.width > video.height) {
+            squareSize = Math.floor(video.height / 3);
+            numCols = Math.ceil(video.width / squareSize);
+        } else {
+            squareSize = Math.floor(video.width / 3);
+            numRows = Math.ceil(video.height / squareSize);
+        }
+        let found = false;
+        for (let row = 0; row < numRows && !found; row++) {
+            for (let col = 0; col < numCols && !found; col++) {
+                let squareX = video.x + squareSize*col;
+                let squareY = video.y + squareSize*row;
+                if (mouseX > squareX && mouseX < squareX+squareSize && mouseY > squareY && mouseY < squareY+squareSize) {
+                    index = numCols*row + col;
+                    found = true;
+                }
+            }
+        }
+    }
+    if (this.gridHighlight != index) {
+        this.gridHighlight = index;
         this.notifySubscribers();
     }
 }
