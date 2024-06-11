@@ -159,12 +159,15 @@ View.prototype.draw = function () {
                         if (this.model.shadowing && this.model.hoverTarget != null) {
                             fill(colour.r, colour.g, colour.b);
                             stroke(colour.r, colour.g, colour.b);
-                            strokeWeight(2);
+                            // strokeWeight(2);
+                            strokeWeight(1);
                             const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
                             const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
                             const x = video.x + video.width * widthRatio;
                             const y = video.y + video.height * heightRatio;
-                            circle(x,y,5);
+                            // circle(x,y,5);
+                            line(x, video.y, x, video.y + video.height);
+                            line(video.x, y, video.x + width, y);
                         }
                     }
         
