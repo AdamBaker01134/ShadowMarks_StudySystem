@@ -256,6 +256,22 @@ Controller.prototype.handleKeyPressed = function (event) {
                         this.model.setShadowing(!this.model.shadowing);
                         this.model.setHoverTarget(this.model.checkVideoHit());
                     }
+                    if (keyCode === 37) {
+                        // Handle left arrow pressed
+                        if (this.model.index > 0) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.model.setIndex(this.model.index - 1);
+                        }
+                    }
+                    if (keyCode === 39) {
+                        // Handle right arrow pressed
+                        if (this.model.index < this.model.getScrollbarSegments() - 1) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.model.setIndex(this.model.index + 1);
+                        }
+                    }
                     break;
                 default:
                     break;
