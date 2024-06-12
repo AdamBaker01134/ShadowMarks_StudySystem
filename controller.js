@@ -311,13 +311,19 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             break;
         case STAGE.INTRO:
+            event.preventDefault();
+            event.stopPropagation();
             this.model.setStage(STAGE.PRE_TRAINING_BLOCK);
             break;
         case STAGE.PRE_TRAINING_BLOCK:
+            event.preventDefault();
+            event.stopPropagation();
             this.model.setStage(STAGE.TRAINING_BLOCK);
             this.model.startBlock();
             break;
         case STAGE.PRE_BLOCK:
+            event.preventDefault();
+            event.stopPropagation();
             this.model.setStage(STAGE.BLOCK);
             this.model.startBlock();
             break;

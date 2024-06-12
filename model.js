@@ -157,8 +157,9 @@ Model.prototype.zoomIn = function () {
         const vWidth = video.width;
         const vHeight = video.height;
         const aspectRatio = vWidth / vHeight;
-        video.setWidth(vWidth + 20 * aspectRatio);
-        video.setHeight(vHeight + 20);
+        const increment = Math.max(vWidth,vHeight) * 0.1;
+        video.setWidth(vWidth + increment * aspectRatio);
+        video.setHeight(vHeight + increment);
     });
     this.notifySubscribers();
 }
@@ -168,8 +169,9 @@ Model.prototype.zoomOut = function () {
         const vWidth = video.width;
         const vHeight = video.height;
         const aspectRatio = vWidth / vHeight;
-        video.setWidth(vWidth - 20 * aspectRatio);
-        video.setHeight(vHeight - 20);
+        const decrement = Math.max(vWidth, vHeight) * 0.1;
+        video.setWidth(vWidth - decrement * aspectRatio);
+        video.setHeight(vHeight - decrement);
     });
     this.notifySubscribers();
 }
@@ -187,7 +189,7 @@ Model.prototype.getScrollbarX = function () {
 }
 
 Model.prototype.getScrollbarY = function () {
-    return height+scrollY-50-20;
+    return windowHeight+scrollY-50-20;
 }
 
 Model.prototype.getScrollbarWidth = function () {
@@ -201,7 +203,7 @@ Model.prototype.getScrollbarHeight = function () {
 // Slightly larger hitbox.
 Model.prototype.checkScrollbarHit = function () {
     return mouseX > 100 && mouseX < width-100 &&
-        mouseY > height+scrollY-100 && mouseY < height+scrollY-50;
+        mouseY > windowHeight+scrollY-100 && mouseY < windowHeight+scrollY-50;
 }
 
 Model.prototype.setIndex = function (index) {
@@ -437,7 +439,7 @@ Model.prototype.setHelpMenuOpen = function (open) {
 
 Model.prototype.checkHelpButtonHit = function () {
     const x = this.getScrollbarX();
-    const y = height - 15;
+    const y = windowHeight + scrollY - 20;
     const w = 50;
     const h = 25;
     return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;

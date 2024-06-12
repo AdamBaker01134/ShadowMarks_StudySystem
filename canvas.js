@@ -81,7 +81,7 @@ async function preload() {
 }
 
 function setup() {
-    createCanvas(1250, 610);
+    createCanvas(windowWidth*0.98, windowHeight*3);
 
     attachUserEventListeners();
     model.addSubscriber(view);

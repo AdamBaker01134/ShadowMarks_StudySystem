@@ -21,7 +21,7 @@ View.prototype.draw = function () {
             textSize(24);
             stroke(0);
             fill(0);
-            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
             messages.forEach(message => {
                 let x = width/2 - textWidth(message)/2;
                 text(message, x, y);
@@ -45,7 +45,7 @@ View.prototype.draw = function () {
             textSize(24);
             stroke(0);
             fill(0);
-            y = height/4 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            y = windowHeight/4 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
             messages.forEach(message => {
                 let x = width/2 - textWidth(message)/2;
                 text(message, x, y);
@@ -67,7 +67,7 @@ View.prototype.draw = function () {
             textSize(24);
             stroke(0);
             fill(0);
-            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
             messages.forEach(message => {
                 let x = width/2 - textWidth(message)/2;
                 text(message, x, y);
@@ -239,12 +239,12 @@ View.prototype.draw = function () {
                 fill(0);
                 stroke(0);
                 textSize(24);
-                text(txt, width/2-textWidth(txt)/2, height/2+12);
+                text(txt, width/2-textWidth(txt)/2, windowHeight/2+scrollY+12);
                 noFill();
-                rect(width/2-100, height/2+50, 200, 25);
+                rect(width/2-100, windowHeight/2+scrollY+50, 200, 25);
                 fill(50, 205, 50);
                 noStroke();
-                rect(width/2-100, height/2+50, 200*this.model.percentLoaded/100, 25)
+                rect(width/2-100, windowHeight/2+scrollY+50, 200*this.model.percentLoaded/100, 25)
             }
             break;
         case STAGE.FINISHED:
@@ -257,7 +257,7 @@ View.prototype.draw = function () {
             textSize(24);
             stroke(0);
             fill(0);
-            y = height/2 - messages.reduce((prev, curr) => prev + 30, 0)/2;
+            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
             messages.forEach(message => {
                 let x = width/2 - textWidth(message)/2;
                 text(message, x, y);
@@ -414,7 +414,7 @@ View.prototype.drawHelpButton = function () {
     stroke(0,0,0,this.model.helpButtonHighlighted ? 255 : 100);
     fill(101, 101, 101, this.model.helpButtonHighlighted ? 255 : 100);
     const x = this.model.getScrollbarX();
-    const y = height - 15;
+    const y = windowHeight + scrollY - 20;
     const w = 50;
     const h = 25;
     rect(x, y, w, h, 10);
@@ -452,19 +452,19 @@ View.prototype.drawHelpMenu = function () {
         }
         helpPoints.push("- Undo last shadow mark you placed with 'CTRL+Z'");
     }
-    textSize(24);
+    textSize(36);
     const w = Math.max(...helpPoints.map(point => textWidth(point) + 20));
-    const h = helpPoints.reduce((prev, curr) => prev + 30, 0) + 6;
-    const x = this.model.getScrollbarX();
-    const y = height-h-5;
+    const h = helpPoints.reduce((prev, curr) => prev + 42, 0) + 12;
+    const x = width/2-w/2;
+    const y = windowHeight/2+scrollY-h/2;
     rect(x, y, w, h, 10);
     noStroke();
     fill(255);
     let textX = x + 10;
-    let textY = y + 30;
+    let textY = y + 42;
     helpPoints.forEach(point => {
         text(point, textX, textY);
-        textY += 30;
+        textY += 42;
     });
 }
 
