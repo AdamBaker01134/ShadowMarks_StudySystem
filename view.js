@@ -88,7 +88,7 @@ View.prototype.draw = function () {
                         this.model.shadowMarks.forEach(mark => {
                             const colour = mark.colour;
                             stroke(0);
-                            strokeWeight(3);
+                            strokeWeight(2);
                             const markerX = video.x + video.width * mark.widthRatio;
                             const markerY = video.y + video.height * mark.heightRatio;
                             let maxLength = 16;
@@ -157,8 +157,8 @@ View.prototype.draw = function () {
             
                         // Draw shadow cursor
                         if (this.model.shadowing && this.model.hoverTarget != null) {
-                            fill(colour.r, colour.g, colour.b);
-                            stroke(colour.r, colour.g, colour.b);
+                            fill(colour.r, colour.g, colour.b, 150);
+                            stroke(colour.r, colour.g, colour.b, 150);
                             // strokeWeight(2);
                             strokeWeight(1);
                             const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
@@ -189,7 +189,7 @@ View.prototype.draw = function () {
                             // Draw highlight, if any
                             if (this.model.gridHighlight >= 0) {
                                 noFill();
-                                stroke(colour.r, colour.g, colour.b);
+                                stroke(colour.r, colour.g, colour.b, 150);
                                 strokeWeight(2);
                                 let squareX = video.x + squareSize * (this.model.gridHighlight % numCols);
                                 let squareY = video.y + squareSize * Math.floor(this.model.gridHighlight / numCols);
@@ -430,7 +430,8 @@ View.prototype.drawHelpMenu = function () {
     let helpPoints = [
         "SYSTEM UTILITIES",
         "- Drag the scrollbar to play through all videos at once, or press spacebar to auto-play.",
-        "- Press 'Alt/Option' to toggle shadow cursor mode.",
+        "- Press 'CTRL+C' to toggle shadow cursor mode.",
+        "- Press 'CTRL+G' to toggle shadow grid mode.",
         "- Zoom in/out with 'CTRL+plus' and 'CTRL+minus'.",
         "- The buttons to the right of the scrollbar control mark type and colour.",
         "- Hold 'CTRL' and click on a video if you think it is correct.",

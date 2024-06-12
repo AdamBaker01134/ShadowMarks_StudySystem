@@ -85,6 +85,18 @@ Controller.prototype.handleMousePressed = function (event) {
                         this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
                         this.savedState = this.currentState;
                         this.currentState = STATE.NAVIGATING;
+                    } else if (this.model.checkHelpButtonHit()) {
+                        this.model.setHelpMenuOpen(true);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.HELP;
+                    } else if (this.model.shadowMarksEnabled && this.model.checkShapeButtonHit()) {
+                        this.model.setShapeMenuOpen(true);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.SHAPE_PICKER;
+                    } else if (this.model.shadowMarksEnabled && this.model.checkColourButtonHit()) {
+                        this.model.setColourMenuOpen(true);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.COLOUR_PICKER;
                     } else if (hit = this.model.checkVideoHit()) {
                         if (event.ctrlKey) {
                             this.model.selectVideo(hit);
@@ -131,20 +143,6 @@ Controller.prototype.handleMousePressed = function (event) {
                             }
                             this.savedState = this.currentState;
                             this.currentState = STATE.MARKING;
-                        }
-                    } else if (this.model.checkHelpButtonHit()) {
-                        this.model.setHelpMenuOpen(true);
-                        this.savedState = this.currentState;
-                        this.currentState = STATE.HELP;
-                    } else if (this.model.shadowMarksEnabled) {
-                        if (this.model.checkShapeButtonHit()) {
-                            this.model.setShapeMenuOpen(true);
-                            this.savedState = this.currentState;
-                            this.currentState = STATE.SHAPE_PICKER;
-                        } else if (this.model.checkColourButtonHit()) {
-                            this.model.setColourMenuOpen(true);
-                            this.savedState = this.currentState;
-                            this.currentState = STATE.COLOUR_PICKER;
                         }
                     }
                     break;
