@@ -6,6 +6,7 @@ const STATE = {
     NAVIGATING: "navigating",
     PLAYING: "playing",
     MARKING: "marking",
+    ZOOMING: "zooming",
     COLOUR_PICKER: "colour_picker",
     SHAPE_PICKER: "shape_picker",
     HELP: "help",
@@ -221,6 +222,12 @@ Controller.prototype.handleKeyPressed = function (event) {
                         event.stopPropagation();
                         this.model.zoomIn();
                         this.model.updateVideoLocations();
+                        this.timer = setInterval(() => {
+                            this.model.zoomIn();
+                            this.model.updateVideoLocations();
+                        }, 300);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.ZOOMING;
                     }
                     if (event.ctrlKey && keyCode === 189) {
                         // Handle ctrl + "-" pressed
@@ -228,6 +235,12 @@ Controller.prototype.handleKeyPressed = function (event) {
                         event.stopPropagation();
                         this.model.zoomOut();
                         this.model.updateVideoLocations();
+                        this.timer = setInterval(() => {
+                            this.model.zoomOut();
+                            this.model.updateVideoLocations();
+                        }, 300);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.ZOOMING;
                     }
                     if (keyCode === 32) {
                         // Handle spacebar pressed
@@ -307,6 +320,29 @@ Controller.prototype.handleKeyPressed = function (event) {
         case STAGE.PRE_BLOCK:
             this.model.setStage(STAGE.BLOCK);
             this.model.startBlock();
+            break;
+        default:
+            break;
+    }
+}
+
+Controller.prototype.handleKeyReleased = function(event) {
+    switch (this.model.currentStage) {
+        case STAGE.TRAINING_BLOCK:
+        case STAGE.BLOCK:
+            switch (this.currentState) {
+                case STATE.ZOOMING:
+                    if (keyCode === 187 || keyCode === 189) {
+                        // Handle ctrl + "+" pressed
+                        event.preventDefault();
+                        event.stopPropagation();
+                        clearInterval(this.timer);
+                        this.currentState = this.savedState;
+                    }
+                    break;
+                default:
+                    break;
+            }
             break;
         default:
             break;

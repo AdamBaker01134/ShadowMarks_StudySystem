@@ -101,6 +101,8 @@ function mouseReleased(event) { controller.handleMouseReleased(event) }
 
 function keyPressed(event) { controller.handleKeyPressed(event) }
 
+function keyReleased(event) { controller.handleKeyReleased(event) }
+
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
 }
