@@ -167,7 +167,7 @@ View.prototype.draw = function () {
                             const y = video.y + video.height * heightRatio;
                             // circle(x,y,5);
                             line(x, video.y, x, video.y + video.height);
-                            line(video.x, y, video.x + width, y);
+                            line(video.x, y, video.x + video.width, y);
                         }
 
                         if (this.model.gridActive) {

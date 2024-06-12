@@ -247,7 +247,11 @@ Controller.prototype.handleKeyPressed = function (event) {
                                     case STATE.MARKING:
                                         if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
                                             clearInterval(this.timer);
-                                            this.currentState = STATE.READY;
+                                            if (this.currentState === STATE.MARKING) {
+                                                this.savedState = STATE.READY;
+                                            } else {
+                                                this.currentState = STATE.READY;
+                                            }
                                         } else {
                                             this.model.setIndex(this.model.index + 1);
                                         }
