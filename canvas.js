@@ -68,6 +68,9 @@ async function preload() {
         case "stocks":
             await controller.handleLoadStocks();
             break;
+        case "plant_rust":
+            await controller.handleLoadRustPlants();
+            break;
         default:
             await controller.handleLoadBlock();
             break;
