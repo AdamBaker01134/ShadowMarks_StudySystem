@@ -37,6 +37,11 @@ app.get("/get/id", (req, res) => {
     res.send({ id: Object.keys(JSON.parse(fs.readFileSync("results.json", "utf8"))).length });
 });
 
+app.post("/get/filenames/plant_rust", (req, res) => {
+    const plant = req.body.plant;
+    res.send({ filenames: fs.readFileSync(`./img/plant_rust/${plant}/filenames.txt`, "utf8").split("\n")})
+});
+
 app.post("/put/data", (req, res) => {
     let data = req.body;
     let results = JSON.parse(fs.readFileSync("results.json", "utf8"));

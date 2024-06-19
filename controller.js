@@ -476,3 +476,41 @@ Controller.prototype.handleLoadStocks = async function () {
         this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
     }
 }
+
+Controller.prototype.handleLoadRustPlants = async function () {
+    console.log("Loading plant rust dataset...");
+    const plants = ["BigLab iPhone14", "iPhone 2", "iPhone 7", "iPhone 8"];
+    let filenames = [];
+    const totalImages = 1000;
+    for (let i = 0; i < plants.length; i++) {
+        filenames.push(await fetch(`http://${host}:3018/get/filenames/plant_rust`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify({ plant: plants[i] })
+        })
+            .then(response => response.json())
+            .then(response => response.filenames));
+    }
+    for (let j = 0; j < plants.length; j++) {
+        const plant = plants[j];
+        const filename = filenames[j];
+        let video = [];
+        let labels = [];
+        await new Promise((resolve, reject) => {
+            let completed = 0;
+            for (let frame = 0; frame < totalImages; frame++) {
+                video.push(loadImage("img/plant_rust/" + filename[frame],
+                    () => {
+                        if (++completed >= totalImages) resolve();
+                        this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
+                    },
+                    (err) => {
+                        if (++completed >= totalImages) reject();
+                        this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
+                    }));
+                labels.push(filename[frame]);
+            }
+        });
+        this.model.addVideo(video, labels, plant);
+    }
+}
