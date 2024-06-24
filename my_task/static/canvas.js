@@ -15,7 +15,11 @@ async function preload() {
     view = new View(model);
     controller = new Controller(model);
 
-    await controller.handleLoadNorthpole();
+    switch (task) {
+        case 1:
+        case 2:
+        case 3:
+    }
 }
 
 function setup() {

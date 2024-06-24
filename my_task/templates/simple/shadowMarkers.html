@@ -3,6 +3,90 @@
 <script src="/my_task/controller.js"></script>
 <script src="/my_task/view.js"></script>
 <script src="/my_task/video.js"></script>
+<script type="text/javascript">
+    const pID = "{{ pID }}";
+    const interaction = "{{ interaction }}";
+    const task = "{{ task }}";
+
+
+    const assets = {
+        baseball: {
+            path: "{{url_for('my_task.static', filename = 'assets/baseball')}}",
+            categories: [
+                {
+                    name: "busch_stadium",
+                    frames: 168,
+                    videos: [{ name: "griffin_jax", }, { name: "michael_fulmer", }, { name: "michael_king", }, { name: "shohei_ohtani", }, { name: "sonny_gray", }, { name: "yency_almonte", },],
+                },
+                {
+                    name: "dodgers_stadium",
+                    frames: 168,
+                    videos: [{ name: "dylan_cease", }, { name: "joe_musgrove", }, { name: "luis_severino", }, { name: "ronel_blanco", }, { name: "seranthony_dominguez", }, { name: "yunior_marte", },],
+                },
+                {
+                    name: "oriole_park",
+                    frames: 168,
+                    videos: [{ name: "corbin_burnes", }, { name: "duane_underwood_jr", }, { name: "john_schreiber", }, { name: "mitch_keller", }, { name: "shohei_ohtani", }, { name: "zach_eflin", },],
+                },
+                {
+                    name: "rogers_centre",
+                    frames: 168,
+                    videos: [{ name: "bryse_wilson", }, { name: "dean_kremer", }, { name: "felix_bautista", }, { name: "jhony_brito", }, { name: "mitch_white", }, { name: "spencer_strider", },],
+                },
+                {
+                    name: "wrigley_field",
+                    frames: 168,
+                    videos: [{ name: "aaron_civale", }, { name: "edward_cabrera", }, { name: "james_naile", }, { name: "logan_webb", }, { name: "miles_mikolas", }, { name: "yoshinobu_yamimoto", },],
+                },
+                {
+                    name: "yankee_stadium",
+                    frames: 168,
+                    videos: [{ name: "cal_quantrill", }, { name: "eli_morgan", }, { name: "rico_garcia", }, { name: "shane_bieber", }, { name: "tyler_wells", }, { name: "yennier_cano", },],
+                },
+            ],
+        },
+        lemnatec: {
+            path: "{{url_for('my_task.static', filename = 'assets/lemnatec')}}",
+            categories: [
+                {
+                    name: "canna",
+                    frames: 35,
+                    videos: [{ name: "canna1", }, { name: "canna2", }, { name: "canna3", }, { name: "canna4", }, { name: "canna5", }, { name: "canna6", }, { name: "canna7", }, { name: "canna8", }, { name: "canna9", }, { name: "canna10", }, { name: "canna11", }, { name: "canna12", }, { name: "canna13", }, { name: "canna14", }, { name: "canna15", }, { name: "canna16", }, { name: "canna17", }, { name: "canna18", }, { name: "canna19", }, { name: "canna20", },],
+                },
+                {
+                    name: "coleus",
+                    frames: 24,
+                    videos: [{ name: "coleus1", }, { name: "coleus2", }, { name: "coleus3", }, { name: "coleus4", }, { name: "coleus5", }, { name: "coleus6", }, { name: "coleus7", }, { name: "coleus8", }, { name: "coleus9", }, { name: "coleus10", }, { name: "coleus11", }, { name: "coleus12", }, { name: "coleus13", }, { name: "coleus14", }, { name: "coleus15", }, { name: "coleus16", }, { name: "coleus17", }, { name: "coleus18", }, { name: "coleus19", }, { name: "coleus20", },],
+                },
+                {
+                    name: "maize",
+                    frames: 27,
+                    videos: [{ name: "maize1", }, { name: "maize2", }, { name: "maize3", }, { name: "maize4", }, { name: "maize5", }, { name: "maize6", }, { name: "maize7", }, { name: "maize8", }, { name: "maize9", }, { name: "maize10", }, { name: "maize11", }, { name: "maize12", }, { name: "maize13", },],
+                },
+                {
+                    name: "sunflower",
+                    frames: 26,
+                    videos: [{ name: "sunflower1", }, { name: "sunflower2", }, { name: "sunflower3", }, { name: "sunflower4", }, { name: "sunflower5", }, { name: "sunflower6", }, { name: "sunflower7", }, { name: "sunflower8", }, { name: "sunflower9", }, { name: "sunflower10", }, { name: "sunflower11", }, { name: "sunflower12", }, { name: "sunflower13", }, { name: "sunflower14", }, { name: "sunflower15", }, { name: "sunflower16", }, { name: "sunflower17", }, { name: "sunflower18", }, { name: "sunflower19", }, { name: "sunflower20", },],
+                },
+            ],
+        },
+        seaice: {
+            path: "{{url_for('my_task.static', filename = 'assets/seaice')}}",
+            categories: [
+                {
+                    name: "northpole",
+                    frames: 365,
+                    videos: [{ name: "1979", }, { name: "1980", }, { name: "1981", }, { name: "1982", }, { name: "1983", }, { name: "1984", }, { name: "1985", }, { name: "1986", }, { name: "1987", }, { name: "1989", }, { name: "1990", }, { name: "1991", }, { name: "1992", }, { name: "1993", }, { name: "1994", }, { name: "1995", }, { name: "1996", }, { name: "1997", }, { name: "1998", }, { name: "1999", }, { name: "2000", }, { name: "2001", }, { name: "2002", }, { name: "2003", }, { name: "2004", }, { name: "2005", }, { name: "2006", }, { name: "2007", }, { name: "2008", }, { name: "2009", }, { name: "2010", }, { name: "2011", }, { name: "2012", }, { name: "2013", }, { name: "2014", }, { name: "2015", }, { name: "2016", }, { name: "2017", }, { name: "2018", }, { name: "2019", }, { name: "2020", }, { name: "2021", }, { name: "2022", },],
+                },
+                {
+                    name: "southpole",
+                    frames: 365,
+                    videos: [{ name: "1980", }, { name: "1981", }, { name: "1982", }, { name: "1983", }, { name: "1984", }, { name: "1985", }, { name: "1986", }, { name: "1987", }, { name: "1989", }, { name: "1990", }, { name: "1991", }, { name: "1992", }, { name: "1993", }, { name: "1994", }, { name: "1995", }, { name: "1996", }, { name: "1997", }, { name: "1998", }, { name: "1999", }, { name: "2000", }, { name: "2001", }, { name: "2002", }, { name: "2003", }, { name: "2004", }, { name: "2005", }, { name: "2006", }, { name: "2007", }, { name: "2008", }, { name: "2009", }, { name: "2010", }, { name: "2011", }, { name: "2012", }, { name: "2013", }, { name: "2014", }, { name: "2015", }, { name: "2016", }, { name: "2017", }, { name: "2018", }, { name: "2019", }, { name: "2020", }, { name: "2021", }, { name: "2022", },],
+                },
+            ]
+        },
+    }
+</script>
 <script src="/my_task/canvas.js"></script>
 
 <main></main>

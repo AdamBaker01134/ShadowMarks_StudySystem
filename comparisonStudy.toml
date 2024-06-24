@@ -21,9 +21,6 @@ RETRIEVE_SESSIONS = true # If ID entered at /external_id was already used, then 
 ALLOW_RETAKES = true # With the external_id page in use, setting this to true will prevent the same ID from being used twice.
 LOG_GRID_CLICKS = false # Used for more fine-grained logging of participant's progress through questionnaires. Log the time the each radio button in a radio grid is clicked.
 CONDITIONS = [
-    { label = 'smallMultiples', enabled = true },
-    { label = 'overlay', enabled = true },
-    { label = 'shadowMarkers', enabled = true },
 ] # Leave blank for only 1 condition.
 
 # External ID Settings, adjust these to adjust the phrasing on /external_id for Prolific, MTurk, etc.
@@ -47,36 +44,39 @@ COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
 # If USE_BREADCRUMBS is true, then the pages with identical names will have (#) beside them.
 PAGE_LIST = [
     { name = 'Consent', path = 'consent' },
-    # Instructions rendered here
-    { name = "Task Instructions", path = "instructions/task_instructions" },
-    { conditional_routing = [
-        { condition = 1, page_list = [
-            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
-            # Renders our custom view
-            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
-            { name = 'Instructions', path = 'instructions/overlays_instructions' },
-            { name = 'Task', path = 'shadowMarkers/overlays' },
-            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
-            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
-        ] },
-        { condition = 2, page_list = [
-            { name = 'Instructions', path = 'instructions/overlays_instructions' },
-            { name = 'Task', path = 'shadowMarkers/overlays' },
-            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
-            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
-            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
-            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
-        ] },
-        { condition = 3, page_list = [
-            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
-            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
-            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
-            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
-            { name = 'Instructions', path = 'instructions/overlays_instructions' },
-            { name = 'Task', path = 'shadowMarkers/overlays' },
-        ] }
-    ] },
-    # Example questionnaire
-    { name = 'Questionnaire', path = "questionnaire/example" },
+
+    { name = "Task 1 Instructions", path = "instructions/task_instructions1" },
+    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = 'Task', path = 'shadowMarkers/1/smallMultiples' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = 'Task', path = 'shadowMarkers/1/overlays' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Shadow Markers Instructions", path = "instructions/shadowMarkers_instructions" },
+    { name = 'Task', path = 'shadowMarkers/1/shadowMarkers' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+
+    { name = "Task 2 Instructions", path = "instructions/task_instructions2" },
+    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = 'Task', path = 'shadowMarkers/2/smallMultiples' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = 'Task', path = 'shadowMarkers/2/overlays' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Shadow Markers Instructions", path = "instructions/shadowMarkers_instructions" },
+    { name = 'Task', path = 'shadowMarkers/2/shadowMarkers' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+
+    { name = "Task 3 Instructions", path = "instructions/task_instructions3" },
+    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = 'Task', path = 'shadowMarkers/3/smallMultiples' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = 'Task', path = 'shadowMarkers/3/overlays' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+    { name = "Shadow Markers Instructions", path = "instructions/shadowMarkers_instructions" },
+    { name = 'Task', path = 'shadowMarkers/3/shadowMarkers' },
+    { name = 'Questionnaire', path = "questionnaire/nasa-tlx" },
+
     { name = 'End', path = 'end' }
 ]

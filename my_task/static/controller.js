@@ -280,26 +280,31 @@ Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
 
-Controller.prototype.handleLoadBlock = async function () {
-    console.log(`Loading block #${this.model.blockNum}`);
-    const dataset = blockDatasets[this.model.blockNum];
-    const totalFrames = dataset.total;
-    const names = dataset.names;
-    for (let name = 0; name < names.length; name++) {
-        let video = [];
-        let labels = [];
-        await new Promise((resolve, reject) => {
-            let completed = 0;
-            for (let frame = 1; frame <= totalFrames; frame++) {
-                video.push(loadImage(`img/baseball/block${this.model.blockNum}/${names[name]}/img${String(frame).padStart(3,"0")}.jpg`,
-                    () => { if (++completed >= totalFrames) resolve() },
-                    (err) => { if (++completed >= totalFrames) reject(err) }));
-                labels.push("Frame " + frame);
-            }
-        });
-        this.model.addVideo(video, labels, names[name]);
-        this.model.setPercentLoaded(Math.floor(name/(names.length-1)*100));
-    }
+// Controller.prototype.handleLoadBlock = async function () {
+//     console.log(`Loading block #${this.model.blockNum}`);
+//     const dataset = blockDatasets[this.model.blockNum];
+//     const totalFrames = dataset.total;
+//     const names = dataset.names;
+//     for (let name = 0; name < names.length; name++) {
+//         let video = [];
+//         let labels = [];
+//         await new Promise((resolve, reject) => {
+//             let completed = 0;
+//             for (let frame = 1; frame <= totalFrames; frame++) {
+//                 video.push(loadImage(`img/baseball/block${this.model.blockNum}/${names[name]}/img${String(frame).padStart(3,"0")}.jpg`,
+//                     () => { if (++completed >= totalFrames) resolve() },
+//                     (err) => { if (++completed >= totalFrames) reject(err) }));
+//                 labels.push("Frame " + frame);
+//             }
+//         });
+//         this.model.addVideo(video, labels, names[name]);
+//         this.model.setPercentLoaded(Math.floor(name/(names.length-1)*100));
+//     }
+// }
+
+Controller.prototype.handleLoadBaseball = async function () {
+    console.log("Loading six baseball videos...");
+    
 }
 
 Controller.prototype.handleLoadNorthpole = async function () {
@@ -345,93 +350,93 @@ Controller.prototype.handleLoadSouthpole = async function () {
 }
 
 
-Controller.prototype.handleLoadArabidopsis = async function () {
-    console.log("Loading arabidopsis dataset...");
-    const firstPlant = 1, lastPlant = 12;
-    const totalImages = 396;
-    for (let plant = firstPlant; plant <= lastPlant; plant++) {
-        let video = [];
-        let labels = [];
-        await new Promise((resolve, reject) => {
-            let day = 4;
-            let hour = 930;
-            let completed = 0;
-            for (let img = 0; img < totalImages; img++){
-                video.push(loadImage("img/arabidopsis/fov-" + String(plant).padStart(2,"0")+"/2017-02-" + String(day).padStart(2,"0") + "_" + String(hour).padStart(4,"0") + "_ch129-pos" + String(plant).padStart(2,"0") + ".jpg",
-                    () => { if (++completed >= totalImages) resolve() },
-                    (err) => { if (++completed >= totalImages) reject(err) }));
-                labels.push("Day " + day + " - " + Math.floor(hour/100).toString().padStart(2,"0") + ":" + (hour%100).toString().padStart(2,"0"));
-                if (hour === 1630) {
-                    hour = 900;
-                    day++;
-                } else {
-                    if (hour % 100 === 0) hour += 30;
-                    else hour += 70;
-                }
-            }
-        });
-        this.model.addVideo(video, labels, "Specimen #" + String(plant).padStart(2,"0"));
-        this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
-    }
-}
+// Controller.prototype.handleLoadArabidopsis = async function () {
+//     console.log("Loading arabidopsis dataset...");
+//     const firstPlant = 1, lastPlant = 12;
+//     const totalImages = 396;
+//     for (let plant = firstPlant; plant <= lastPlant; plant++) {
+//         let video = [];
+//         let labels = [];
+//         await new Promise((resolve, reject) => {
+//             let day = 4;
+//             let hour = 930;
+//             let completed = 0;
+//             for (let img = 0; img < totalImages; img++){
+//                 video.push(loadImage("img/arabidopsis/fov-" + String(plant).padStart(2,"0")+"/2017-02-" + String(day).padStart(2,"0") + "_" + String(hour).padStart(4,"0") + "_ch129-pos" + String(plant).padStart(2,"0") + ".jpg",
+//                     () => { if (++completed >= totalImages) resolve() },
+//                     (err) => { if (++completed >= totalImages) reject(err) }));
+//                 labels.push("Day " + day + " - " + Math.floor(hour/100).toString().padStart(2,"0") + ":" + (hour%100).toString().padStart(2,"0"));
+//                 if (hour === 1630) {
+//                     hour = 900;
+//                     day++;
+//                 } else {
+//                     if (hour % 100 === 0) hour += 30;
+//                     else hour += 70;
+//                 }
+//             }
+//         });
+//         this.model.addVideo(video, labels, "Specimen #" + String(plant).padStart(2,"0"));
+//         this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
+//     }
+// }
 
-Controller.prototype.handleLoadStocks = async function () {
-    console.log("Loading stocks dataset...");
-    const stocks = ["AAPL", "AMD", "AMZN", "CSCO", "META", "MSFT", "NFLX", "QCOM", "SBUX", "TSLA"]
-    const firstYear = 2014, lastYear = 2024;
-    const totalImages = 10;
-    for (let i = 0; i < stocks.length; i++) {
-        const stock = stocks[i];
-        let video = [];
-        let labels = [];
-        await new Promise((resolve, reject) => {
-            let completed = 0;
-            for (let year = firstYear; year < lastYear; year++) {
-                video.push(loadImage("img/stocks/" + stock + "/" + year + ".png",
-                    () => { if (++completed >= totalImages) resolve() },
-                    (err) => { if (++completed >= totalImages) reject() }));
-                labels.push(year.toString());
-            }
-        });
-        this.model.addVideo(video, labels, stock);
-        this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
-    }
-}
+// Controller.prototype.handleLoadStocks = async function () {
+//     console.log("Loading stocks dataset...");
+//     const stocks = ["AAPL", "AMD", "AMZN", "CSCO", "META", "MSFT", "NFLX", "QCOM", "SBUX", "TSLA"]
+//     const firstYear = 2014, lastYear = 2024;
+//     const totalImages = 10;
+//     for (let i = 0; i < stocks.length; i++) {
+//         const stock = stocks[i];
+//         let video = [];
+//         let labels = [];
+//         await new Promise((resolve, reject) => {
+//             let completed = 0;
+//             for (let year = firstYear; year < lastYear; year++) {
+//                 video.push(loadImage("img/stocks/" + stock + "/" + year + ".png",
+//                     () => { if (++completed >= totalImages) resolve() },
+//                     (err) => { if (++completed >= totalImages) reject() }));
+//                 labels.push(year.toString());
+//             }
+//         });
+//         this.model.addVideo(video, labels, stock);
+//         this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
+//     }
+// }
 
-Controller.prototype.handleLoadRustPlants = async function () {
-    console.log("Loading plant rust dataset...");
-    const plants = ["BigLab iPhone14", "iPhone 2", "iPhone 7", "iPhone 8"];
-    let filenames = [];
-    const totalImages = 1000;
-    for (let i = 0; i < plants.length; i++) {
-        // filenames.push(await fetch(`http://${host}:3018/get/filenames/plant_rust`, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json"},
-        //     body: JSON.stringify({ plant: plants[i] })
-        // })
-        //     .then(response => response.json())
-        //     .then(response => response.filenames));
-    }
-    for (let j = 0; j < plants.length; j++) {
-        const plant = plants[j];
-        const filename = filenames[j];
-        let video = [];
-        let labels = [];
-        await new Promise((resolve, reject) => {
-            let completed = 0;
-            for (let frame = 0; frame < totalImages; frame++) {
-                video.push(loadImage("img/plant_rust/" + filename[frame],
-                    () => {
-                        if (++completed >= totalImages) resolve();
-                        this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
-                    },
-                    (err) => {
-                        if (++completed >= totalImages) reject();
-                        this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
-                    }));
-                labels.push(filename[frame]);
-            }
-        });
-        this.model.addVideo(video, labels, plant);
-    }
-}
+// Controller.prototype.handleLoadRustPlants = async function () {
+//     console.log("Loading plant rust dataset...");
+//     const plants = ["BigLab iPhone14", "iPhone 2", "iPhone 7", "iPhone 8"];
+//     let filenames = [];
+//     const totalImages = 1000;
+//     for (let i = 0; i < plants.length; i++) {
+//         // filenames.push(await fetch(`http://${host}:3018/get/filenames/plant_rust`, {
+//         //     method: "POST",
+//         //     headers: { "Content-Type": "application/json"},
+//         //     body: JSON.stringify({ plant: plants[i] })
+//         // })
+//         //     .then(response => response.json())
+//         //     .then(response => response.filenames));
+//     }
+//     for (let j = 0; j < plants.length; j++) {
+//         const plant = plants[j];
+//         const filename = filenames[j];
+//         let video = [];
+//         let labels = [];
+//         await new Promise((resolve, reject) => {
+//             let completed = 0;
+//             for (let frame = 0; frame < totalImages; frame++) {
+//                 video.push(loadImage("img/plant_rust/" + filename[frame],
+//                     () => {
+//                         if (++completed >= totalImages) resolve();
+//                         this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
+//                     },
+//                     (err) => {
+//                         if (++completed >= totalImages) reject();
+//                         this.model.setPercentLoaded(Math.ceil((j/(plants.length)*100) + (completed/totalImages)*(100/plants.length)));
+//                     }));
+//                 labels.push(filename[frame]);
+//             }
+//         });
+//         this.model.addVideo(video, labels, plant);
+//     }
+// }
