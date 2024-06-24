@@ -9,10 +9,10 @@ SECRET_KEY = 'asdfoaishdfyutfsadiglaskdf'
 # Application Settings
 # --------------------
 APPLICATION_ROOT = '' # Rarely adjusted, used to set the project to be accessible at a different URL rather than /.
-TITLE = 'shapeDrawing' # What users see at the top of the page
+TITLE = 'Shadow Markers' # What users see at the top of the page
 
 # Please have an actual password...
-ADMIN_PASSWORD = 'shapeDrawing' # Used to log in to the admin pages at /admin
+ADMIN_PASSWORD = 'SamwiseGamgee2980' # Used to log in to the admin pages at /admin
 USE_BREADCRUMBS = false # Show breadcrumbs-style progress bar
 
 # Make sure this does not overlap with another studies port!!
@@ -21,9 +21,9 @@ RETRIEVE_SESSIONS = true # If ID entered at /external_id was already used, then 
 ALLOW_RETAKES = true # With the external_id page in use, setting this to true will prevent the same ID from being used twice.
 LOG_GRID_CLICKS = false # Used for more fine-grained logging of participant's progress through questionnaires. Log the time the each radio button in a radio grid is clicked.
 CONDITIONS = [
-    { label = 'aimkeys', enabled = true },
-    { label = 'shortcuts', enabled = true },
-    { label = 'toolbar', enabled = true },
+    { label = 'smallMultiples', enabled = true },
+    { label = 'overlay', enabled = true },
+    { label = 'shadowMarkers', enabled = true },
 ] # Leave blank for only 1 condition.
 
 # External ID Settings, adjust these to adjust the phrasing on /external_id for Prolific, MTurk, etc.
@@ -51,29 +51,29 @@ PAGE_LIST = [
     { name = "Task Instructions", path = "instructions/task_instructions" },
     { conditional_routing = [
         { condition = 1, page_list = [
-            { name = 'Instructions', path = 'instructions/aimkey_instructions' },
+            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
             # Renders our custom view
-            { name = 'Task', path = 'shapeDrawing/aimkeys' },
-            { name = 'Instructions', path = 'instructions/shortcut_instructions' },
-            { name = 'Task', path = 'shapeDrawing/shortcuts' },
-            { name = 'Instructions', path = 'instructions/toolbar_instructions' },
-            { name = 'Task', path = 'shapeDrawing/toolbar' },
+            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
+            { name = 'Instructions', path = 'instructions/overlays_instructions' },
+            { name = 'Task', path = 'shadowMarkers/overlays' },
+            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
+            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
         ] },
         { condition = 2, page_list = [
-            { name = 'Instructions', path = 'instructions/shortcut_instructions' },
-            { name = 'Task', path = 'shapeDrawing/shortcuts' },
-            { name = 'Instructions', path = 'instructions/toolbar_instructions' },
-            { name = 'Task', path = 'shapeDrawing/toolbar' },
-            { name = 'Instructions', path = 'instructions/aimkey_instructions' },
-            { name = 'Task', path = 'shapeDrawing/aimkeys' },
+            { name = 'Instructions', path = 'instructions/overlays_instructions' },
+            { name = 'Task', path = 'shadowMarkers/overlays' },
+            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
+            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
+            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
+            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
         ] },
         { condition = 3, page_list = [
-            { name = 'Instructions', path = 'instructions/toolbar_instructions' },
-            { name = 'Task', path = 'shapeDrawing/toolbar' },
-            { name = 'Instructions', path = 'instructions/aimkey_instructions' },
-            { name = 'Task', path = 'shapeDrawing/aimkeys' },
-            { name = 'Instructions', path = 'instructions/shortcut_instructions' },
-            { name = 'Task', path = 'shapeDrawing/shortcuts' },
+            { name = 'Instructions', path = 'instructions/shadowMarkers_instructions' },
+            { name = 'Task', path = 'shadowMarkers/shadowMarkers' },
+            { name = 'Instructions', path = 'instructions/smallmultiples_instructions' },
+            { name = 'Task', path = 'shadowMarkers/smallMultiples' },
+            { name = 'Instructions', path = 'instructions/overlays_instructions' },
+            { name = 'Task', path = 'shadowMarkers/overlays' },
         ] }
     ] },
     # Example questionnaire
