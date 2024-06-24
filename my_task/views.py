@@ -11,30 +11,30 @@ my_task = Blueprint('my_task', __name__,
                          static_folder='static')
 
 
-@my_task.route("/shapeDrawing/aimkeys", methods=['POST', 'GET'])
+@my_task.route("/shadowMarkers/smallMultiples", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def aimkeys():
-    return shapeDrawing("aimkeys")
+def smallMultiples():
+    return comparisonStudy("smallMultiples")
 
-@my_task.route("/shapeDrawing/shortcuts", methods=['POST', 'GET'])
+@my_task.route("/shadowMarkers/overlays", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def shortcuts():
-    return shapeDrawing("shortcuts")
+def overlays():
+    return comparisonStudy("overlays")
 
-@my_task.route("/shapeDrawing/toolbar", methods=['POST', 'GET'])
+@my_task.route("/shadowMarkers/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def toolbar():
-    return shapeDrawing("toolbar")
+def shadowMarkers():
+    return comparisonStudy("shadowMarkers")
 
 
 
-@my_task.route("/shapeDrawing", methods=['POST', 'GET'])
+@my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def shapeDrawing(interaction):
+def comparisonStudy(interaction):
     # interaction is the variable passed from custom routes
 
     # getting the participant ID from the session variable
@@ -45,7 +45,7 @@ def shapeDrawing(interaction):
     condition = session["condition"]
 
     if request.method == 'POST':
-        log = db.shapeDrawing()  # This database table was defined in /tables/shapeDrawing.json
+        log = db.shadowMarkers()  # This database table was defined in /tables/shapeDrawing.json
         # writing columns from our javascript to the log
         log.trialLog = request.form['trialLog']
         log.streamLog = request.form['streamLog']
@@ -58,6 +58,6 @@ def shapeDrawing(interaction):
         return redirect("/redirect_next_page")
     
     # if no post, render our custom html with these variables
-    return render_template("simple/shapeDrawing.html", pID = pID, interaction = interaction)
+    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction)
 
 
