@@ -7,263 +7,175 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
-    let messages, y;
-    switch (this.model.currentStage) {
-        case STAGE.INTRO:
-            messages = [
-                "Welcome to my 811 project evaluation!", 
-                "During this experiment, you will go through multiple stages.",
-                "First, you will work through a training experiment to get you acquainted with the system.",
-                "Then, you will go through 5 blocks. Correct selections in each block will allow you to advance.",
-                "Once you have successfully gone through each block, please fill out the survey linked in the email.",
-                "Press any key to continue.",
-            ];
-            textSize(24);
-            stroke(0);
-            fill(0);
-            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
-            messages.forEach(message => {
-                let x = width/2 - textWidth(message)/2;
-                text(message, x, y);
-                y += 30;
-            });
-            break;
-        case STAGE.PRE_TRAINING_BLOCK:
-            messages = [
-                "You are now about to start the training phase.",
-                "In each block, you will be looking at six baseball pitching videos.",
-                "Your objective is to find the pitch that has the largest start-finish location difference.",
-                "For example, in the images below you can see the start and end locations of the ball marked by a '+' symbol.",
-                "You'll be looking for the video with the largest distance between these two points.",
-                "Take some time in the training phase to explore the system. There is a help button in the bottom left.",
-                "To select the video you think is correct, hold CTRL and click on it.",
-            ];
+    if (this.model.percentLoaded === 100) {
+        // Draw videos from the model
+        this.model.videos.forEach(video => {
+            const x = video.x;
+            const y = video.y;
+            image(video.images[this.model.index], x, y, video.width, video.height);
             if (this.model.shadowMarksEnabled) {
-                messages.push("You can change mark shape and colour using the menus to the right of the scrollbar.");
-            }
-            messages.push("Press any key to begin the training phase.");
-            textSize(24);
-            stroke(0);
-            fill(0);
-            y = windowHeight/4 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
-            messages.forEach(message => {
-                let x = width/2 - textWidth(message)/2;
-                text(message, x, y);
-                y += 30;
-            });
-            if (images[0] && images[1]) {
-                const aspectRatio = images[0].height / images[0].width;
-                const w = width/2;
-                const h = w*aspectRatio;
-                image(images[0], width/2-w-5, y+50, w, h);
-                image(images[1], width/2+5, y+50, w, h);
-            }
-            break;
-        case STAGE.PRE_BLOCK:
-            messages = [
-                "You are now on block " + this.model.blockNum + ".",
-                "Press any key to begin the next block.",
-            ];
-            textSize(24);
-            stroke(0);
-            fill(0);
-            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
-            messages.forEach(message => {
-                let x = width/2 - textWidth(message)/2;
-                text(message, x, y);
-                y += 30;
-            });
-            break;
-        case STAGE.TRAINING_BLOCK:
-        case STAGE.BLOCK:
-            if (this.model.percentLoaded === 100) {
-                // Draw videos from the model
-                this.model.videos.forEach(video => {
-                    const x = video.x;
-                    const y = video.y;
-                    image(video.images[this.model.index], x, y, video.width, video.height);
-                    if (this.model.shadowMarksEnabled) {
-                        // Draw shadow marks on each video
-                        noFill();
-                        this.model.shadowMarks.forEach(mark => {
-                            const colour = mark.colour;
-                            stroke(0);
-                            strokeWeight(2);
-                            const markerX = video.x + video.width * mark.widthRatio;
-                            const markerY = video.y + video.height * mark.heightRatio;
-                            let maxLength = 16;
-                            let markLength = Math.min(video.width, video.height) / 20;
-                            if (mark.shape === SHAPES.CROSSHAIR) {
-                                maxLength = 16;
-                                markLength = Math.min(video.width, video.height) / 16;
-                            }
-                            if (markLength > maxLength) markLength = maxLength;
-                            switch(mark.shape) {
-                                case SHAPES.CROSSHAIR:
-                                    line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
-                                    line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
-                                    stroke(colour.r, colour.g, colour.b);
-                                    strokeWeight(1);    
-                                    line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
-                                    line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);    
-                                    break;
-                                case SHAPES.CROSS:
-                                    line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                                    line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
-                                    stroke(colour.r, colour.g, colour.b);
-                                    strokeWeight(1);  
-                                    line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                                    line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
-                                    break;
-                                case SHAPES.SQUARE:
-                                    square(markerX - markLength / 2, markerY - markLength / 2, markLength);
-                                    stroke(colour.r, colour.g, colour.b);
-                                    strokeWeight(1); 
-                                    square(markerX - markLength / 2, markerY - markLength / 2, markLength);    
-                                    break;
-                                case SHAPES.CIRCLE:
-                                    ellipse(markerX, markerY, markLength, markLength);
-                                    stroke(colour.r, colour.g, colour.b);
-                                    strokeWeight(1);
-                                    ellipse(markerX, markerY, markLength, markLength);    
-                                    break;
-                                case SHAPES.FREEFORM:
-                                    stroke(colour.r, colour.g, colour.b);
-                                    strokeWeight(2);
-                                    for (let i = 0; i < mark.path.length - 1; i++) {
-                                        const x1 = video.x + video.width * mark.path[i].widthRatio;
-                                        const y1 = video.y + video.height * mark.path[i].heightRatio;
-                                        const x2 = video.x + video.width * mark.path[i+1].widthRatio;
-                                        const y2 = video.y + video.height * mark.path[i+1].heightRatio;
-                                        line(x1, y1, x2, y2);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-            
-                        // Draw current freeform path
-                        const colour = this.model.shadowMarkColour;
-                        stroke(colour.r, colour.g, colour.b);
-                        strokeWeight(2);
-                        for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
-                            const x1 = video.x + video.width * this.model.freeformPath[i].widthRatio;
-                            const y1 = video.y + video.height * this.model.freeformPath[i].heightRatio;
-                            const x2 = video.x + video.width * this.model.freeformPath[i+1].widthRatio;
-                            const y2 = video.y + video.height * this.model.freeformPath[i+1].heightRatio;
-                            line(x1, y1, x2, y2);
-                        }
-            
-                        // Draw shadow cursor
-                        if (this.model.shadowing && this.model.hoverTarget != null) {
-                            fill(colour.r, colour.g, colour.b, 150);
-                            stroke(colour.r, colour.g, colour.b, 150);
-                            // strokeWeight(2);
-                            strokeWeight(1);
-                            const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
-                            const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
-                            const x = video.x + video.width * widthRatio;
-                            const y = video.y + video.height * heightRatio;
-                            // circle(x,y,5);
-                            line(x, video.y, x, video.y + video.height);
-                            line(video.x, y, video.x + video.width, y);
-                        }
-
-                        if (this.model.gridActive) {
-                            let squareSize, numRows = 3, numCols = 3;
-                            if (video.width > video.height) {
-                                squareSize = Math.floor(video.height / 3);
-                                numCols = Math.ceil(video.width/squareSize);
-                            } else {
-                                squareSize = Math.floor(video.width / 3);
-                                numRows = Math.ceil(video.height/squareSize)
-                            }
-                            fill(200,200,200,125);
-                            stroke(200,200,200,125);
-                            strokeWeight(1);
-                            // Draw row lines
-                            for (let i = 1; i < numRows; i++) line(video.x, video.y + squareSize*i, video.x + video.width, video.y + squareSize*i);
-                            // Draw column lines
-                            for (let j = 1; j < numCols; j++) line(video.x + squareSize*j, video.y, video.x + squareSize*j, video.y + video.height);
-                            // Draw highlight, if any
-                            if (this.model.gridHighlight >= 0) {
-                                noFill();
-                                stroke(colour.r, colour.g, colour.b, 150);
-                                strokeWeight(2);
-                                let squareX = video.x + squareSize * (this.model.gridHighlight % numCols);
-                                let squareY = video.y + squareSize * Math.floor(this.model.gridHighlight / numCols);
-                                if (squareX + squareSize > video.x + video.width || squareY + squareSize > video.y + video.height) {
-                                    let squareW = squareSize, squareH = squareSize;
-                                    if (squareX + squareW > video.x + video.width) squareW -= (squareX + squareW - video.x - video.width);
-                                    if (squareY + squareH > video.y + video.height) squareH -= (squareY + squareH - video.y - video.height);
-                                    rect(squareX, squareY, squareW, squareH);
-                                } else {
-                                    square(squareX, squareY, squareSize);
-                                }
-                            }
-                        }
+                // Draw shadow marks on each video
+                noFill();
+                this.model.shadowMarks.forEach(mark => {
+                    const colour = mark.colour;
+                    stroke(0);
+                    strokeWeight(2);
+                    const markerX = video.x + video.width * mark.widthRatio;
+                    const markerY = video.y + video.height * mark.heightRatio;
+                    let maxLength = 16;
+                    let markLength = Math.min(video.width, video.height) / 20;
+                    if (mark.shape === SHAPES.CROSSHAIR) {
+                        maxLength = 16;
+                        markLength = Math.min(video.width, video.height) / 16;
                     }
-        
-                    stroke(0);
-                    strokeWeight(1);
-                    fill(255);
-                    textSize(16);
-                    text(video.name, x+5, y+20);
-
-                    noFill();
-                    stroke(0);
-                    rect(x, y, video.width, video.height);
-                    if (this.model.selectedVideo === video) {
-                        strokeWeight(2);
-                        if (video.name === blockDatasets[this.model.blockNum].correct) {
-                            stroke(0,255,0);
-                        } else {
-                            stroke(255,0,0);
-                        }
-                        rect(x+1,y+1,video.width-2,video.height-2);
+                    if (markLength > maxLength) markLength = maxLength;
+                    switch(mark.shape) {
+                        case SHAPES.CROSSHAIR:
+                            line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                            line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(1);    
+                            line (markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
+                            line (markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);    
+                            break;
+                        case SHAPES.CROSS:
+                            line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                            line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(1);  
+                            line (markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
+                            line (markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+                            break;
+                        case SHAPES.SQUARE:
+                            square(markerX - markLength / 2, markerY - markLength / 2, markLength);
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(1); 
+                            square(markerX - markLength / 2, markerY - markLength / 2, markLength);    
+                            break;
+                        case SHAPES.CIRCLE:
+                            ellipse(markerX, markerY, markLength, markLength);
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(1);
+                            ellipse(markerX, markerY, markLength, markLength);    
+                            break;
+                        case SHAPES.FREEFORM:
+                            stroke(colour.r, colour.g, colour.b);
+                            strokeWeight(2);
+                            for (let i = 0; i < mark.path.length - 1; i++) {
+                                const x1 = video.x + video.width * mark.path[i].widthRatio;
+                                const y1 = video.y + video.height * mark.path[i].heightRatio;
+                                const x2 = video.x + video.width * mark.path[i+1].widthRatio;
+                                const y2 = video.y + video.height * mark.path[i+1].heightRatio;
+                                line(x1, y1, x2, y2);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 });
-                strokeWeight(1);
-                this.drawScrollbar();
-                this.drawHelpButton();
-                if (this.model.helpMenuOpen) this.drawHelpMenu();
-                if (this.model.shadowMarksEnabled) {
-                    this.drawMarkModeButton();
-                    this.drawColourButton();
-                    if (this.model.shapeMenuOpen) this.drawShapeMenu();
-                    if (this.model.colourMenuOpen) this.drawColourMenu();
+    
+                // Draw current freeform path
+                const colour = this.model.shadowMarkColour;
+                stroke(colour.r, colour.g, colour.b);
+                strokeWeight(2);
+                for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
+                    const x1 = video.x + video.width * this.model.freeformPath[i].widthRatio;
+                    const y1 = video.y + video.height * this.model.freeformPath[i].heightRatio;
+                    const x2 = video.x + video.width * this.model.freeformPath[i+1].widthRatio;
+                    const y2 = video.y + video.height * this.model.freeformPath[i+1].heightRatio;
+                    line(x1, y1, x2, y2);
                 }
-            } else {
-                let txt = this.model.percentLoaded + "%";
-                fill(0);
-                stroke(0);
-                textSize(24);
-                text(txt, width/2-textWidth(txt)/2, windowHeight/2+scrollY+12);
-                noFill();
-                rect(width/2-100, windowHeight/2+scrollY+50, 200, 25);
-                fill(50, 205, 50);
-                noStroke();
-                rect(width/2-100, windowHeight/2+scrollY+50, 200*this.model.percentLoaded/100, 25)
+    
+                // Draw shadow cursor
+                if (this.model.shadowing && this.model.hoverTarget != null) {
+                    fill(colour.r, colour.g, colour.b, 150);
+                    stroke(colour.r, colour.g, colour.b, 150);
+                    // strokeWeight(2);
+                    strokeWeight(1);
+                    const widthRatio = (mouseX-this.model.hoverTarget.x)/this.model.hoverTarget.width;
+                    const heightRatio = (mouseY-this.model.hoverTarget.y)/this.model.hoverTarget.height;
+                    const x = video.x + video.width * widthRatio;
+                    const y = video.y + video.height * heightRatio;
+                    // circle(x,y,5);
+                    line(x, video.y, x, video.y + video.height);
+                    line(video.x, y, video.x + video.width, y);
+                }
+
+                if (this.model.gridActive) {
+                    let squareSize, numRows = 3, numCols = 3;
+                    if (video.width > video.height) {
+                        squareSize = Math.floor(video.height / 3);
+                        numCols = Math.ceil(video.width/squareSize);
+                    } else {
+                        squareSize = Math.floor(video.width / 3);
+                        numRows = Math.ceil(video.height/squareSize)
+                    }
+                    fill(200,200,200,125);
+                    stroke(200,200,200,125);
+                    strokeWeight(1);
+                    // Draw row lines
+                    for (let i = 1; i < numRows; i++) line(video.x, video.y + squareSize*i, video.x + video.width, video.y + squareSize*i);
+                    // Draw column lines
+                    for (let j = 1; j < numCols; j++) line(video.x + squareSize*j, video.y, video.x + squareSize*j, video.y + video.height);
+                    // Draw highlight, if any
+                    if (this.model.gridHighlight >= 0) {
+                        noFill();
+                        stroke(colour.r, colour.g, colour.b, 150);
+                        strokeWeight(2);
+                        let squareX = video.x + squareSize * (this.model.gridHighlight % numCols);
+                        let squareY = video.y + squareSize * Math.floor(this.model.gridHighlight / numCols);
+                        if (squareX + squareSize > video.x + video.width || squareY + squareSize > video.y + video.height) {
+                            let squareW = squareSize, squareH = squareSize;
+                            if (squareX + squareW > video.x + video.width) squareW -= (squareX + squareW - video.x - video.width);
+                            if (squareY + squareH > video.y + video.height) squareH -= (squareY + squareH - video.y - video.height);
+                            rect(squareX, squareY, squareW, squareH);
+                        } else {
+                            square(squareX, squareY, squareSize);
+                        }
+                    }
+                }
             }
-            break;
-        case STAGE.FINISHED:
-            messages = [
-                "Congrats on successfully finishing the experiment!",
-                "Thank you for your participation!", 
-                "Now, please go through the survey linked in the email.",
-                "Your user id is: " + this.model.id
-            ];
-            textSize(24);
+
             stroke(0);
-            fill(0);
-            y = windowHeight/2 + scrollY - messages.reduce((prev, curr) => prev + 30, 0)/2;
-            messages.forEach(message => {
-                let x = width/2 - textWidth(message)/2;
-                text(message, x, y);
-                y += 30;
-            });
-            break;
+            strokeWeight(1);
+            fill(255);
+            textSize(16);
+            text(video.name, x+5, y+20);
+
+            noFill();
+            stroke(0);
+            rect(x, y, video.width, video.height);
+            if (this.model.selectedVideo === video) {
+                strokeWeight(2);
+                if (video.name === blockDatasets[this.model.blockNum].correct) {
+                    stroke(0,255,0);
+                } else {
+                    stroke(255,0,0);
+                }
+                rect(x+1,y+1,video.width-2,video.height-2);
+            }
+        });
+        strokeWeight(1);
+        this.drawScrollbar();
+        this.drawHelpButton();
+        if (this.model.helpMenuOpen) this.drawHelpMenu();
+        if (this.model.shadowMarksEnabled) {
+            this.drawMarkModeButton();
+            this.drawColourButton();
+            if (this.model.shapeMenuOpen) this.drawShapeMenu();
+            if (this.model.colourMenuOpen) this.drawColourMenu();
+        }
+    } else {
+        let txt = this.model.percentLoaded + "%";
+        fill(0);
+        stroke(0);
+        textSize(24);
+        text(txt, width/2-textWidth(txt)/2, windowHeight/2+scrollY+12);
+        noFill();
+        rect(width/2-100, windowHeight/2+scrollY+50, 200, 25);
+        fill(50, 205, 50);
+        noStroke();
+        rect(width/2-100, windowHeight/2+scrollY+50, 200*this.model.percentLoaded/100, 25)
     }
 }
 

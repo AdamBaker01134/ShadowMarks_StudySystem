@@ -20,15 +20,6 @@ const COLOURS = {
     CYAN: { r: 0, g: 255, b: 255 },
 }
 
-const STAGE = {
-    INTRO: "intro",
-    PRE_TRAINING_BLOCK: "pre_training_block",
-    TRAINING_BLOCK: "training_block",
-    PRE_BLOCK: "pre_block",
-    BLOCK: "block",
-    FINISHED: "finished",
-}
-
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
@@ -56,13 +47,9 @@ function Model() {
     this.gridHighlight = -1;
 
     this.selectedVideo = null;
-    this.id = -1;
-    this.shadowMarksEnabled = false;
-    this.blockNum = 0;
-    this.totalBlocks = 6;
+    this.shadowMarksEnabled = true;
     this.blockErrors = 0;
     this.blockStartTime = 0;
-    this.currentStage = STAGE.INTRO;
 }
 
 Model.prototype.updateVideoLocations = function () {
@@ -77,24 +64,6 @@ Model.prototype.updateVideoLocations = function () {
             y += video.height;
         }
     });
-    this.notifySubscribers();
-}
-
-Model.prototype.setId = function (id) {
-    this.id = id;
-    if (id % 2 == 0) this.shadowMarksEnabled = true;
-    this.notifySubscribers();
-}
-
-Model.prototype.setStage = function (stage) {
-    if (this.currentStage != stage) {
-        this.currentStage = stage;
-        this.notifySubscribers();
-    }
-}
-
-Model.prototype.nextBlock = function () {
-    this.blockNum += 1;
     this.notifySubscribers();
 }
 
