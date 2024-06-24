@@ -404,13 +404,13 @@ Controller.prototype.handleLoadRustPlants = async function () {
     let filenames = [];
     const totalImages = 1000;
     for (let i = 0; i < plants.length; i++) {
-        filenames.push(await fetch(`http://${host}:3018/get/filenames/plant_rust`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify({ plant: plants[i] })
-        })
-            .then(response => response.json())
-            .then(response => response.filenames));
+        // filenames.push(await fetch(`http://${host}:3018/get/filenames/plant_rust`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json"},
+        //     body: JSON.stringify({ plant: plants[i] })
+        // })
+        //     .then(response => response.json())
+        //     .then(response => response.filenames));
     }
     for (let j = 0; j < plants.length; j++) {
         const plant = plants[j];

@@ -1,4 +1,5 @@
-img/
+*.db
+my_task/__pycache__
+BOFS
 
-node_modules/
-package-lock.json
+my_task/static/assets/

@@ -10,9 +10,6 @@ p5.disableFriendlyErrors = true;
 
 let model, view, controller;
 
-// const host = "localhost";
-const host = "hci-sandbox.usask.ca";
-
 async function preload() {
     model = new Model();
     view = new View(model);
