@@ -82,7 +82,11 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
-                if (event.ctrlKey) {
+                if (this.model.interaction === INTERACTIONS.OVERLAYS && event.which === 3) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.model.addToOverlay(hit);
+                } else if (event.ctrlKey) {
                     this.model.selectVideo(hit);
                     if (this.model.selectedVideo.name === blockDatasets[this.model.blockNum].correct) {
                         clearInterval(this.timer);
@@ -107,6 +111,8 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.savedState = this.currentState;
                     this.currentState = STATE.MARKING;
                 }
+            } else if (this.model.checkOverlayHit() && event.which === 3) {
+                this.model.popFromOverlay();
             }
             break;
         case STATE.SHAPE_PICKER:

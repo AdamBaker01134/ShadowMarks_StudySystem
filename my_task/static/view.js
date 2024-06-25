@@ -155,6 +155,34 @@ View.prototype.draw = function () {
                 rect(x+1,y+1,video.width-2,video.height-2);
             }
         });
+
+        // Draw overlay items, if any
+        if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS) {
+            let ow = this.model.videos[0].width;
+            let oh = this.model.videos[0].height;
+            let ox = width - ow - 1;
+            let oy = scrollY;
+            if (this.model.overlay.length > 0) {
+                this.model.overlay.forEach((video, index) => {
+                    tint(255, Math.floor(255 * 1/(index+1)))
+                    image(video.images[this.model.index], ox, oy, ow, oh);
+                });
+                noFill();
+                stroke(0);
+                rect(ox, oy, ow, oh);
+                noTint();
+            } else {
+                stroke(101,101,101);
+                fill(200,200,200);
+                rect(ox, oy, ow, oh);
+                noStroke();
+                fill(0);
+                textSize(24);
+                text("No videos selected.", ox + ow/2 - textWidth("No videos selected.")/2, oy + oh/2);
+                text("Right click video to select.", ox + ow/2 - textWidth("Right click video to select.")/2, oy + oh/2 + 24);
+            }
+        }
+
         strokeWeight(1);
         this.drawScrollbar();
         this.drawHelpButton();

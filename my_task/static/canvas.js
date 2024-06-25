@@ -16,11 +16,12 @@ async function preload() {
     controller = new Controller(model);
 
     model.setInteraction(interaction);
+    model.setTask(parseInt(task));
 
-    switch (task) {
-        case "1":
-        case "2":
-        case "3":
+    switch (model.task) {
+        case 1:
+        case 2:
+        case 3:
             controller.handleLoadLemnatec();
     }
 }
@@ -50,6 +51,7 @@ function keyReleased(event) { controller.handleKeyReleased(event) }
 
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
+    document.getElementById("defaultCanvas0")?.addEventListener("contextmenu", e => e.preventDefault());
 }
 
 function shuffleArray(arr) {

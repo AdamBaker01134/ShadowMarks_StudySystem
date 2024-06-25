@@ -54,23 +54,11 @@ function Model() {
 
     this.selectedVideo = null;
     this.interaction = INTERACTIONS.SHADOW_MARKER;
+    this.task = 1;
     this.blockErrors = 0;
     this.blockStartTime = 0;
-}
 
-Model.prototype.updateVideoLocations = function () {
-    let x = 0;
-    let y = 0;
-    this.videos.forEach(video => {
-        video.setX(x);
-        video.setY(y);
-        x += video.width;
-        if (x + video.width > width) {
-            x = 0;
-            y += video.height;
-        }
-    });
-    this.notifySubscribers();
+    this.overlay = [];
 }
 
 Model.prototype.startBlock = function () {
@@ -89,6 +77,11 @@ Model.prototype.setInteraction = function (interaction) {
     this.notifySubscribers();
 }
 
+Model.prototype.setTask = function (task) {
+    this.task = task;
+    this.notifySubscribers();
+}
+
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
     if (this.percentLoaded == 100) {
@@ -104,18 +97,73 @@ Model.prototype.addVideo = function (video, labels, name) {
     let y = 0;
     this.videos.forEach(video => {
         x += video.width;
-        if (x + video.width > width) {
-            x = 0;
-            y += video.height;
+        if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
+            if (x + video.width > width - video.width - 20) {
+                x = 0;
+                y += video.height;
+            }
+        } else {
+            if (x + video.width > width) {
+                x = 0;
+                y += video.height;
+            }
         }
     });
     this.videos.push(new Video(video, labels, name, x, y));
     this.notifySubscribers();
 }
 
+Model.prototype.updateVideoLocations = function () {
+    let x = 0;
+    let y = 0;
+    this.videos.forEach(video => {
+        video.setX(x);
+        video.setY(y);
+        x += video.width;
+        if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
+            if (x + video.width > width - video.width - 20) {
+                x = 0;
+                y += video.height;
+            }
+        } else {
+            if (x + video.width > width) {
+                x = 0;
+                y += video.height;
+            }
+        }
+    });
+    this.notifySubscribers();
+}
+
 Model.prototype.clearVideos = function () {
     this.videos = [];
     this.notifySubscribers();
+}
+
+Model.prototype.addToOverlay = function (video) {
+    if (!this.overlay.includes(video)) {
+        this.overlay.push(video);
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.popFromOverlay = function () {
+    if (this.overlay.length > 0) {
+        this.overlay.pop();
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.checkOverlayHit = function () {
+    if (this.videos.length > 0 && this.interaction === INTERACTIONS.OVERLAYS) {
+        let ow = this.videos[0].width;
+        let oh = this.videos[0].height;
+        let ox = width - ow - 1;
+        let oy = scrollY;
+        return mouseX > ox && mouseX < ox + ow && mouseY > oy && mouseY < oy + oh;
+    } else {
+        return false;
+    }
 }
 
 Model.prototype.checkVideoHit = function () {
