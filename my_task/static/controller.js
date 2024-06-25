@@ -73,11 +73,11 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
-            } else if (this.model.shadowMarksEnabled && this.model.checkShapeButtonHit()) {
+            } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkShapeButtonHit()) {
                 this.model.setShapeMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.SHAPE_PICKER;
-            } else if (this.model.shadowMarksEnabled && this.model.checkColourButtonHit()) {
+            } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {
                 this.model.setColourMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
@@ -99,7 +99,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     } else {
                         this.model.error();
                     }
-                } else if (this.model.shadowMarksEnabled) {
+                } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
                         this.model.setFreeformTarget(hit);
@@ -222,7 +222,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                     this.currentState = STATE.PLAYING;
                 }
             }
-            if (event.ctrlKey && keyCode === 67 && this.model.shadowMarksEnabled) {
+            if (event.ctrlKey && keyCode === 67 && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.setShadowing(!this.model.shadowing);

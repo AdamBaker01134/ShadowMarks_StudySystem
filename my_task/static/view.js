@@ -13,7 +13,7 @@ View.prototype.draw = function () {
             const x = video.x;
             const y = video.y;
             image(video.images[this.model.index], x, y, video.width, video.height);
-            if (this.model.shadowMarksEnabled) {
+            if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 // Draw shadow marks on each video
                 noFill();
                 this.model.shadowMarks.forEach(mark => {
@@ -159,7 +159,7 @@ View.prototype.draw = function () {
         this.drawScrollbar();
         this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
-        if (this.model.shadowMarksEnabled) {
+        if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
             this.drawMarkModeButton();
             this.drawColourButton();
             if (this.model.shapeMenuOpen) this.drawShapeMenu();
@@ -350,7 +350,7 @@ View.prototype.drawHelpMenu = function () {
         "- On selection, a video will either flash red for wrong or green for correct.",
         "----------------------------------------------------------------------------------------------------------------------"
     ];
-    if (this.model.shadowMarksEnabled) {
+    if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
         switch (this.model.shadowMarkShape) {
             case SHAPES.FREEFORM:
                 helpPoints.push("FREEFORM SHADOW MARK");

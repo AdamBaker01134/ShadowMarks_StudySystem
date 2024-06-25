@@ -1,6 +1,6 @@
 # Database settings
 # change URL to modify your .db file name
-SQLALCHEMY_DATABASE_URI = 'sqlite:///shapeDrawing.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///comparisonStudy.db'
 # The secret key MUST be changed to something unique.
 # You should at the very least mash your keyboard a bit to generate a random string.
 SECRET_KEY = 'asdfoaishdfyutfsadiglaskdf'
@@ -12,7 +12,7 @@ APPLICATION_ROOT = '' # Rarely adjusted, used to set the project to be accessibl
 TITLE = 'Shadow Markers' # What users see at the top of the page
 
 # Please have an actual password...
-ADMIN_PASSWORD = 'SamwiseGamgee2980' # Used to log in to the admin pages at /admin
+ADMIN_PASSWORD = '1234' # Used to log in to the admin pages at /admin
 USE_BREADCRUMBS = false # Show breadcrumbs-style progress bar
 
 # Make sure this does not overlap with another studies port!!
@@ -45,36 +45,36 @@ COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
 PAGE_LIST = [
     { name = 'Consent', path = 'consent' },
 
-    { name = "Task 1 Instructions", path = "instructions/task_instructions1" },
-    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = "Task 1 Instructions", path = "instructions/task1/task_instructions" },
+    { name = "Small Multiples Instuctions", path = "instructions/task1/smallmultiples" },
     { name = 'Task', path = 'shadowMarkers/1/smallMultiples' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/smallmultiples1" },
-    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = "Overlays Instructions", path = "instructions/task1/overlays" },
     { name = 'Task', path = 'shadowMarkers/1/overlays' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/overlays1" },
-    { name = "Shadow Markers Instructions", path = "instructions/shadowmarkers_instructions" },
+    { name = "Shadow Markers Instructions", path = "instructions/task1/shadowmarkers" },
     { name = 'Task', path = 'shadowMarkers/1/shadowMarkers' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/shadowMarkers1" },
 
-    { name = "Task 2 Instructions", path = "instructions/task_instructions2" },
-    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = "Task 2 Instructions", path = "instructions/task2/task_instructions" },
+    { name = "Small Multiples Instuctions", path = "instructions/task2/smallmultiples" },
     { name = 'Task', path = 'shadowMarkers/2/smallMultiples' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/smallmultiples2" },
-    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = "Overlays Instructions", path = "instructions/task2/overlays" },
     { name = 'Task', path = 'shadowMarkers/2/overlays' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/overlays2" },
-    { name = "Shadow Markers Instructions", path = "instructions/shadowMarkers_instructions" },
+    { name = "Shadow Markers Instructions", path = "instructions/task2/shadowMarkers" },
     { name = 'Task', path = 'shadowMarkers/2/shadowMarkers' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/shadowmarkers2" },
 
-    { name = "Task 3 Instructions", path = "instructions/task_instructions3" },
-    { name = "Small Multiples Instuctions", path = "instructions/smallmultiples_instructions" },
+    { name = "Task 3 Instructions", path = "instructions/task3/task_instructions" },
+    { name = "Small Multiples Instuctions", path = "instructions/task3/smallmultiples" },
     { name = 'Task', path = 'shadowMarkers/3/smallMultiples' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/smallmultiples3" },
-    { name = "Overlays Instructions", path = "instructions/overlays_instructions" },
+    { name = "Overlays Instructions", path = "instructions/task3/overlays" },
     { name = 'Task', path = 'shadowMarkers/3/overlays' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/overlays3" },
-    { name = "Shadow Markers Instructions", path = "instructions/shadowMarkers_instructions" },
+    { name = "Shadow Markers Instructions", path = "instructions/task3/shadowMarkers" },
     { name = 'Task', path = 'shadowMarkers/3/shadowMarkers' },
     { name = 'Questionnaire', path = "questionnaire/nasa-tlx/shadowmarkers3" },
 

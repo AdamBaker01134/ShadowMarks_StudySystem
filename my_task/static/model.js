@@ -1,6 +1,12 @@
 /* Application Model */
 "use strict";
 
+const INTERACTIONS = {
+    SMALL_MULTIPLES: "smallMultiples",
+    OVERLAYS: "overlays",
+    SHADOW_MARKER: "shadowMarkers",
+}
+
 const SHAPES = {
     CROSSHAIR: "crosshair",
     CROSS: "cross",
@@ -47,7 +53,7 @@ function Model() {
     this.gridHighlight = -1;
 
     this.selectedVideo = null;
-    this.shadowMarksEnabled = true;
+    this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.blockErrors = 0;
     this.blockStartTime = 0;
 }
@@ -75,6 +81,11 @@ Model.prototype.startBlock = function () {
 
 Model.prototype.error = function () {
     this.blockErrors++;
+    this.notifySubscribers();
+}
+
+Model.prototype.setInteraction = function (interaction) {
+    this.interaction = interaction;
     this.notifySubscribers();
 }
 

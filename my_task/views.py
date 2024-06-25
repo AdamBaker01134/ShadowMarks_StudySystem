@@ -29,8 +29,6 @@ def overlays(task):
 def shadowMarkers(task):
     return comparisonStudy("shadowMarkers", int(task))
 
-
-
 @my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
@@ -45,7 +43,7 @@ def comparisonStudy(interaction, task):
     condition = session["condition"]
 
     if request.method == 'POST':
-        log = db.shadowMarkers()  # This database table was defined in /tables/shapeDrawing.json
+        log = db.comparisonStudy()  # This database table was defined in /tables/comparisonStudy.json
         # writing columns from our javascript to the log
         log.trialLog = request.form['trialLog']
         log.streamLog = request.form['streamLog']

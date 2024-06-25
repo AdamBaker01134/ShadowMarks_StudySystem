@@ -15,6 +15,8 @@ async function preload() {
     view = new View(model);
     controller = new Controller(model);
 
+    model.setInteraction(interaction);
+
     switch (task) {
         case "1":
         case "2":
