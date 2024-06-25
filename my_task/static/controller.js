@@ -371,6 +371,7 @@ Controller.prototype.handleLoadSeaIce = async function () {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
+    if (this.model.task === 1) loadImage(`${assets.seaice.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
 }
 
 // Controller.prototype.handleLoadRustPlants = async function () {

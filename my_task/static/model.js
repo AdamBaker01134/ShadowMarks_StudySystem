@@ -59,6 +59,8 @@ function Model() {
     this.blockStartTime = 0;
 
     this.overlay = [];
+
+    this.exampleImage = null;
 }
 
 Model.prototype.startBlock = function () {
@@ -79,6 +81,11 @@ Model.prototype.setInteraction = function (interaction) {
 
 Model.prototype.setTask = function (task) {
     this.task = task;
+    this.notifySubscribers();
+}
+
+Model.prototype.setExampleImage = function (image) {
+    this.exampleImage = image;
     this.notifySubscribers();
 }
 

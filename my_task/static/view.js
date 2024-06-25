@@ -156,30 +156,50 @@ View.prototype.draw = function () {
             }
         });
 
+        // Draw example image 
+        if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage !== null) {
+            let iw = this.model.videos[0].width;
+            let ih = this.model.videos[0].height;
+            let ix = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - iw;
+            let iy = scrollY;
+            image(this.model.exampleImage, ix, iy, iw, ih);
+            noFill();
+            stroke(0);
+            rect(ix, iy, iw, ih);
+            stroke(0);
+            fill(255);
+            textSize(16);
+            text("Example Image", ix+5, iy+20);
+        }
+
         // Draw overlay items, if any
         if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS) {
             let ow = this.model.videos[0].width;
             let oh = this.model.videos[0].height;
-            let ox = width - ow - 1;
+            let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
             let oy = scrollY;
             if (this.model.overlay.length > 0) {
                 this.model.overlay.forEach((video, index) => {
-                    tint(255, Math.floor(255 * 1/(index+1)))
+                    if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage !== null) {
+                        tint(255, Math.floor(255 * 1/(index+2)))
+                    } else {
+                        tint(255, Math.floor(255 * 1/(index+1)))
+                    }
                     image(video.images[this.model.index], ox, oy, ow, oh);
                 });
+                noTint();
                 noFill();
                 stroke(0);
                 rect(ox, oy, ow, oh);
-                noTint();
             } else {
-                stroke(101,101,101);
-                fill(200,200,200);
+                noFill();
+                stroke(0);
                 rect(ox, oy, ow, oh);
                 noStroke();
                 fill(0);
                 textSize(24);
-                text("No videos selected.", ox + ow/2 - textWidth("No videos selected.")/2, oy + oh/2);
-                text("Right click video to select.", ox + ow/2 - textWidth("Right click video to select.")/2, oy + oh/2 + 24);
+                text("No videos selected.", ox + ow/2 - textWidth("No videos selected.")/2, oy + oh + 24);
+                text("Right click video to select.", ox + ow/2 - textWidth("Right click video to select.")/2, oy + oh + 48);
             }
         }
 
