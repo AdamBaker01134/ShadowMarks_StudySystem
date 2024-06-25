@@ -280,128 +280,92 @@ Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
 
-// Controller.prototype.handleLoadBlock = async function () {
-//     console.log(`Loading block #${this.model.blockNum}`);
-//     const dataset = blockDatasets[this.model.blockNum];
-//     const totalFrames = dataset.total;
-//     const names = dataset.names;
-//     for (let name = 0; name < names.length; name++) {
-//         let video = [];
-//         let labels = [];
-//         await new Promise((resolve, reject) => {
-//             let completed = 0;
-//             for (let frame = 1; frame <= totalFrames; frame++) {
-//                 video.push(loadImage(`img/baseball/block${this.model.blockNum}/${names[name]}/img${String(frame).padStart(3,"0")}.jpg`,
-//                     () => { if (++completed >= totalFrames) resolve() },
-//                     (err) => { if (++completed >= totalFrames) reject(err) }));
-//                 labels.push("Frame " + frame);
-//             }
-//         });
-//         this.model.addVideo(video, labels, names[name]);
-//         this.model.setPercentLoaded(Math.floor(name/(names.length-1)*100));
-//     }
-// }
-
 Controller.prototype.handleLoadBaseball = async function () {
-    console.log("Loading six baseball videos...");
-    
-}
-
-Controller.prototype.handleLoadNorthpole = async function () {
-    console.log("Loading northpole dataset...");
-    const firstYear = 1992, lastYear = 2022;
-    const totalDays = 353;
-    for (let year = firstYear; year <= lastYear; year++) {
-        let video = [];
+    console.log("Loading 6 random baseball videos...");
+    let category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)];
+    for (let video = 0; video < category.videos.length; video++) {
+        let frames = [];
         let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
-            for (let day = 1; day <= totalDays; day++) {
-                video.push(loadImage("img/northpole/" + year + "/" + year + "" + String(day).padStart(4, "0") + ".png",
-                    () => { if (++completed >= totalDays) resolve() },
-                    (err) => { if (++completed >= totalDays) reject(err) }));
-                labels.push("Day " + day);
+            for (let frame = 1; frame <= category.frames; frame++) {
+                frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[video].name}/img${String(frame).padStart(3,"0")}.jpg`,
+                    () => {
+                        if (++completed >= category.frames) resolve();
+                        this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                    },
+                    (err) => {
+                        if (++completed >= category.frames) reject(err);
+                        this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                    }));
+                labels.push(`Frame ${frame}`);
             }
         });
-        this.model.addVideo(video, labels, year.toString());
-        this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
+        this.model.addVideo(frames, labels, category.videos[video].name);
     }
 }
 
-Controller.prototype.handleLoadSouthpole = async function () {
-    console.log("Loading southpole dataset...");
-    const firstYear = 1992, lastYear = 2022;
-    const totalDays = 353;
-    for (let year = firstYear; year <= lastYear; year++) {
-        let video = [];
+Controller.prototype.handleLoadLemnatec = async function () {
+    console.log("Loading 6 random lemnatec videos...");
+    let category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)];
+    let videos = [];
+    while (videos.length < 6) {
+        let video = getRandomInt(0, category.videos.length);
+        if (!videos.includes(video)) videos.push(video);
+    }
+    videos.sort((a,b) => a - b); // better to have numbers in order
+    for (let video = 0; video < videos.length; video++) {
+        let frames = [];
         let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
-            for (let day = 1; day <= totalDays; day++) {
-                video.push(loadImage("img/southpole/" + year + "/" + year + "" + String(day).padStart(4, "0") + ".png",
-                    () => { if (++completed >= totalDays) resolve() },
-                    (err) => { if (++completed >= totalDays) reject(err) }));
-                labels.push("Day " + day);
+            for (let frame = 0; frame < category.frames.length; frame++) {
+                frames.push(loadImage(`${assets.lemnatec.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.png`,
+                    () => {
+                        if (++completed >= category.frames.length) resolve();
+                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                    },
+                    (err) => {
+                        if (++completed >= category.frames.length) reject(err);
+                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                    }));
+                labels.push(category.frames[frame]);
             }
         });
-        this.model.addVideo(video, labels, year.toString());
-        this.model.setPercentLoaded(Math.floor((firstYear - year) / (firstYear - lastYear) * 100));
+        this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
 }
 
-
-// Controller.prototype.handleLoadArabidopsis = async function () {
-//     console.log("Loading arabidopsis dataset...");
-//     const firstPlant = 1, lastPlant = 12;
-//     const totalImages = 396;
-//     for (let plant = firstPlant; plant <= lastPlant; plant++) {
-//         let video = [];
-//         let labels = [];
-//         await new Promise((resolve, reject) => {
-//             let day = 4;
-//             let hour = 930;
-//             let completed = 0;
-//             for (let img = 0; img < totalImages; img++){
-//                 video.push(loadImage("img/arabidopsis/fov-" + String(plant).padStart(2,"0")+"/2017-02-" + String(day).padStart(2,"0") + "_" + String(hour).padStart(4,"0") + "_ch129-pos" + String(plant).padStart(2,"0") + ".jpg",
-//                     () => { if (++completed >= totalImages) resolve() },
-//                     (err) => { if (++completed >= totalImages) reject(err) }));
-//                 labels.push("Day " + day + " - " + Math.floor(hour/100).toString().padStart(2,"0") + ":" + (hour%100).toString().padStart(2,"0"));
-//                 if (hour === 1630) {
-//                     hour = 900;
-//                     day++;
-//                 } else {
-//                     if (hour % 100 === 0) hour += 30;
-//                     else hour += 70;
-//                 }
-//             }
-//         });
-//         this.model.addVideo(video, labels, "Specimen #" + String(plant).padStart(2,"0"));
-//         this.model.setPercentLoaded(Math.floor((firstPlant - plant) / (firstPlant - lastPlant) * 100));
-//     }
-// }
-
-// Controller.prototype.handleLoadStocks = async function () {
-//     console.log("Loading stocks dataset...");
-//     const stocks = ["AAPL", "AMD", "AMZN", "CSCO", "META", "MSFT", "NFLX", "QCOM", "SBUX", "TSLA"]
-//     const firstYear = 2014, lastYear = 2024;
-//     const totalImages = 10;
-//     for (let i = 0; i < stocks.length; i++) {
-//         const stock = stocks[i];
-//         let video = [];
-//         let labels = [];
-//         await new Promise((resolve, reject) => {
-//             let completed = 0;
-//             for (let year = firstYear; year < lastYear; year++) {
-//                 video.push(loadImage("img/stocks/" + stock + "/" + year + ".png",
-//                     () => { if (++completed >= totalImages) resolve() },
-//                     (err) => { if (++completed >= totalImages) reject() }));
-//                 labels.push(year.toString());
-//             }
-//         });
-//         this.model.addVideo(video, labels, stock);
-//         this.model.setPercentLoaded(Math.floor(i/(stocks.length-1)*100))
-//     }
-// }
+Controller.prototype.handleLoadSeaIce = async function () {
+    console.log("Loading 6 random sea ice videos...");
+    let category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)];
+    let videos = [];
+    while (videos.length < 6) {
+        let video = getRandomInt(0, category.videos.length);
+        if (!videos.includes(video)) videos.push(video);
+    }
+    videos.sort((a,b) => a - b); // better to have years in order
+    for (let video = 0; video < videos.length; video++) {
+        let frames = [];
+        let labels = [];
+        await new Promise((resolve, reject) => {
+            let completed = 0;
+            for (let frame = 1; frame <= category.frames; frame++) {
+                frames.push(loadImage(`${assets.seaice.path}/${category.name}/${category.videos[videos[video]].name}/${category.videos[videos[video]].name}${String(frame).padStart(4, "0")}.png`,
+                    () => {
+                        if (++completed >= category.frames) resolve();
+                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                    },
+                    (err) => {
+                        if (++completed >= category.frames) reject(err);
+                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                    }));
+                labels.push(`Day ${frame}`);
+            }
+        });
+        this.model.addVideo(frames, labels, category.videos[videos[video]].name);
+    }
+}
 
 // Controller.prototype.handleLoadRustPlants = async function () {
 //     console.log("Loading plant rust dataset...");

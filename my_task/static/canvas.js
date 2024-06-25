@@ -16,9 +16,10 @@ async function preload() {
     controller = new Controller(model);
 
     switch (task) {
-        case 1:
-        case 2:
-        case 3:
+        case "1":
+        case "2":
+        case "3":
+            controller.handleLoadLemnatec();
     }
 }
 
@@ -57,4 +58,14 @@ function shuffleArray(arr) {
         arr[i] = temp;
     }
     return arr;
+}
+
+/**
+ * Returns a random integer between min and max.
+ * min inclusive, max exclusive 
+ */
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
 }
