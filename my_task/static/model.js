@@ -162,10 +162,11 @@ Model.prototype.popFromOverlay = function () {
 }
 
 Model.prototype.checkOverlayHit = function () {
-    if (this.videos.length > 0 && this.interaction === INTERACTIONS.OVERLAYS) {
+    // Overlay rectangle is only in play when the overlay interaction technique is active or during task 1 where it is an example image.
+    if (this.videos.length > 0 && (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1)) {
         let ow = this.videos[0].width;
         let oh = this.videos[0].height;
-        let ox = width - ow - 1;
+        let ox = this.getScrollbarX() + this.getScrollbarWidth() + 75 - ow;
         let oy = scrollY;
         return mouseX > ox && mouseX < ox + ow && mouseY > oy && mouseY < oy + oh;
     } else {
@@ -291,19 +292,31 @@ Model.prototype.setGridActive = function (gridActive) {
 Model.prototype.setGridHighlight = function (video) {
     let index = -1;
     if (video !== null) {
-        let squareSize, numRows = 3, numCols = 3;
-        if (video.width > video.height) {
-            squareSize = Math.floor(video.height / 3);
-            numCols = Math.ceil(video.width / squareSize);
+        let vx, vy, vw, vh;
+        if (video === "OVERLAY") {
+            vw = this.videos[0].width;
+            vh = this.videos[0].height;
+            vx = width - vw - 1;
+            vy = scrollY;
         } else {
-            squareSize = Math.floor(video.width / 3);
-            numRows = Math.ceil(video.height / squareSize);
+            vx = video.x;
+            vy = video.y;
+            vw = video.width;
+            vh = video.height;
+        }
+        let squareSize, numRows = 3, numCols = 3;
+        if (vw > vh) {
+            squareSize = Math.floor(vh / 3);
+            numCols = Math.ceil(vw / squareSize);
+        } else {
+            squareSize = Math.floor(vw / 3);
+            numRows = Math.ceil(vh / squareSize);
         }
         let found = false;
         for (let row = 0; row < numRows && !found; row++) {
             for (let col = 0; col < numCols && !found; col++) {
-                let squareX = video.x + squareSize*col;
-                let squareY = video.y + squareSize*row;
+                let squareX = vx + squareSize*col;
+                let squareY = vy + squareSize*row;
                 if (mouseX > squareX && mouseX < squareX+squareSize && mouseY > squareY && mouseY < squareY+squareSize) {
                     index = numCols*row + col;
                     found = true;

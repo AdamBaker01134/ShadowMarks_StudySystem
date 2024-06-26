@@ -28,7 +28,8 @@ Controller.prototype.handleMouseMoved = function (event) {
             this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
             this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
             this.model.setHelpButtonHighlighted(this.model.checkHelpButtonHit());
-            const hit = this.model.checkVideoHit();
+            let hit = this.model.checkVideoHit();
+            if (this.model.checkOverlayHit()) hit = "OVERLAY";
             this.model.setHoverTarget(hit);
             if (this.model.gridActive) {
                 this.model.setGridHighlight(hit);
@@ -49,6 +50,13 @@ Controller.prototype.handleMouseDragged = function (event) {
             hit = this.model.checkVideoHit();
             if (this.model.shadowMarkShape === SHAPES.FREEFORM && hit && hit === this.model.freeformTarget) {
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+            } else if (this.model.shadowMarkShape === SHAPES.FREEFORM && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
+                let ow = this.model.videos[0].width;
+                let oh = this.model.videos[0].height;
+                let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+                let oy = scrollY;
+                hit = "OVERLAY";
+                this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
             }
             this.model.setHoverTarget(hit);
             if (this.model.gridActive) {
@@ -88,21 +96,21 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.model.addToOverlay(hit);
                 } else if (event.ctrlKey) {
                     this.model.selectVideo(hit);
-                    if (this.model.selectedVideo.name === blockDatasets[this.model.blockNum].correct) {
-                        clearInterval(this.timer);
-                        this.currentState = STATE.NO_INTERACTION;
-                        setTimeout(() => {
-                            this.model.selectVideo(null);
-                            this.model.clearVideos();
-                            this.model.clearShadowMarks();
-                            this.model.setIndex(0);
-                            this.model.setShape(SHAPES.CROSSHAIR);
-                            this.model.setColour(COLOURS.RED);
-                            this.currentState = STATE.READY;
-                        }, 2000)
-                    } else {
-                        this.model.error();
-                    }
+                    // if (this.model.selectedVideo.name === blockDatasets[this.model.blockNum].correct) {
+                    //     clearInterval(this.timer);
+                    //     this.currentState = STATE.NO_INTERACTION;
+                    //     setTimeout(() => {
+                    //         this.model.selectVideo(null);
+                    //         this.model.clearVideos();
+                    //         this.model.clearShadowMarks();
+                    //         this.model.setIndex(0);
+                    //         this.model.setShape(SHAPES.CROSSHAIR);
+                    //         this.model.setColour(COLOURS.RED);
+                    //         this.currentState = STATE.READY;
+                    //     }, 2000)
+                    // } else {
+                    //     this.model.error();
+                    // }
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
@@ -111,8 +119,21 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.savedState = this.currentState;
                     this.currentState = STATE.MARKING;
                 }
-            } else if (this.model.checkOverlayHit() && event.which === 3) {
-                this.model.popFromOverlay();
+            } else if (this.model.checkOverlayHit()) {
+                if (event.which === 3) {
+                    this.model.popFromOverlay();
+                } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+                    let ow = this.model.videos[0].width;
+                    let oh = this.model.videos[0].height;
+                    let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+                    let oy = scrollY;
+                    if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                        this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
+                        this.model.setFreeformTarget("OVERLAY");
+                    }
+                    this.savedState = this.currentState;
+                    this.currentState = STATE.MARKING;
+                }
             }
             break;
         case STATE.SHAPE_PICKER:
@@ -147,12 +168,20 @@ Controller.prototype.handleMouseReleased = function (event) {
             this.currentState = this.savedState;
             break;
         case STATE.MARKING:
-            if (hit = this.model.checkVideoHit()) {
+            if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                     this.model.addFreeformPathToShadowMarks();
                     this.model.setFreeformTarget(null);
                 } else {
-                    this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                    if (this.model.checkOverlayHit()) {
+                        let ow = this.model.videos[0].width;
+                        let oh = this.model.videos[0].height;
+                        let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+                        let oy = scrollY;
+                        this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh);
+                    } else {
+                        this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                    }
                 }
             }
             this.currentState = this.savedState;
@@ -229,16 +258,21 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (event.ctrlKey && keyCode === 67 && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+                // Handle ctrl + c pressed
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.setShadowing(!this.model.shadowing);
-                this.model.setHoverTarget(this.model.checkVideoHit());
+                let hit = this.model.checkVideoHit();
+                if (this.model.checkOverlayHit()) hit = "OVERLAY";
+                this.model.setHoverTarget(hit);
             }
             if (event.ctrlKey && keyCode === 71) {
+                // Handle ctrl + g pressed
                 event.preventDefault();
                 event.stopPropagation();
                 this.model.setGridActive(!this.model.gridActive);
-                const hit = this.model.checkVideoHit();
+                let hit = this.model.checkVideoHit();
+                if (this.model.checkOverlayHit()) hit = "OVERLAY";
                 this.model.setHoverTarget(hit);
                 if (this.model.gridActive) {
                     this.model.setGridHighlight(hit);
@@ -340,6 +374,7 @@ Controller.prototype.handleLoadLemnatec = async function () {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
+    if (this.model.task === 1) loadImage(`${assets.lemnatec.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
 }
 
 Controller.prototype.handleLoadSeaIce = async function () {
