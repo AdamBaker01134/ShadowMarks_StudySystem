@@ -389,50 +389,61 @@ View.prototype.drawColourMenu = function () {
 }
 
 View.prototype.drawHelpButton = function () {
-    stroke(0, 0, 0, this.model.helpButtonHighlighted ? 255 : 100);
+    stroke(0, 0, 0, this.model.helpButtonHighlighted ? 255 : 100)
     fill(101, 101, 101, this.model.helpButtonHighlighted ? 255 : 100);
-    const x = this.model.getScrollbarX();
-    const y = windowHeight + scrollY - 20;
-    const w = 50;
-    const h = 25;
-    rect(x, y, w, h, 10);
+    const x = this.model.getScrollbarX() - 75;
+    const y = this.model.getScrollbarY() - 12;
+    const l = 50;
+    square(x, y, l, 10);
+    noFill();
+    stroke(255, 255, 255, this.model.helpButtonHighlighted ? 255 : 100);
+    circle(x + (l / 2), y + (l / 2), 30);
     noStroke();
     fill(255, 255, 255, this.model.helpButtonHighlighted ? 255 : 100);
-    textSize(12);
-    text("Help", x + (w / 2) - textWidth("help") / 2, y + (h / 2));
+    textSize(24);
+    text("?", x + (l / 2) - textWidth("?") / 2, y + (l / 2) + 8);
 }
 
 View.prototype.drawHelpMenu = function () {
     stroke(0);
     fill(101);
-    let helpPoints = [
-        "SYSTEM UTILITIES",
-        "- Drag the scrollbar to play through all videos at once, or press spacebar to auto-play.",
-        "- Press 'CTRL+C' to toggle shadow cursor mode.",
-        "- Press 'CTRL+G' to toggle shadow grid mode.",
-        "- Zoom in/out with 'CTRL+plus' and 'CTRL+minus'.",
-        "- The buttons to the right of the scrollbar control mark type and colour.",
-        "- Hold 'CTRL' and click on a video if you think it is correct.",
-        "- On selection, a video will either flash red for wrong or green for correct.",
-        "----------------------------------------------------------------------------------------------------------------------"
-    ];
+    let generalPoints = ["GENERAL"], hotkeysPoints = ["HOTKEYS"], taskPoints = ["CURRENT TASK"];
+    generalPoints.push("- Drag the scrollbar to play through all videos at once.");
+    hotkeysPoints.push("- Auto-play ---------------------------------------------------------------------------------------------------- spacebar");
+    hotkeysPoints.push("- Zoom in ----------------------------------------------------------------------------------------------------- ctrl + plus");
+    hotkeysPoints.push("- Zoom out ------------------------------------------------------------------------------------------------- ctrl + minus");
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-        switch (this.model.shadowMarkShape) {
-            case SHAPES.FREEFORM:
-                helpPoints.push("FREEFORM SHADOW MARK");
-                helpPoints.push("- Click and drag on a video to draw a freeform shadow mark.");
-                helpPoints.push("- Press 'SHIFT' while dragging to make a straight line.");
-                break;
-            default:
-                helpPoints.push("SHADOW MARK")
-                helpPoints.push("- Click on a video to place a shadow mark.")
-                break;
-        }
-        helpPoints.push("- Undo last shadow mark you placed with 'CTRL+Z'");
+        generalPoints.push("- Markers can be placed by clicking on a video.");
+        generalPoints.push("- Marker shape and colour are controlled in the menus to the right of the scrollbar.");
+        generalPoints.push("- The freeform marker (squiggly line) allows you to freely draw shapes in each video.");
+        hotkeysPoints.push("- Toggle straight freeform lines ------------------------------------------------------------------ shift + dragging");
+        hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- ctrl + c");
+        hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
+        hotkeysPoints.push("- Undo last shadow marker  --------------------------------------------------------------------------------- ctrl + z");
+    } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
+        generalPoints.push("- Right click on a video to add it to the overlay on the right.");
+        generalPoints.push("- Right click on the overlay to remove the top video from the stack.");
     }
+    switch (this.model.task) {
+        case 1:
+            taskPoints.push("- Does the ________ in this video get (smaller/larger) than the ________ in the example image?");
+            break;
+        case 2:
+            taskPoints.push("- Does the ________ in this video span the largest distance?");
+            break;
+        case 3:
+            taskPoints.push("- Does the _________ in this video grow the largest during a set amount of time?");
+    }
+    let helpPoints = [
+        ...generalPoints,
+        "----------------------------------------------------------------------------------------------------------------------------------",
+        ...hotkeysPoints,
+        "----------------------------------------------------------------------------------------------------------------------------------",
+        ...taskPoints,
+    ]
     textSize(36);
     const w = Math.max(...helpPoints.map(point => textWidth(point) + 20));
-    const h = helpPoints.reduce((prev, curr) => prev + 42, 0) + 12;
+    const h = helpPoints.reduce((prev, curr) => prev + 42, 0) + 20;
     const x = width / 2 - w / 2;
     const y = windowHeight / 2 + scrollY - h / 2;
     rect(x, y, w, h, 10);

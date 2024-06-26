@@ -486,11 +486,10 @@ Model.prototype.setHelpMenuOpen = function (open) {
 }
 
 Model.prototype.checkHelpButtonHit = function () {
-    const x = this.getScrollbarX();
-    const y = windowHeight + scrollY - 20;
-    const w = 50;
-    const h = 25;
-    return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
+    const x = this.getScrollbarX() - 75;
+    const y = this.getScrollbarY() - 12;
+    const l = 50;
+    return mouseX > x && mouseX < x + l && mouseY > y && mouseY < y + l;
 }
 
 Model.prototype.addSubscriber = function (subscriber) {
