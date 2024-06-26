@@ -52,6 +52,7 @@ function Model() {
     this.hoverTarget = null;
     this.gridHighlight = -1;
 
+    this.highlightedMarker = null;
     this.selectedVideo = null;
     this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.task = 1;
@@ -179,6 +180,13 @@ Model.prototype.checkVideoHit = function () {
         if (this.videos[i].checkHit(mouseX, mouseY)) return this.videos[i];
     }
     return null;
+}
+
+Model.prototype.highlightMarker = function (marker) {
+    if (marker != this.highlightedMarker) {
+        this.highlightedMarker = marker;
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.selectVideo = function (video) {
@@ -347,12 +355,13 @@ Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
     return idx;
 }
 
-Model.prototype.addShadowMark = function (widthRatio, heightRatio) {
+Model.prototype.addShadowMark = function (widthRatio, heightRatio, video) {
     this.shadowMarks.push({
         widthRatio: widthRatio,
         heightRatio: heightRatio,
         shape: this.shadowMarkShape,
         colour: this.shadowMarkColour,
+        video: video,
     });
     this.notifySubscribers();
 }
@@ -375,11 +384,12 @@ Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
     this.notifySubscribers();
 }
 
-Model.prototype.addFreeformPathToShadowMarks = function () {
+Model.prototype.addFreeformPathToShadowMarks = function (video) {
     this.shadowMarks.push({
         path: this.freeformPath,
         shape: this.shadowMarkShape,
         colour: this.shadowMarkColour,
+        video: video,
     });
     this.freeformPath = [];
     this.notifySubscribers();
@@ -407,6 +417,47 @@ Model.prototype.popLastShadowMark = function () {
 Model.prototype.clearShadowMarks = function () {
     this.shadowMarks = [];
     this.notifySubscribers();
+}
+
+Model.prototype.checkShadowMarkerHit = function () {
+    let hoverTargetX, hoverTargetY, hoverTargetW, hoverTargetH;
+    if (this.hoverTarget === "OVERLAY") {
+        hoverTargetW = this.videos[0].width;
+        hoverTargetH = this.videos[0].height;
+        hoverTargetX = this.getScrollbarX() + this.getScrollbarWidth() + 75 - hoverTargetW;
+        hoverTargetY = scrollY;
+    } else if (this.hoverTarget !== null) {
+        hoverTargetX = this.hoverTarget.x;
+        hoverTargetY = this.hoverTarget.y;
+        hoverTargetW = this.hoverTarget.width;
+        hoverTargetH = this.hoverTarget.height;
+    } else {
+        return null;
+    }
+    for (let i = 0; i < this.shadowMarks.length; i++) {
+        let shadowMarker = this.shadowMarks[i];
+        if (shadowMarker.shape === SHAPES.FREEFORM) {
+            for (let j = 0; j < shadowMarker.path.length; j++) {
+                let point = shadowMarker.path[j];
+                let px = hoverTargetX + hoverTargetW * point.widthRatio;
+                let py = hoverTargetY + hoverTargetH * point.heightRatio;
+                let padding = 5;
+                if (mouseX > px - padding && mouseX < px + padding && mouseY > py - padding && mouseY < py + padding) return shadowMarker;
+            }
+        } else {
+            let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
+            let sy = hoverTargetY + hoverTargetH * shadowMarker.heightRatio;
+            let maxLength = 16;
+            let markLength = Math.min(hoverTargetW, hoverTargetH) / 20;
+            if (shadowMarker.shape === SHAPES.CROSSHAIR) {
+                maxLength = 16;
+                markLength = Math.min(hoverTargetW, hoverTargetH) / 16;
+            }
+            if (markLength > maxLength) markLength = maxLength;
+            if (mouseX > sx - markLength/2 && mouseX < sx + markLength/2 && mouseY > sy - markLength/2 && mouseY < sy + markLength/2) return shadowMarker;
+        }
+    }
+    return null;
 }
 
 Model.prototype.checkShapeButtonHit = function () {

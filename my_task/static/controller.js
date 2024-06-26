@@ -31,6 +31,7 @@ Controller.prototype.handleMouseMoved = function (event) {
             let hit = this.model.checkVideoHit();
             if (this.model.checkOverlayHit()) hit = "OVERLAY";
             this.model.setHoverTarget(hit);
+            if (hit && this.model.interaction === INTERACTIONS.SHADOW_MARKER) this.model.highlightMarker(this.model.checkShadowMarkerHit());
             if (this.model.gridActive) {
                 this.model.setGridHighlight(hit);
             }
@@ -170,7 +171,7 @@ Controller.prototype.handleMouseReleased = function (event) {
         case STATE.MARKING:
             if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
-                    this.model.addFreeformPathToShadowMarks();
+                    this.model.addFreeformPathToShadowMarks(hit !== null ? hit : "OVERLAY");
                     this.model.setFreeformTarget(null);
                 } else {
                     if (this.model.checkOverlayHit()) {
@@ -178,9 +179,9 @@ Controller.prototype.handleMouseReleased = function (event) {
                         let oh = this.model.videos[0].height;
                         let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
                         let oy = scrollY;
-                        this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh);
+                        this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
                     } else {
-                        this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                        this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
                     }
                 }
             }

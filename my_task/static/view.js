@@ -26,15 +26,12 @@ View.prototype.draw = function () {
             noFill();
             stroke(0);
             rect(x, y, video.width, video.height);
-            // if (this.model.selectedVideo === video) {
-            //     strokeWeight(2);
-            //     if (video.name === blockDatasets[this.model.blockNum].correct) {
-            //         stroke(0,255,0);
-            //     } else {
-            //         stroke(255,0,0);
-            //     }
-            //     rect(x+1,y+1,video.width-2,video.height-2);
-            // }
+            let highlightedMarker = this.model.highlightedMarker;
+            if (highlightedMarker && highlightedMarker.video === video) {
+                strokeWeight(5);
+                stroke(highlightedMarker.colour.r,highlightedMarker.colour.g,highlightedMarker.colour.b,125);
+                rect(x+1,y+1,video.width-2,video.height-2);
+            }
         });
 
         // Draw example image 
@@ -49,6 +46,13 @@ View.prototype.draw = function () {
             strokeWeight(1);
             stroke(0);
             rect(ix, iy, iw, ih);
+            let highlightedMarker = this.model.highlightedMarker;
+            if (highlightedMarker && highlightedMarker.video === "OVERLAY") {
+                strokeWeight(5);
+                stroke(highlightedMarker.colour.r,highlightedMarker.colour.g,highlightedMarker.colour.b,125);
+                rect(ix+1,iy+1,iw-2,ih-2);
+            }
+            strokeWeight(1);
             stroke(0);
             fill(255);
             textSize(16);
@@ -416,6 +420,7 @@ View.prototype.drawHelpMenu = function () {
         generalPoints.push("- Markers can be placed by clicking on a video.");
         generalPoints.push("- Marker shape and colour are controlled in the menus to the right of the scrollbar.");
         generalPoints.push("- The freeform marker (squiggly line) allows you to freely draw shapes in each video.");
+        generalPoints.push("- Hovering over a shadow marker will highlight the video it originally came from.");
         hotkeysPoints.push("- Toggle straight freeform lines ------------------------------------------------------------------ shift + dragging");
         hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- ctrl + c");
         hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
