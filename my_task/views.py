@@ -15,24 +15,30 @@ my_task = Blueprint('my_task', __name__,
 @verify_correct_page
 @verify_session_valid
 def smallMultiples(task):
-    return comparisonStudy("smallMultiples", int(task))
+    return comparisonStudy("smallMultiples", task)
 
 @my_task.route("/shadowMarkers/<task>/overlays", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
 def overlays(task):
-    return comparisonStudy("overlays", int(task))
+    return comparisonStudy("overlays", task)
 
 @my_task.route("/shadowMarkers/<task>/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
 def shadowMarkers(task):
-    return comparisonStudy("shadowMarkers", int(task))
+    return comparisonStudy("shadowMarkers", task)
+
+@my_task.route("/tutorials/<task>/<tutorial>", methods=['POST', 'GET'])
+@verify_correct_page
+@verify_session_valid
+def tutorials(task, tutorial):
+    return comparisonStudy(tutorial, task, True)
 
 @my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def comparisonStudy(interaction, task):
+def comparisonStudy(interaction, task, tutorial=False):
     # interaction is the variable passed from custom routes
 
     # getting the participant ID from the session variable
@@ -56,6 +62,4 @@ def comparisonStudy(interaction, task):
         return redirect("/redirect_next_page")
     
     # if no post, render our custom html with these variables
-    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task)
-
-
+    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task, tutorial = tutorial)

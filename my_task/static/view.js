@@ -7,7 +7,9 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
-    if (this.model.percentLoaded === 100) {
+    if (tutorial) {
+        this.drawTutorials();
+    } else if (this.model.percentLoaded === 100) {
         // Draw videos from the model
         this.model.videos.forEach(video => {
             const x = video.x;
@@ -29,8 +31,8 @@ View.prototype.draw = function () {
             let highlightedMarker = this.model.highlightedMarker;
             if (highlightedMarker && highlightedMarker.video === video) {
                 strokeWeight(5);
-                stroke(highlightedMarker.colour.r,highlightedMarker.colour.g,highlightedMarker.colour.b,125);
-                rect(x+1,y+1,video.width-2,video.height-2);
+                stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
+                rect(x + 1, y + 1, video.width - 2, video.height - 2);
             }
         });
 
@@ -49,8 +51,8 @@ View.prototype.draw = function () {
             let highlightedMarker = this.model.highlightedMarker;
             if (highlightedMarker && highlightedMarker.video === "OVERLAY") {
                 strokeWeight(5);
-                stroke(highlightedMarker.colour.r,highlightedMarker.colour.g,highlightedMarker.colour.b,125);
-                rect(ix+1,iy+1,iw-2,ih-2);
+                stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
+                rect(ix + 1, iy + 1, iw - 2, ih - 2);
             }
             strokeWeight(1);
             stroke(0);
@@ -111,6 +113,91 @@ View.prototype.draw = function () {
         fill(50, 205, 50);
         noStroke();
         rect(width / 2 - 100, windowHeight / 2 + scrollY + 50, 200 * this.model.percentLoaded / 100, 25)
+    }
+}
+
+View.prototype.drawTutorials = function () {
+    if (this.model.task === 1) {
+        this.model.videos.forEach((video, index) => {
+            stroke(0);
+            strokeWeight(1);
+            fill(121, 121, 121);
+            rect(video.x, video.y, video.width, video.height);
+            // Moving circle
+            fill(255, 0, 0);
+            circle(video.x + 55 + (this.model.index / 360) * (video.width - 110), video.y + video.height * (index + 1) / 3 - 70, 100);
+            // Scaling square
+            stroke(0);
+            strokeWeight(1);
+            fill(0, 0, 255);
+            square(video.x + video.width * (index + 1) / 6, video.y + 100, 20 + 150 * (this.model.index / 360));
+            // Spinning line
+            stroke(0, 255, 0);
+            strokeWeight(3);
+            angleMode(DEGREES);
+            let p1 = [0, 0];
+            let p2 = [90 * cos(this.model.index), 90 * sin(this.model.index)];
+            line(video.x + p1[0] + 100, video.y + p1[1] + video.height * (index + 1) / 4, video.x + p2[0] + 100, video.y + p2[1] + video.height * (index + 1) / 4);
+            if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+                this.drawShadowMarkers(video.x, video.y, video.width, video.height);
+            }
+            if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.includes(video)) {
+                let ow = this.model.videos[0].width;
+                let oh = this.model.videos[0].height;
+                let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+                let oy = scrollY;
+                stroke(0, 0, 0, 255 / (index + 1));
+                strokeWeight(1);
+                fill(121, 121, 121, 255 / (index + 1));
+                rect(ox, oy, ow, oh);
+                // Moving circle
+                fill(255, 0, 0, 255 / (index + 1));
+                circle(ox + 55 + (this.model.index / 360) * (ow - 110), oy + oh * (index + 1) / 3 - 70, 100);
+                // Scaling square
+                stroke(0, 0, 0, 255 / (index + 1));
+                strokeWeight(1);
+                fill(0, 0, 255, 255 / (index + 1));
+                square(ox + ow * (index + 1) / 6, oy + 100, 20 + 150 * (this.model.index / 360));
+                // Spinning line
+                stroke(0, 255, 0, 255 / (index + 1));
+                strokeWeight(3);
+                angleMode(DEGREES);
+                let p1 = [0, 0];
+                let p2 = [90 * cos(this.model.index), 90 * sin(this.model.index)];
+                line(ox + p1[0] + 100, oy + p1[1] + oh * (index + 1) / 4, ox + p2[0] + 100, oy + p2[1] + oh * (index + 1) / 4);
+                noFill();
+                stroke(0);
+                rect(ox, oy, ow, oh);
+            }
+        });
+
+        if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.length === 0) {
+            let ow = this.model.videos[0].width;
+            let oh = this.model.videos[0].height;
+            let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+            let oy = scrollY;
+            noFill();
+            stroke(0);
+            rect(ox, oy, ow, oh);
+            noStroke();
+            fill(0);
+            textSize(24);
+            text("No videos selected.", ox + ow / 2 - textWidth("No videos selected.") / 2, oy + oh + 24);
+            text("Right click video to select.", ox + ow / 2 - textWidth("Right click video to select.") / 2, oy + oh + 48);
+        }
+
+        stroke(0);
+        strokeWeight(1);
+        this.drawScrollbar();
+        if (this.model.helpMenuOpen) this.drawHelpMenu();
+        if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+            this.drawMarkModeButton();
+            this.drawColourButton();
+            if (this.model.shapeMenuOpen) this.drawShapeMenu();
+            if (this.model.colourMenuOpen) this.drawColourMenu();
+        }
+    } else {
+
     }
 }
 

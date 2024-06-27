@@ -321,6 +321,19 @@ Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
 
+Controller.prototype.handleLoadTutorials = async function () {
+    console.log("Loading tutorials into the model...");
+    for (let i = 1; i <= 3; i++) {
+        let frames = [];
+        let labels = [];
+        for (let j = 1; j <= 360; j++) {
+            frames.push({ width: 420, height: 420 });
+            labels.push(`Frame ${j}`);
+        }
+        this.model.addVideo(frames, labels, `video-${i}`)
+    }
+}
+
 Controller.prototype.handleLoadBaseball = async function () {
     console.log("Loading 6 random baseball videos...");
     let category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)];

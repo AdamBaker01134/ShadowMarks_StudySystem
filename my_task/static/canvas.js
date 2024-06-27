@@ -18,11 +18,15 @@ async function preload() {
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
 
-    switch (model.task) {
-        case 1:
-        case 2:
-        case 3:
-            controller.handleLoadLemnatec();
+    if (tutorial) {
+        controller.handleLoadTutorials();
+    } else {
+        switch (model.task) {
+            case 1:
+            case 2:
+            case 3:
+                controller.handleLoadLemnatec();
+        }
     }
 }
 
