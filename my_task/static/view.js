@@ -203,7 +203,7 @@ View.prototype.drawTutorials = function () {
         fill(0);
         textSize(24);
         let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? `! You've completed the tutorial. Press ENTER to begin task ${this.model.task}.` : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
-        let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth()/2 - textWidth(prompt)/2;
+        let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
         let promptY = this.model.getScrollbarY() - 50;
         text(prompt, promptX, promptY);
     } else {
@@ -224,14 +224,18 @@ View.prototype.drawTutorials = function () {
                 interactionName = "Shadow Marker";
                 break;
         }
-        let prmpt1 = `You've completed the ${interactionName} tutorial already.`;
-        let prmpt2 =       `Press ENTER to begin task ${this.model.task}.`;
-        let prmpt1X = windowWidth/2 - textWidth(prmpt1)/2;
-        let prmpt1Y = windowHeight/2+scrollY - 50;
-        let prmpt2X = windowWidth/2 - textWidth(prmpt2)/2;
-        let prmpt2Y = windowHeight/2+scrollY + 50;
-        text(prmpt1,prmpt1X,prmpt1Y);
-        text(prmpt2,prmpt2X,prmpt2Y);
+        let prmpt1 = `You've already completed the ${interactionName} tutorial.`;
+        let prmpt2 = `Open the help menu if you forget the task or any of the ${interactionName} features.`;
+        let prmpt3 = `Press ENTER to begin task ${this.model.task}.`;
+        let prmpt1X = windowWidth / 2 - textWidth(prmpt1) / 2;
+        let prmpt1Y = windowHeight / 2 + scrollY - 75;
+        let prmpt2X = windowWidth / 2 - textWidth(prmpt2) / 2;
+        let prmpt2Y = windowHeight / 2 + scrollY;
+        let prmpt3X = windowWidth / 2 - textWidth(prmpt3) / 2;
+        let prmpt3Y = windowHeight / 2 + scrollY + 75;
+        text(prmpt1, prmpt1X, prmpt1Y);
+        text(prmpt2, prmpt2X, prmpt2Y);
+        text(prmpt3, prmpt3X, prmpt3Y);
     }
 }
 
