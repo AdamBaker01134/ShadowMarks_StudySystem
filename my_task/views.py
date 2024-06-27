@@ -49,14 +49,15 @@ def comparisonStudy(interaction, task, tutorial=False):
     condition = session["condition"]
 
     if request.method == 'POST':
-        log = db.comparisonStudy()  # This database table was defined in /tables/comparisonStudy.json
-        # writing columns from our javascript to the log
-        log.trialLog = request.form['trialLog']
-        log.streamLog = request.form['streamLog']
+        if 'trialLog' in request.form:
+            log = db.comparisonStudy()  # This database table was defined in /tables/comparisonStudy.json
+            # writing columns from our javascript to the log
+            log.participantID = pID
+            log.trialLog = request.form['trialLog']
 
-        # adding the participant log to the database
-        db.session.add(log)
-        db.session.commit()
+            # adding the participant log to the database
+            db.session.add(log)
+            db.session.commit()
 
         # if a post request occured redirect
         return redirect("/redirect_next_page")

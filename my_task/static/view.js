@@ -197,6 +197,14 @@ View.prototype.drawTutorials = function () {
             if (this.model.shapeMenuOpen) this.drawShapeMenu();
             if (this.model.colourMenuOpen) this.drawColourMenu();
         }
+        stroke(0);
+        strokeWeight(1);
+        fill(0);
+        textSize(24);
+        let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? "! You've completed the tutorial. Press ENTER to continue to the task trials." : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
+        let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth()/2 - textWidth(prompt)/2;
+        let promptY = this.model.getScrollbarY() - 50;
+        text(prompt, promptX, promptY);
     } else {
 
     }
@@ -348,7 +356,7 @@ View.prototype.drawScrollbar = function () {
         stroke(0);
         fill(0);
         textSize(16);
-        text(this.model.videos[0].labels[this.model.index], this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.index.toString()) / 2, this.model.getScrollbarY() - 20);
+        text(this.model.videos[0].labels[this.model.index], this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.videos[0].labels[this.model.index]) / 2, this.model.getScrollbarY() - 20);
     }
 }
 

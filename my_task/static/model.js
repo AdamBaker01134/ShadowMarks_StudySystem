@@ -60,9 +60,24 @@ function Model() {
     this.blockErrors = 0;
     this.blockStartTime = 0;
 
+    this.tutorialChecklist = [];
+    this.currentChecklistPrompt = 0;
+
     this.overlay = [];
 
     this.exampleImage = null;
+}
+
+Model.prototype.setTutorialChecklist = function (checklist) {
+    this.tutorialChecklist = checklist;
+    this.notifySubscribers();
+}
+
+Model.prototype.nextPrompt = function () {
+    if (this.tutorialChecklist.length > 0) {
+        this.currentChecklistPrompt++;
+        this.notifySubscribers();
+    }
 }
 
 Model.prototype.startBlock = function () {
@@ -547,6 +562,33 @@ Model.prototype.checkHelpButtonHit = function () {
     const y = this.getScrollbarY() - 12;
     const l = 50;
     return mouseX > x && mouseX < x + l && mouseY > y && mouseY < y + l;
+}
+
+Model.prototype.logData = function () {
+    let submitForm = document.createElement("form");
+    submitForm.setAttribute("action", "#");
+    submitForm.setAttribute("method", "post");
+    submitForm.style.display = "none";
+    document.body.append(submitForm);
+  
+    if (!tutorial) {
+        // writing to trialLog column
+        let submitResponses = document.createElement("input");
+        submitResponses.setAttribute("type", "text");
+        submitResponses.setAttribute("value", "Testing");
+        submitResponses.setAttribute("name", "trialLog");
+        submitResponses.style.display = "none";
+        submitForm.append(submitResponses);
+    }
+  
+    // Submitting the result. This will redirect to the next page
+    let submitBut = document.createElement("input");
+    submitBut.setAttribute("type", "submit");
+    submitBut.setAttribute("name", "submitButton");
+    submitBut.setAttribute("value", "Continue");
+    submitBut.style.display = "none";
+    submitForm.append(submitBut);
+    submitBut.click();
 }
 
 Model.prototype.addSubscriber = function (subscriber) {

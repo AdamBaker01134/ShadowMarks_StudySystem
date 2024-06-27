@@ -17,6 +17,7 @@ async function preload() {
 
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
+    model.setTutorialChecklist(tutorialChecklists[interaction]);
 
     if (tutorial) {
         controller.handleLoadTutorials();
