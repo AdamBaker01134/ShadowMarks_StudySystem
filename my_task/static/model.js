@@ -36,6 +36,7 @@ function Model() {
     this.shadowMarkColour = COLOURS.RED;
     this.freeformPath = [];
     this.freeformTarget = null;
+    this.freeformStraight = false;
 
     this.index = 0;
     this.scrollbarHighlighted = false;
@@ -367,7 +368,7 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio, video) {
 }
 
 Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
-    if (keyIsDown(SHIFT) && this.freeformPath.length > 1) {
+    if (this.freeformStraight && this.freeformPath.length > 1) {
         this.freeformPath = [
             this.freeformPath[0],
             {
@@ -400,6 +401,11 @@ Model.prototype.setFreeformTarget = function (target) {
         this.freeformTarget = target;
         this.notifySubscribers();
     }
+}
+
+Model.prototype.toggleFreeformStraight = function () {
+    this.freeformStraight = !this.freeformStraight;
+    this.notifySubscribers();
 }
 
 Model.prototype.setHoverTarget = function (target) {

@@ -295,6 +295,9 @@ Controller.prototype.handleKeyPressed = function (event) {
                     this.model.setIndex(this.model.index + 1);
                 }
             }
+            if (keyCode === SHIFT && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                this.model.toggleFreeformStraight();
+            }
             break;
         default:
             break;

@@ -167,6 +167,7 @@ View.prototype.drawTutorials = function () {
                 line(ox + p1[0] + 100, oy + p1[1] + oh * (index + 1) / 4, ox + p2[0] + 100, oy + p2[1] + oh * (index + 1) / 4);
                 noFill();
                 stroke(0);
+                strokeWeight(1);
                 rect(ox, oy, ow, oh);
             }
         });
@@ -379,14 +380,18 @@ View.prototype.drawMarkModeButton = function () {
             ellipse(centerX, centerY, centerLength, centerLength);
             break;
         case SHAPES.FREEFORM:
-            beginShape();
-            curveVertex(x + 10, y + 10);
-            curveVertex(x + 15, y + 15);
-            curveVertex(x + 10 + (length - 20) / 2 + 5, y + 10 + (length - 20) / 2 - 5);
-            curveVertex(x + 10 + (length - 20) / 2 - 5, y + 10 + (length - 20) / 2 + 5);
-            curveVertex(x + 10 + (length - 20) - 5, y + 10 + (length - 20) - 5);
-            curveVertex(x + 10 + (length - 20), y + 10 + (length - 20));
-            endShape();
+            if (this.model.freeformStraight) {
+                line(x + 10, y + 10, x + 10 + (length - 20), y + 10 + (length - 20))
+            } else {
+                beginShape();
+                curveVertex(x + 10, y + 10);
+                curveVertex(x + 15, y + 15);
+                curveVertex(x + 10 + (length - 20) / 2 + 5, y + 10 + (length - 20) / 2 - 5);
+                curveVertex(x + 10 + (length - 20) / 2 - 5, y + 10 + (length - 20) / 2 + 5);
+                curveVertex(x + 10 + (length - 20) - 5, y + 10 + (length - 20) - 5);
+                curveVertex(x + 10 + (length - 20), y + 10 + (length - 20));
+                endShape();
+            }
             break;
     }
 }
@@ -429,14 +434,18 @@ View.prototype.drawShapeMenu = function () {
     // Freeform
     x += 60;
     y += 45;
-    beginShape();
-    curveVertex(x, y);
-    curveVertex(x + 3, y + 3);
-    curveVertex(x + 13, y + 7);
-    curveVertex(x + 7, y + 13);
-    curveVertex(x + 17, y + 17);
-    curveVertex(x + 20, y + 20);
-    endShape();
+    if (this.model.freeformStraight) {
+        line(x, y, x + 20, y + 20);
+    } else {
+        beginShape();
+        curveVertex(x, y);
+        curveVertex(x + 3, y + 3);
+        curveVertex(x + 13, y + 7);
+        curveVertex(x + 7, y + 13);
+        curveVertex(x + 17, y + 17);
+        curveVertex(x + 20, y + 20);
+        endShape();
+    }
 }
 
 View.prototype.drawColourButton = function () {
