@@ -82,6 +82,7 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
+                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.task === 1 && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;

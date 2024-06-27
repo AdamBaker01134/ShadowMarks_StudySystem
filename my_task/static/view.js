@@ -190,6 +190,7 @@ View.prototype.drawTutorials = function () {
         stroke(0);
         strokeWeight(1);
         this.drawScrollbar();
+        this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
             this.drawMarkModeButton();
@@ -201,12 +202,36 @@ View.prototype.drawTutorials = function () {
         strokeWeight(1);
         fill(0);
         textSize(24);
-        let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? "! You've completed the tutorial. Press ENTER to continue to the task trials." : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
+        let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? `! You've completed the tutorial. Press ENTER to begin task ${this.model.task}.` : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
         let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth()/2 - textWidth(prompt)/2;
         let promptY = this.model.getScrollbarY() - 50;
         text(prompt, promptX, promptY);
     } else {
-
+        stroke(0);
+        strokeWeight(1);
+        fill(0);
+        textSize(48);
+        let interactionName = "";
+        switch (this.model.interaction) {
+            case "smallMultiples":
+                interactionName = "Small Multiples";
+                break;
+            case "overlays":
+                interactionName = "Overlay"
+                break;
+            case "shadowMakers":
+            default:
+                interactionName = "Shadow Marker";
+                break;
+        }
+        let prmpt1 = `You've completed the ${interactionName} tutorial already.`;
+        let prmpt2 =       `Press ENTER to begin task ${this.model.task}.`;
+        let prmpt1X = windowWidth/2 - textWidth(prmpt1)/2;
+        let prmpt1Y = windowHeight/2+scrollY - 50;
+        let prmpt2X = windowWidth/2 - textWidth(prmpt2)/2;
+        let prmpt2Y = windowHeight/2+scrollY + 50;
+        text(prmpt1,prmpt1X,prmpt1Y);
+        text(prmpt2,prmpt2X,prmpt2Y);
     }
 }
 
@@ -533,22 +558,29 @@ View.prototype.drawHelpMenu = function () {
         generalPoints.push("- Right click on a video to add it to the overlay on the right.");
         generalPoints.push("- Right click on the overlay to remove the top video from the stack.");
     }
-    switch (this.model.task) {
-        case 1:
-            taskPoints.push("- Does the ________ in this video get (smaller/larger) than the ________ in the example image?");
-            break;
-        case 2:
-            taskPoints.push("- Does the ________ in this video span the largest distance?");
-            break;
-        case 3:
-            taskPoints.push("- Does the _________ in this video grow the largest during a set amount of time?");
+    if (tutorial) {
+        taskPoints.push("- Follow the prompts displayed above the scrollbar.");
+    } else {
+        switch (this.model.task) {
+            case 1:
+                taskPoints.push("- Does the ________ in this video get (smaller/larger) than the ________ in the example image?");
+                break;
+            case 2:
+                taskPoints.push("- Does the ________ in this video span the largest distance?");
+                break;
+            case 3:
+                taskPoints.push("- Does the _________ in this video grow the largest during a set amount of time?");
+                break;
+        }
     }
     let helpPoints = [
+        "---------------------------------------------------------------------------------------------------- Click anywhere to exit",
         ...generalPoints,
         "----------------------------------------------------------------------------------------------------------------------------------",
         ...hotkeysPoints,
         "----------------------------------------------------------------------------------------------------------------------------------",
         ...taskPoints,
+        "----------------------------------------------------------------------------------------------------------------------------------",
     ]
     textSize(36);
     const w = Math.max(...helpPoints.map(point => textWidth(point) + 20));
