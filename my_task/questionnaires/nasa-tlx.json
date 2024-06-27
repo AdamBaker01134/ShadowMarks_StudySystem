@@ -1,71 +1,61 @@
 {
-  "title": "Example Questionnaire",
-  "instructions": "Please rate each video game experience....",
+  "title": "NASA-TLX Questionnaire",
+  "instructions": "Please rate your experience performing the last task....",
   "code": "",
   "questions": [
     {
-      "questiontype": "textview",
-      "title": "I am a title",
-      "text": "This allows you to display descriptive or informative text."
-    },
-    {
-      "questiontype": "radiolist",
-      "instructions": "choose one option...",
-      "id": "radiolist_1",
-      "labels": ["Yes", "Maybe", "No"]
-    },
-    {
-      "questiontype": "checklist",
-      "instructions": "choose any options...",
-      "id": "checklist_1",
-      "shuffle": true,
-      "questions": [
-        {
-          "id": "cl_1",
-          "text": "Option 1"
-        },
-        {
-          "id": "cl_2",
-          "text": "Option 2"
-        },
-        {
-          "id": "cl_3",
-          "text": "Option 3"
-        }
-      ]
-    },
-    {
       "questiontype": "slider",
-      "instructions": "I am a slider",
+      "instructions": "How mentally demanding was the task?",
       "id": "slider_1",
-      "left": "left",
-      "right": "right",
-      "tick_count": 5,
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
       "width": 500
     },
     {
-      "questiontype": "field",
-      "instructions": "enter text",
-      "placeholder": "I am a placeholder",
-      "id": "input_1"
+      "questiontype": "slider",
+      "instructions": "How physically demanding was the task?",
+      "id": "slider_2",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 500
     },
     {
-      "questiontype": "num_field",
-      "instructions": "enter a number",
-      "id": "number_field"
+      "questiontype": "slider",
+      "instructions": "How hurried or rushed was the pace of the task?",
+      "id": "slider_3",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 500
     },
     {
-      "id": "dropdownexample",
-      "questiontype": "drop_down",
-      "instructions": "choose one",
-      "items": ["apples", "oranges", "watermelon"]
+      "questiontype": "slider",
+      "instructions": "How successful were you in accomplishing what you were asked to do?",
+      "id": "slider_4",
+      "left": "Perfect",
+      "right": "Failure",
+      "tick_count": 7,
+      "width": 500
     },
     {
-      "questiontype": "multi_field",
-      "id": "big",
-      "placeholder": "I am holding the place",
-      "instructions": "big text field",
-      "height": "100"
+      "questiontype": "slider",
+      "instructions": "How hard did you have to work to accomplish your level of performance?",
+      "id": "slider_5",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 500
+    },
+    {
+      "questiontype": "slider",
+      "instructions": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+      "id": "slider_5",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 500
     }
   ]
 }
