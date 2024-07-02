@@ -300,6 +300,26 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
         }
     });
 
+    // For pixel counting
+    // if (this.model.shadowMarks.length === 2) {
+        // let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1]];
+        // stroke(0);
+        // fill(0);
+        // strokeWeight(1);
+        // text(`${Math.abs(marks[0].widthRatio - marks[1].widthRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+        // text(`${Math.abs(marks[0].heightRatio - marks[1].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+        // text(`${(1 - marks[0].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+
+    // } else if (this.model.shadowMarks.length === 4) {
+    //     let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1], this.model.shadowMarks[2], this.model.shadowMarks[3]];
+    //     let a = Math.abs(marks[0].heightRatio - marks[1].heightRatio)/2;
+    //     let b = Math.abs(marks[2].widthRatio - marks[3].widthRatio)/2;
+    //     stroke(0);
+    //     fill(0);
+    //     strokeWeight(1);
+    //     text(`${(PI*a*b).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+    // }
+
     // Draw current freeform path
     const colour = this.model.shadowMarkColour;
     stroke(colour.r, colour.g, colour.b);
