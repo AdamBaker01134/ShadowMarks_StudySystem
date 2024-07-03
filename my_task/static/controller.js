@@ -82,7 +82,7 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.task === 1 && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.task === 1 && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
@@ -101,22 +101,12 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.model.addToOverlay(hit);
                     if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.task === 1 && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
                 } else if (event.ctrlKey) {
+                    if (this.model.task > 1) {
+                        // Tasks 2 and 3 do not allow multi-select.
+                        this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
+                    }
                     this.model.selectVideo(hit);
-                    // if (this.model.selectedVideo.name === blockDatasets[this.model.blockNum].correct) {
-                    //     clearInterval(this.timer);
-                    //     this.currentState = STATE.NO_INTERACTION;
-                    //     setTimeout(() => {
-                    //         this.model.selectVideo(null);
-                    //         this.model.clearVideos();
-                    //         this.model.clearShadowMarks();
-                    //         this.model.setIndex(0);
-                    //         this.model.setShape(SHAPES.CROSSHAIR);
-                    //         this.model.setColour(COLOURS.RED);
-                    //         this.currentState = STATE.READY;
-                    //     }, 2000)
-                    // } else {
-                    //     this.model.error();
-                    // }
+                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.task === 1 && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
@@ -316,7 +306,27 @@ Controller.prototype.handleKeyPressed = function (event) {
                 // if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
                 //     this.model.logData();
                 // }
-                this.model.logData();
+                if (!tutorial && this.model.block < 2) {
+                    this.model.addTrialData();
+                    this.model.nextBlock();
+                    this.model.clearVideos();
+                    switch (this.model.getCurrentDataset()) {
+                        case "baseball":
+                            this.handleLoadBaseball(this.model.category).then(category => this.model.setCategory(category));
+                            break;
+                        case "seaice":
+                            this.handleLoadSeaIce(this.model.category).then(category => this.model.setCategory(category));
+                            break;
+                        case "lemnatec":
+                            this.handleLoadLemnatec(this.model.category).then(category => this.model.setCategory(category));
+                            break;
+                    }
+                } else if (tutorial /*&& this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length */) {
+                    this.model.logData();
+                } else {
+                    this.model.addTrialData();
+                    this.model.logData();
+                }
             }
             if (keyCode === SHIFT) {
                 // Handle shift key pressed
@@ -364,9 +374,10 @@ Controller.prototype.handleLoadTutorials = async function () {
     }
 }
 
-Controller.prototype.handleLoadBaseball = async function () {
+Controller.prototype.handleLoadBaseball = async function (undesired="") {
     console.log("Loading 6 random baseball videos...");
-    let category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)];
+    let category;
+    while ((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name === undesired);
     for (let video = 0; video < category.videos.length; video++) {
         let frames = [];
         let labels = [];
@@ -387,11 +398,13 @@ Controller.prototype.handleLoadBaseball = async function () {
         });
         this.model.addVideo(frames, labels, category.videos[video].name);
     }
+    return category;
 }
 
-Controller.prototype.handleLoadLemnatec = async function () {
+Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     console.log("Loading 6 random lemnatec videos...");
-    let category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)];
+    let category;
+    while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
@@ -419,11 +432,13 @@ Controller.prototype.handleLoadLemnatec = async function () {
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
     if (this.model.task === 1) loadImage(`${assets.lemnatec.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
+    return category;
 }
 
-Controller.prototype.handleLoadSeaIce = async function () {
+Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     console.log("Loading 6 random sea ice videos...");
-    let category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)];
+    let category;
+    while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
@@ -451,6 +466,7 @@ Controller.prototype.handleLoadSeaIce = async function () {
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
     if (this.model.task === 1) loadImage(`${assets.seaice.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
+    return category;
 }
 
 // Controller.prototype.handleLoadRustPlants = async function () {

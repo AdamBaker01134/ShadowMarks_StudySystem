@@ -26,7 +26,13 @@ View.prototype.draw = function () {
             text(video.name, x + 5, y + 20);
 
             noFill();
+            if (this.model.selectedVideos.includes(video)) {
+                stroke(255,255,0);
+                strokeWeight(4);
+                rect(x, y, video.width, video.height);
+            }
             stroke(0);
+            strokeWeight(1);
             rect(x, y, video.width, video.height);
             let highlightedMarker = this.model.highlightedMarker;
             if (highlightedMarker && highlightedMarker.video === video) {
@@ -141,6 +147,15 @@ View.prototype.drawTutorials = function () {
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
+            noFill();
+            if (this.model.selectedVideos.includes(video)) {
+                stroke(255,255,0);
+                strokeWeight(4);
+                rect(video.x, video.y, video.width, video.height);
+            }
+            stroke(0);
+            strokeWeight(1);
+            rect(video.x, video.y, video.width, video.height);
             if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.includes(video)) {
                 let ow = this.model.videos[0].width;
                 let oh = this.model.videos[0].height;
@@ -205,6 +220,9 @@ View.prototype.drawTutorials = function () {
         let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? `! You've completed the tutorial. Press ENTER to begin task ${this.model.task}.` : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
         let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
         let promptY = this.model.getScrollbarY() - 50;
+        fill(255);
+        rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
+        fill(0);
         text(prompt, promptX, promptY);
     } else {
         stroke(0);
@@ -302,13 +320,13 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
 
     // For pixel counting
     // if (this.model.shadowMarks.length === 2) {
-        // let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1]];
-        // stroke(0);
-        // fill(0);
-        // strokeWeight(1);
-        // text(`${Math.abs(marks[0].widthRatio - marks[1].widthRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-        // text(`${Math.abs(marks[0].heightRatio - marks[1].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-        // text(`${(1 - marks[0].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+    //     let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1]];
+    //     stroke(0);
+    //     fill(0);
+    //     strokeWeight(1);
+    //     // text(`${Math.abs(marks[0].widthRatio - marks[1].widthRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+    //     text(`${Math.abs(marks[0].heightRatio - marks[1].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
+    //     text(`${(1 - marks[0].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
 
     // } else if (this.model.shadowMarks.length === 4) {
     //     let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1], this.model.shadowMarks[2], this.model.shadowMarks[3]];
@@ -569,6 +587,7 @@ View.prototype.drawHelpMenu = function () {
     hotkeysPoints.push("- Auto-play ---------------------------------------------------------------------------------------------------- spacebar");
     hotkeysPoints.push("- Zoom in ----------------------------------------------------------------------------------------------------- ctrl + plus");
     hotkeysPoints.push("- Zoom out ------------------------------------------------------------------------------------------------- ctrl + minus");
+    hotkeysPoints.push("- Select ------------------------------------------------------------------------------------------------------- ctrl + click")
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
         generalPoints.push("- Markers can be placed by clicking on a video.");
         generalPoints.push("- Marker shape and colour are controlled in the menus to the right of the scrollbar.");

@@ -21,13 +21,10 @@ async function preload() {
 
     if (tutorial) {
         controller.handleLoadTutorials();
+    } else if (model.task === 1) {
+        controller.handleLoadLemnatec("maize").then(category => model.setCategory(category));
     } else {
-        switch (model.task) {
-            case 1:
-            case 2:
-            case 3:
-                controller.handleLoadLemnatec();
-        }
+        controller.handleLoadLemnatec().then(category => model.setCategory(category));
     }
 }
 

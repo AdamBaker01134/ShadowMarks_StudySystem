@@ -54,10 +54,13 @@ function Model() {
     this.gridHighlight = -1;
 
     this.highlightedMarker = null;
-    this.selectedVideo = null;
+    this.selectedVideos = [];
     this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.task = 1;
-    this.blockErrors = 0;
+    this.category = "";
+    this.block = 1;
+    this.log = [];
+    this.trialLog = [];
     this.blockStartTime = 0;
 
     this.tutorialChecklist = [];
@@ -80,14 +83,20 @@ Model.prototype.nextPrompt = function () {
     }
 }
 
-Model.prototype.startBlock = function () {
-    this.blockStartTime = new Date().getTime();
-    this.blockErrors = 0;
+Model.prototype.setCategory = function (category) {
+    if (category !== this.category) {
+        this.category = category;
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.nextBlock = function () {
+    this.block++;
     this.notifySubscribers();
 }
 
-Model.prototype.error = function () {
-    this.blockErrors++;
+Model.prototype.startBlock = function () {
+    this.blockStartTime = new Date().getTime();
     this.notifySubscribers();
 }
 
@@ -161,6 +170,9 @@ Model.prototype.updateVideoLocations = function () {
 
 Model.prototype.clearVideos = function () {
     this.videos = [];
+    this.overlay = [];
+    this.selectedVideos = [];
+    this.clearShadowMarks();
     this.notifySubscribers();
 }
 
@@ -206,8 +218,12 @@ Model.prototype.highlightMarker = function (marker) {
 }
 
 Model.prototype.selectVideo = function (video) {
-    if (video != this.selectedVideo) {
-        this.selectedVideo = video;
+    let index;
+    if ((index = this.selectedVideos.indexOf(video)) > -1) {
+        this.selectedVideos.splice(index, 1);
+        this.notifySubscribers();
+    } else {
+        this.selectedVideos.push(video);
         this.notifySubscribers();
     }
 }
@@ -564,6 +580,24 @@ Model.prototype.checkHelpButtonHit = function () {
     return mouseX > x && mouseX < x + l && mouseY > y && mouseY < y + l;
 }
 
+Model.prototype.getCurrentDataset = function () {
+    switch (this.block) {
+        case 2:
+            switch (this.task) {
+                case 1:
+                    return "seaice";
+                case 2:
+                    return "baseball";
+                case 3:
+                default:
+                    return "lemnatec";
+            }
+        case 1:
+        default:
+            return "lemnatec";
+    }
+}
+
 Model.prototype.logData = function () {
     let submitForm = document.createElement("form");
     submitForm.setAttribute("action", "#");
@@ -575,7 +609,7 @@ Model.prototype.logData = function () {
         // writing to trialLog column
         let submitResponses = document.createElement("input");
         submitResponses.setAttribute("type", "text");
-        submitResponses.setAttribute("value", "Testing");
+        submitResponses.setAttribute("value", JSON.stringify(this.log));
         submitResponses.setAttribute("name", "trialLog");
         submitResponses.style.display = "none";
         submitForm.append(submitResponses);
@@ -589,6 +623,60 @@ Model.prototype.logData = function () {
     submitBut.style.display = "none";
     submitForm.append(submitBut);
     submitBut.click();
+}
+
+Model.prototype.addTrialData = function () {
+    // Elapsed time
+    let elapsedTime = new Date().getTime() - this.blockStartTime;
+
+    // Errors
+    let falseNegatives = 0;
+    let falsePositives = 0;
+    let correctVideos = [];
+    let blockVideos = [];
+    this.category.videos.forEach(categoryVideo => {
+        if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) blockVideos.push(categoryVideo);
+    });
+    if (blockVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
+    blockVideos.forEach(video => {
+        switch (this.task) {
+            case 1:
+                if (this.getCurrentDataset() === "seaice" && this.category.name === "northpole") {
+                    // Northpole measures smaller area
+                    if (video.area < this.category.example_area) correctVideos.push(video);
+                } else {
+                    // All other datasets measure larger area
+                    if (video.area > this.category.example_area) correctVideos.push(video);
+                }
+                break;
+            case 2:
+                if (correctVideos.length === 0) correctVideos = [ video ];
+                else if (correctVideos[0].dist < video.dist) correctVideos = [ video ];
+                break;
+            case 3:
+            default:
+                if (correctVideos.length === 0) correctVideos = [ video ];
+                else if (correctVideos[0].dist-correctVideos[0].dist_flower < video.dist-video.dist_flower) correctVideos = [ video ];
+                break;
+        }
+    });
+    correctVideos.forEach(video => { if (this.selectedVideos.findIndex(selectedVideo => video.name === selectedVideo.name) === -1) falseNegatives++ });
+    this.selectedVideos.forEach(selectedVideo => { if (correctVideos.findIndex(video => video.name === selectedVideo.name) === -1) falsePositives++ });
+
+    // Construct trial data object
+    let trialData = {
+        pID: pID,
+        task: this.task,
+        interaction: this.interaction,
+        block: this.block,
+        dataset: this.getCurrentDataset(),
+        category: this.category.name,
+        videos: this.videos.map(video => video.name),
+        elapsedTime: elapsedTime,
+        falseNegatives: falseNegatives,
+        falsePositives: falsePositives,
+    };
+    this.log.push(trialData);
 }
 
 Model.prototype.addSubscriber = function (subscriber) {
