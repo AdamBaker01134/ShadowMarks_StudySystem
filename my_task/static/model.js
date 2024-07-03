@@ -130,17 +130,21 @@ Model.prototype.addVideo = function (video, labels, name) {
     let y = 0;
     this.videos.forEach(video => {
         x += video.width;
-        if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
-            if (x + video.width > width - video.width - 20) {
-                x = 0;
-                y += video.height;
-            }
-        } else {
-            if (x + video.width > width) {
-                x = 0;
-                y += video.height;
-            }
+        if (x + video.width > width - video.width - 20) {
+            x = 0;
+            y += video.height;
         }
+        // if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
+        //     if (x + video.width > width - video.width - 20) {
+        //         x = 0;
+        //         y += video.height;
+        //     }
+        // } else {
+        //     if (x + video.width > width) {
+        //         x = 0;
+        //         y += video.height;
+        //     }
+        // }
     });
     this.videos.push(new Video(video, labels, name, x, y));
     this.notifySubscribers();
@@ -153,17 +157,21 @@ Model.prototype.updateVideoLocations = function () {
         video.setX(x);
         video.setY(y);
         x += video.width;
-        if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
-            if (x + video.width > width - video.width - 20) {
-                x = 0;
-                y += video.height;
-            }
-        } else {
-            if (x + video.width > width) {
-                x = 0;
-                y += video.height;
-            }
+        if (x + video.width > width - video.width - 20) {
+            x = 0;
+            y += video.height;
         }
+        // if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
+        //     if (x + video.width > width - video.width - 20) {
+        //         x = 0;
+        //         y += video.height;
+        //     }
+        // } else {
+        //     if (x + video.width > width) {
+        //         x = 0;
+        //         y += video.height;
+        //     }
+        // }
     });
     this.notifySubscribers();
 }

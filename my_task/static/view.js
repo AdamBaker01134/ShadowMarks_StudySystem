@@ -93,10 +93,11 @@ View.prototype.draw = function () {
                 noStroke();
                 fill(0);
                 textSize(24);
-                text("No videos selected.", ox + ow / 2 - textWidth("No videos selected.") / 2, oy + oh + 24);
-                text("Right click video to select.", ox + ow / 2 - textWidth("Right click video to select.") / 2, oy + oh + 48);
+                text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
+                text("Right click video to add.", ox + ow / 2 - textWidth("Right click video to add.") / 2, oy + oh + 48);
             }
         }
+        this.drawInstructions();
 
         strokeWeight(1);
         this.drawScrollbar();
@@ -254,6 +255,74 @@ View.prototype.drawTutorials = function () {
         text(prmpt1, prmpt1X, prmpt1Y);
         text(prmpt2, prmpt2X, prmpt2Y);
         text(prmpt3, prmpt3X, prmpt3Y);
+    }
+}
+
+View.prototype.drawInstructions = function () {
+    if (this.model.videos.length > 0) {
+        let w = this.model.videos[0].width;
+        let h = this.model.videos[0].height;
+        let x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - w;
+        let y = scrollY + h + 120;
+
+        let iX = x-10;
+        let iY = y-30;
+        let instructions = [];
+        switch (this.model.task) {
+            case 1:
+                if (this.model.getCurrentDataset() === "lemnatec") {
+                    instructions.push(`Select any videos where the ${this.model.category.name} plant gets larger`);
+                    instructions.push(`than the plant in the example image.`);
+                } else {
+                    if (this.model.category.name === "northpole") {
+                        instructions.push(`Select any videos where the area of ice gets`);
+                        instructions.push(`smaller than in the example image.`);
+                    } else {
+                        instructions.push(`Select any videos where the area of ice gets`);
+                        instructions.push(`larger than in the example image.`);
+                    }
+                }
+                break;
+            case 2:
+                if (this.model.getCurrentDataset() === "lemnatec") {
+                    instructions.push("Select the plant that grows the largest.");
+                } else {
+                    instructions.push("Select the pitch that moves the farthest horizontally.");
+                }
+                break;
+            case 3:
+            default:
+                instructions.push("Select the plant that grows the most during")
+                instructions.push("their flowering cycle.");
+                break;
+        }
+
+        let size = 24;
+        noStroke();
+        strokeWeight(1);
+        textSize(size);
+        while (x + textWidth(instructions[0]) > windowWidth*0.98) {
+            size--;
+            textSize(size);
+        }
+        fill(0);
+        instructions.forEach(instruction => {
+            text(instruction, x+w/2-textWidth(instruction)/2-10,y);
+            y+=(size+10);
+        });
+        let iW = textWidth(instructions[0]+20);
+        let iH = y-iY-size+10;
+        stroke(0);
+        noFill();
+        rect(iX+w/2-iW/2,iY,iW,iH,10);
+
+        if (this.model.task === 1 || this.model.selectedVideos.length > 0) {
+            let submitPrompt = "Press ENTER to submit.";
+            y += size + 10;
+            fill(0)
+            noStroke();
+            text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
+        }
     }
 }
 
@@ -582,7 +651,7 @@ View.prototype.drawHelpButton = function () {
 View.prototype.drawHelpMenu = function () {
     stroke(0);
     fill(101);
-    let generalPoints = ["GENERAL"], hotkeysPoints = ["HOTKEYS"], taskPoints = ["CURRENT TASK"];
+    let generalPoints = ["GENERAL"], hotkeysPoints = ["HOTKEYS"], taskPoints = [];
     generalPoints.push("- Drag the scrollbar to play through all videos at once.");
     hotkeysPoints.push("- Auto-play ---------------------------------------------------------------------------------------------------- spacebar");
     hotkeysPoints.push("- Zoom in ----------------------------------------------------------------------------------------------------- ctrl + plus");
@@ -604,17 +673,7 @@ View.prototype.drawHelpMenu = function () {
     if (tutorial) {
         taskPoints.push("- Follow the prompts displayed above the scrollbar.");
     } else {
-        switch (this.model.task) {
-            case 1:
-                taskPoints.push("- Does the ________ in this video get (smaller/larger) than the ________ in the example image?");
-                break;
-            case 2:
-                taskPoints.push("- Does the ________ in this video span the largest distance?");
-                break;
-            case 3:
-                taskPoints.push("- Does the _________ in this video grow the largest during a set amount of time?");
-                break;
-        }
+        taskPoints.push("- Follow the instruction displayed on the right.")
     }
     let helpPoints = [
         "---------------------------------------------------------------------------------------------------- Click anywhere to exit",
