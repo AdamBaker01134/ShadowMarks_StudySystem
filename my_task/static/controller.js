@@ -302,10 +302,6 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (keyCode === ENTER) {
-                // Uncomment once ready
-                // if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
-                //     this.model.logData();
-                // }
                 if (!tutorial && this.model.block < 2) {
                     this.model.addTrialData();
                     this.model.nextBlock();
@@ -321,7 +317,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.handleLoadLemnatec(this.model.category).then(category => this.model.setCategory(category));
                             break;
                     }
-                } else if (tutorial /*&& this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length */) {
+                } else if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
                     this.model.logData();
                 } else {
                     this.model.addTrialData();

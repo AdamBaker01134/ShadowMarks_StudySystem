@@ -8,15 +8,15 @@ function Video(images, labels, name, x, y) {
     this.x = x;
     this.y = y;
     this.aspectRatio = this.images[0].width / this.images[0].height;
-    // if (this.aspectRatio > 1.0) {
-    //     this.width = width / 3;
-    //     this.height = this.width / this.aspectRatio;
-    // } else {
-    //     this.height = windowHeight / 3;
-    //     this.width = this.height * this.aspectRatio;
-    // }
-    this.height = (windowHeight-110)/2;
-    this.width = this.height * this.aspectRatio;
+    if (this.aspectRatio > 1.0) {
+        this.width = width/3-20;
+        this.height = this.width/this.aspectRatio;
+    } else {
+        this.height = (windowHeight-110)/2;
+        this.width = this.height * this.aspectRatio;
+    }
+    // this.height = (windowHeight-110)/2;
+    // this.width = this.height * this.aspectRatio;
 }
 
 Video.prototype.setWidth = function(width) {

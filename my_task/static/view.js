@@ -199,8 +199,8 @@ View.prototype.drawTutorials = function () {
             noStroke();
             fill(0);
             textSize(24);
-            text("No videos selected.", ox + ow / 2 - textWidth("No videos selected.") / 2, oy + oh + 24);
-            text("Right click video to select.", ox + ow / 2 - textWidth("Right click video to select.") / 2, oy + oh + 48);
+            text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
+            text("Right click video to add.", ox + ow / 2 - textWidth("Right click video to add.") / 2, oy + oh + 48);
         }
 
         stroke(0);
