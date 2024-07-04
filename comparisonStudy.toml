@@ -16,7 +16,7 @@ ADMIN_PASSWORD = '1234' # Used to log in to the admin pages at /admin
 USE_BREADCRUMBS = false # Show breadcrumbs-style progress bar
 
 # Make sure this does not overlap with another studies port!!
-PORT = 8064 # Configure what port the project will be accessible at
+PORT = 8888 # Configure what port the project will be accessible at
 RETRIEVE_SESSIONS = true # If ID entered at /external_id was already used, then attempt to load a participant's progress from the database and redirect them to where they last were.
 ALLOW_RETAKES = true # With the external_id page in use, setting this to true will prevent the same ID from being used twice.
 LOG_GRID_CLICKS = false # Used for more fine-grained logging of participant's progress through questionnaires. Log the time the each radio button in a radio grid is clicked.
