@@ -96,6 +96,7 @@ Model.prototype.nextTrial = function () {
     this.overlay = [];
     this.selectedVideos = [];
     if (this.videos.length < 6) this.percentLoaded = 0;
+    this.index = 0;
     this.clearShadowMarks();
     this.updateVideoLocations();
     this.startTrial();
@@ -461,6 +462,7 @@ Model.prototype.deleteShadowMarker = function (shadowMarker) {
 
 Model.prototype.clearShadowMarks = function () {
     this.shadowMarks = [];
+    this.highlightedMarker = null;
     this.notifySubscribers();
 }
 
