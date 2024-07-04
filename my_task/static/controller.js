@@ -310,14 +310,16 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (keyCode === ENTER) {
-                if (!tutorial && this.model.trial < 2) {
-                    this.model.addTrialData();
-                    this.model.nextTrial();
-                } else if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
+                if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
                     this.model.logData();
-                } else {
-                    this.model.addTrialData();
-                    this.model.logData();
+                } else if (confirm("Are you sure you want to submit your selection?")) {
+                    if (!tutorial && this.model.trial < 2) {
+                        this.model.addTrialData();
+                        this.model.nextTrial();
+                    } else {
+                        this.model.addTrialData();
+                        this.model.logData();  
+                    }
                 }
             }
             if (keyCode === SHIFT) {
