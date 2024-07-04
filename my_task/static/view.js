@@ -276,7 +276,7 @@ View.prototype.drawInstructions = function () {
         noStroke();
         strokeWeight(1);
         textSize(size);
-        while (x + textWidth(instructions[0]) > windowWidth*0.98) {
+        while (x + textWidth(instructions[0]) > width) {
             size--;
             textSize(size);
         }
