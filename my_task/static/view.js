@@ -15,7 +15,7 @@ View.prototype.draw = function () {
             let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
-            image(video.images[this.model.index], x, y, video.width, video.height);
+            if (video) image(video.images[this.model.index], x, y, video.width, video.height);
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }

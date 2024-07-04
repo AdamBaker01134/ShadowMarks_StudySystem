@@ -21,7 +21,7 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -40,10 +40,11 @@ Controller.prototype.handleMouseMoved = function (event) {
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -72,10 +73,11 @@ Controller.prototype.handleMouseDragged = function (event) {
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleMousePressed = function (event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.READY:
@@ -99,10 +101,9 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
                 if (this.model.interaction === INTERACTIONS.OVERLAYS && event.which === 3) {
-                    event.preventDefault();
-                    event.stopPropagation();
                     this.model.addToOverlay(hit);
                     if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
+                    return false;
                 } else if (event.ctrlKey) {
                     if (this.model.task > 1) {
                         // Tasks 2 and 3 do not allow multi-select.
@@ -162,10 +163,11 @@ Controller.prototype.handleMousePressed = function (event) {
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleMouseReleased = function (event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -193,10 +195,11 @@ Controller.prototype.handleMouseReleased = function (event) {
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleKeyPressed = function (event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -208,38 +211,40 @@ Controller.prototype.handleKeyPressed = function (event) {
                     this.model.deleteShadowMarker(hit);
                 }
             }
-            if (event.ctrlKey && keyCode === 187) {
+            if (event.ctrlKey && [61,187].includes(keyCode)) {
                 // Handle ctrl + "+" pressed
-                event.preventDefault();
-                event.stopPropagation();
                 if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                 this.model.zoomIn();
                 this.model.updateVideoLocations();
-                this.timer = setInterval(() => {
-                    this.model.zoomIn();
-                    this.model.updateVideoLocations();
-                }, 300);
-                this.savedState = this.currentState;
-                this.currentState = STATE.ZOOMING;
+                if (keyCode === 187) {
+                    // Firefox does not like this behaviour
+                    this.timer = setInterval(() => {
+                        this.model.zoomIn();
+                        this.model.updateVideoLocations();
+                    }, 300);
+                    this.savedState = this.currentState;
+                    this.currentState = STATE.ZOOMING;
+                }
+                return false;
             }
-            if (event.ctrlKey && keyCode === 189) {
+            if (event.ctrlKey && [173,189].includes(keyCode)) {
                 // Handle ctrl + "-" pressed
-                event.preventDefault();
-                event.stopPropagation();
                 if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                 this.model.zoomOut();
                 this.model.updateVideoLocations();
-                this.timer = setInterval(() => {
-                    this.model.zoomOut();
-                    this.model.updateVideoLocations();
-                }, 300);
-                this.savedState = this.currentState;
-                this.currentState = STATE.ZOOMING;
+                if (keyCode === 189) {
+                    // Firefox does not like this behaviour
+                    this.timer = setInterval(() => {
+                        this.model.zoomOut();
+                        this.model.updateVideoLocations();
+                    }, 300);
+                    this.savedState = this.currentState;
+                    this.currentState = STATE.ZOOMING;
+                }
+                return false;
             }
             if (keyCode === 32) {
                 // Handle spacebar pressed
-                event.preventDefault();
-                event.stopPropagation();
                 if (this.currentState === STATE.PLAYING) {
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
@@ -267,21 +272,19 @@ Controller.prototype.handleKeyPressed = function (event) {
                     }, 50);
                     this.currentState = STATE.PLAYING;
                 }
+                return false;
             }
             if (event.ctrlKey && keyCode === 67 && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 // Handle ctrl + c pressed
-                event.preventDefault();
-                event.stopPropagation();
                 if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 8) this.model.nextPrompt();
                 this.model.setShadowing(!this.model.shadowing);
                 let hit = this.model.checkVideoHit();
                 if (this.model.checkOverlayHit()) hit = "OVERLAY";
                 this.model.setHoverTarget(hit);
+                return false;
             }
             if (event.ctrlKey && keyCode === 71) {
                 // Handle ctrl + g pressed
-                event.preventDefault();
-                event.stopPropagation();
                 if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
                 this.model.setGridActive(!this.model.gridActive);
                 let hit = this.model.checkVideoHit();
@@ -290,21 +293,20 @@ Controller.prototype.handleKeyPressed = function (event) {
                 if (this.model.gridActive) {
                     this.model.setGridHighlight(hit);
                 }
+                return false;
             }
             if (keyCode === 37) {
                 // Handle left arrow pressed
                 if (this.model.index > 0) {
-                    event.preventDefault();
-                    event.stopPropagation();
                     this.model.setIndex(this.model.index - 1);
+                    return false;
                 }
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
                 if (this.model.index < this.model.getScrollbarSegments() - 1) {
-                    event.preventDefault();
-                    event.stopPropagation();
                     this.model.setIndex(this.model.index + 1);
+                    return false;
                 }
             }
             if (keyCode === ENTER) {
@@ -329,23 +331,24 @@ Controller.prototype.handleKeyPressed = function (event) {
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleKeyReleased = function(event) {
-    if (this.model.percentLoaded !== 100) return;
+    if (!tutorial && this.model.percentLoaded !== 100) return true;
     switch (this.currentState) {
         case STATE.ZOOMING:
-            if (keyCode === 187 || keyCode === 189) {
-                // Handle ctrl + "+" pressed
-                event.preventDefault();
-                event.stopPropagation();
+            if ([187,189].includes(keyCode)) {
+                // Handle ctrl + "+" or "-" released
                 clearInterval(this.timer);
                 this.currentState = this.savedState;
+                return false;
             }
             break;
         default:
             break;
     }
+    return true;
 }
 
 Controller.prototype.handleScroll = function() {

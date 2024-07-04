@@ -50,17 +50,17 @@ function setup() {
 
 function draw() {}
 
-function mouseMoved(event) { controller.handleMouseMoved(event) }
+function mouseMoved(event) { return controller.handleMouseMoved(event) }
 
-function mouseDragged(event) { controller.handleMouseDragged(event) }
+function mouseDragged(event) { return controller.handleMouseDragged(event) }
 
-function mousePressed(event) { controller.handleMousePressed(event) }
+function mousePressed(event) { return controller.handleMousePressed(event) }
 
-function mouseReleased(event) { controller.handleMouseReleased(event) }
+function mouseReleased(event) { return controller.handleMouseReleased(event) }
 
-function keyPressed(event) { controller.handleKeyPressed(event) }
+function keyPressed(event) { return controller.handleKeyPressed(event) }
 
-function keyReleased(event) { controller.handleKeyReleased(event) }
+function keyReleased(event) { return controller.handleKeyReleased(event) }
 
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
