@@ -18,18 +18,29 @@ async function preload() {
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
     model.setTutorialChecklist(tutorialChecklists[interaction]);
-
-    if (tutorial) {
-        controller.handleLoadTutorials();
-    } else if (model.task === 1) {
-        controller.handleLoadLemnatec("maize").then(category => model.setCategory(category));
-    } else {
-        controller.handleLoadLemnatec().then(category => model.setCategory(category));
-    }
 }
 
 function setup() {
     createCanvas(windowWidth*0.98, windowHeight*3);
+
+    if (tutorial) {
+        controller.handleLoadTutorials();
+    } else {
+        controller.handleLoadLemnatec().then(category => {
+            model.setCategory(category);
+            switch (model.task) {
+                case 1:
+                    controller.handleLoadSeaIce(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+                case 2:
+                    controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+                case 3:
+                    controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+            }
+        });
+    }
 
     attachUserEventListeners();
     model.addSubscriber(view);
@@ -39,17 +50,17 @@ function setup() {
 
 function draw() {}
 
-function mouseMoved(event) { controller.handleMouseMoved(event) }
+function mouseMoved(event) { return controller.handleMouseMoved(event) }
 
-function mouseDragged(event) { controller.handleMouseDragged(event) }
+function mouseDragged(event) { return controller.handleMouseDragged(event) }
 
-function mousePressed(event) { controller.handleMousePressed(event) }
+function mousePressed(event) { return controller.handleMousePressed(event) }
 
-function mouseReleased(event) { controller.handleMouseReleased(event) }
+function mouseReleased(event) { return controller.handleMouseReleased(event) }
 
-function keyPressed(event) { controller.handleKeyPressed(event) }
+function keyPressed(event) { return controller.handleKeyPressed(event) }
 
-function keyReleased(event) { controller.handleKeyReleased(event) }
+function keyReleased(event) { return controller.handleKeyReleased(event) }
 
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());

@@ -11,20 +11,21 @@ View.prototype.draw = function () {
         this.drawTutorials();
     } else if (this.model.percentLoaded === 100) {
         // Draw videos from the model
-        this.model.videos.forEach(video => {
+        for (let i = 0; i < 6 && i < this.model.videos.length; i++) {
+            let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
-            image(video.images[this.model.index], x, y, video.width, video.height);
+            if (video) image(video.images[this.model.index], x, y, video.width, video.height);
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
-
+    
             stroke(0);
             strokeWeight(1);
             fill(255);
             textSize(16);
             text(video.name, x + 5, y + 20);
-
+    
             noFill();
             if (this.model.selectedVideos.includes(video)) {
                 stroke(255,255,0);
@@ -40,15 +41,15 @@ View.prototype.draw = function () {
                 stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
                 rect(x + 1, y + 1, video.width - 2, video.height - 2);
             }
-        });
+        }
 
         // Draw example image 
-        if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage !== null) {
+        if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage.length > 0) {
             let iw = this.model.videos[0].width;
             let ih = this.model.videos[0].height;
             let ix = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - iw;
             let iy = scrollY;
-            image(this.model.exampleImage, ix, iy, iw, ih);
+            image(this.model.exampleImage[0], ix, iy, iw, ih);
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) this.drawShadowMarkers(ix, iy, iw, ih);
             noFill();
             strokeWeight(1);
@@ -75,7 +76,7 @@ View.prototype.draw = function () {
             let oy = scrollY;
             if (this.model.overlay.length > 0) {
                 this.model.overlay.forEach((video, index) => {
-                    if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage !== null) {
+                    if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage.length > 0) {
                         tint(255, Math.floor(255 * 1 / (index + 2)))
                     } else {
                         tint(255, Math.floor(255 * 1 / (index + 1)))
@@ -156,6 +157,12 @@ View.prototype.drawTutorials = function () {
         stroke(0);
         strokeWeight(1);
         rect(video.x, video.y, video.width, video.height);
+        let highlightedMarker = this.model.highlightedMarker;
+        if (highlightedMarker && highlightedMarker.video === video) {
+            strokeWeight(5);
+            stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
+            rect(video.x + 1, video.y + 1, video.width - 2, video.height - 2);
+        }
         if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.includes(video)) {
             let ow = this.model.videos[0].width;
             let oh = this.model.videos[0].height;
@@ -227,7 +234,7 @@ View.prototype.drawTutorials = function () {
 }
 
 View.prototype.drawInstructions = function () {
-    if (this.model.videos.length > 0) {
+    if (this.model.videos.length > 0 && this.model.category.length > 0) {
         let w = this.model.videos[0].width;
         let h = this.model.videos[0].height;
         let x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - w;
@@ -239,10 +246,10 @@ View.prototype.drawInstructions = function () {
         switch (this.model.task) {
             case 1:
                 if (this.model.getCurrentDataset() === "lemnatec") {
-                    instructions.push(`Select any videos where the ${this.model.category.name} plant gets larger`);
+                    instructions.push(`Select any videos where the ${this.model.category[0].name} plant gets larger`);
                     instructions.push(`than the plant in the example image.`);
                 } else {
-                    if (this.model.category.name === "northpole") {
+                    if (this.model.category[0].name === "northpole") {
                         instructions.push(`Select any videos where the area of ice gets`);
                         instructions.push(`smaller than in the example image.`);
                     } else {
@@ -269,7 +276,7 @@ View.prototype.drawInstructions = function () {
         noStroke();
         strokeWeight(1);
         textSize(size);
-        while (x + textWidth(instructions[0]) > windowWidth*0.98) {
+        while (x + textWidth(instructions[0]) > width) {
             size--;
             textSize(size);
         }
@@ -633,7 +640,7 @@ View.prototype.drawHelpMenu = function () {
         hotkeysPoints.push("- Toggle straight freeform lines ------------------------------------------------------------------ shift + dragging");
         hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- ctrl + c");
         hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
-        hotkeysPoints.push("- Undo last shadow marker  --------------------------------------------------------------------------------- ctrl + z");
+        hotkeysPoints.push("- Delete shadow marker  --------------------------------------------------------------------------- hover + delete");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
         generalPoints.push("- Right click on a video to add it to the overlay on the right.");
         generalPoints.push("- Right click on the overlay to remove the top video from the stack.");
