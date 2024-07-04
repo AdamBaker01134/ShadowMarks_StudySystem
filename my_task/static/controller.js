@@ -21,6 +21,7 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
+    if (this.model.percentLoaded !== 100) return;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -42,6 +43,7 @@ Controller.prototype.handleMouseMoved = function (event) {
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
+    if (this.model.percentLoaded !== 100) return;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -73,6 +75,7 @@ Controller.prototype.handleMouseDragged = function (event) {
 }
 
 Controller.prototype.handleMousePressed = function (event) {
+    if (this.model.percentLoaded !== 100) return;
     let hit = null;
     switch (this.currentState) {
         case STATE.READY:
@@ -162,6 +165,7 @@ Controller.prototype.handleMousePressed = function (event) {
 }
 
 Controller.prototype.handleMouseReleased = function (event) {
+    if (this.model.percentLoaded !== 100) return;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -192,6 +196,7 @@ Controller.prototype.handleMouseReleased = function (event) {
 }
 
 Controller.prototype.handleKeyPressed = function (event) {
+    if (this.model.percentLoaded !== 100) return;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -303,21 +308,9 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (keyCode === ENTER) {
-                if (!tutorial && this.model.block < 2) {
+                if (!tutorial && this.model.trial < 2) {
                     this.model.addTrialData();
-                    this.model.nextBlock();
-                    this.model.clearVideos();
-                    switch (this.model.getCurrentDataset()) {
-                        case "baseball":
-                            this.handleLoadBaseball(this.model.category).then(category => this.model.setCategory(category));
-                            break;
-                        case "seaice":
-                            this.handleLoadSeaIce(this.model.category).then(category => this.model.setCategory(category));
-                            break;
-                        case "lemnatec":
-                            this.handleLoadLemnatec(this.model.category).then(category => this.model.setCategory(category));
-                            break;
-                    }
+                    this.model.nextTrial();
                 } else if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
                     this.model.logData();
                 } else {
@@ -339,6 +332,7 @@ Controller.prototype.handleKeyPressed = function (event) {
 }
 
 Controller.prototype.handleKeyReleased = function(event) {
+    if (this.model.percentLoaded !== 100) return;
     switch (this.currentState) {
         case STATE.ZOOMING:
             if (keyCode === 187 || keyCode === 189) {
@@ -384,11 +378,11 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
                 frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[video].name}/img${String(frame).padStart(3,"0")}.jpg`,
                     () => {
                         if (++completed >= category.frames) resolve();
-                        this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
                     },
                     (err) => {
                         if (++completed >= category.frames) reject(err);
-                        this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
                     }));
                 labels.push(`Frame ${frame}`);
             }
@@ -417,11 +411,11 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
                 frames.push(loadImage(`${assets.lemnatec.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.png`,
                     () => {
                         if (++completed >= category.frames.length) resolve();
-                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
                     },
                     (err) => {
                         if (++completed >= category.frames.length) reject(err);
-                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
                     }));
                 labels.push(category.frames[frame]);
             }
@@ -451,11 +445,11 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
                 frames.push(loadImage(`${assets.seaice.path}/${category.name}/${category.videos[videos[video]].name}/${category.videos[videos[video]].name}${String(frame).padStart(4, "0")}.png`,
                     () => {
                         if (++completed >= category.frames) resolve();
-                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
                     },
                     (err) => {
                         if (++completed >= category.frames) reject(err);
-                        this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
                     }));
                 labels.push(`Day ${frame}`);
             }

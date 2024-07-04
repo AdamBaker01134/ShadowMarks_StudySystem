@@ -25,10 +25,21 @@ function setup() {
 
     if (tutorial) {
         controller.handleLoadTutorials();
-    } else if (model.task === 1) {
-        controller.handleLoadLemnatec("maize").then(category => model.setCategory(category));
     } else {
-        controller.handleLoadLemnatec().then(category => model.setCategory(category));
+        controller.handleLoadLemnatec().then(category => {
+            model.setCategory(category);
+            switch (model.task) {
+                case 1:
+                    controller.handleLoadSeaIce(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+                case 2:
+                    controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+                case 3:
+                    controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
+                    break;
+            }
+        });
     }
 
     attachUserEventListeners();

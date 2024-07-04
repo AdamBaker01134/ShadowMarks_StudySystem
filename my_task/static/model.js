@@ -57,18 +57,18 @@ function Model() {
     this.selectedVideos = [];
     this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.task = 1;
-    this.category = "";
-    this.block = 1;
+    this.category = [];
+    this.trial = 1;
     this.log = [];
     this.trialLog = [];
-    this.blockStartTime = 0;
+    this.trialStartTime = 0;
 
     this.tutorialChecklist = [];
     this.currentChecklistPrompt = 0;
 
     this.overlay = [];
 
-    this.exampleImage = null;
+    this.exampleImage = [];
 }
 
 Model.prototype.setTutorialChecklist = function (checklist) {
@@ -84,19 +84,26 @@ Model.prototype.nextPrompt = function () {
 }
 
 Model.prototype.setCategory = function (category) {
-    if (category !== this.category) {
-        this.category = category;
-        this.notifySubscribers();
-    }
-}
-
-Model.prototype.nextBlock = function () {
-    this.block++;
+    this.category.push(category);
     this.notifySubscribers();
 }
 
-Model.prototype.startBlock = function () {
-    this.blockStartTime = new Date().getTime();
+Model.prototype.nextTrial = function () {
+    this.trial++;
+    this.videos.splice(0,6);
+    this.category.splice(0,1);
+    this.exampleImage.splice(0,1);
+    this.overlay = [];
+    this.selectedVideos = [];
+    if (this.videos.length < 6) this.percentLoaded = 0;
+    this.clearShadowMarks();
+    this.updateVideoLocations();
+    this.startTrial();
+    this.notifySubscribers();
+}
+
+Model.prototype.startTrial = function () {
+    this.trialStartTime = new Date().getTime();
     this.notifySubscribers();
 }
 
@@ -111,15 +118,15 @@ Model.prototype.setTask = function (task) {
 }
 
 Model.prototype.setExampleImage = function (image) {
-    this.exampleImage = image;
+    this.exampleImage.push(image);
     this.notifySubscribers();
 }
 
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
     if (this.percentLoaded == 100) {
-        // User and percentage bar are racing. Whoever finishes last sets the start block time.
-        this.startBlock();
+        // User and percentage bar are racing. Whoever finishes last sets the start trial time.
+        this.startTrial();
     } else {
         this.notifySubscribers();
     }
@@ -173,14 +180,6 @@ Model.prototype.updateVideoLocations = function () {
         //     }
         // }
     });
-    this.notifySubscribers();
-}
-
-Model.prototype.clearVideos = function () {
-    this.videos = [];
-    this.overlay = [];
-    this.selectedVideos = [];
-    this.clearShadowMarks();
     this.notifySubscribers();
 }
 
@@ -625,7 +624,7 @@ Model.prototype.checkHelpButtonHit = function () {
 }
 
 Model.prototype.getCurrentDataset = function () {
-    switch (this.block) {
+    switch (this.trial) {
         case 2:
             switch (this.task) {
                 case 1:
@@ -671,26 +670,27 @@ Model.prototype.logData = function () {
 
 Model.prototype.addTrialData = function () {
     // Elapsed time
-    let elapsedTime = new Date().getTime() - this.blockStartTime;
+    let elapsedTime = new Date().getTime() - this.trialStartTime;
 
     // Errors
     let falseNegatives = 0;
     let falsePositives = 0;
     let correctVideos = [];
-    let blockVideos = [];
-    this.category.videos.forEach(categoryVideo => {
-        if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) blockVideos.push(categoryVideo);
+    let trialVideos = [];
+    let category = this.category[0];
+    category.videos.forEach(categoryVideo => {
+        if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) trialVideos.push(categoryVideo);
     });
-    if (blockVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
-    blockVideos.forEach(video => {
+    if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
+    trialVideos.forEach(video => {
         switch (this.task) {
             case 1:
-                if (this.getCurrentDataset() === "seaice" && this.category.name === "northpole") {
+                if (this.getCurrentDataset() === "seaice" && category.name === "northpole") {
                     // Northpole measures smaller area
-                    if (video.area < this.category.example_area) correctVideos.push(video);
+                    if (video.area < category.example_area) correctVideos.push(video);
                 } else {
                     // All other datasets measure larger area
-                    if (video.area > this.category.example_area) correctVideos.push(video);
+                    if (video.area > category.example_area) correctVideos.push(video);
                 }
                 break;
             case 2:
@@ -712,9 +712,9 @@ Model.prototype.addTrialData = function () {
         pID: pID,
         task: this.task,
         interaction: this.interaction,
-        block: this.block,
+        trial: this.trial,
         dataset: this.getCurrentDataset(),
-        category: this.category.name,
+        category: category.name,
         videos: this.videos.map(video => video.name),
         elapsedTime: elapsedTime,
         falseNegatives: falseNegatives,
