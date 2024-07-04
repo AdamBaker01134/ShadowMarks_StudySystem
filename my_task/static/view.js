@@ -156,6 +156,12 @@ View.prototype.drawTutorials = function () {
         stroke(0);
         strokeWeight(1);
         rect(video.x, video.y, video.width, video.height);
+        let highlightedMarker = this.model.highlightedMarker;
+        if (highlightedMarker && highlightedMarker.video === video) {
+            strokeWeight(5);
+            stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
+            rect(video.x + 1, video.y + 1, video.width - 2, video.height - 2);
+        }
         if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.includes(video)) {
             let ow = this.model.videos[0].width;
             let oh = this.model.videos[0].height;
@@ -633,7 +639,7 @@ View.prototype.drawHelpMenu = function () {
         hotkeysPoints.push("- Toggle straight freeform lines ------------------------------------------------------------------ shift + dragging");
         hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- ctrl + c");
         hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
-        hotkeysPoints.push("- Undo last shadow marker  --------------------------------------------------------------------------------- ctrl + z");
+        hotkeysPoints.push("- Delete shadow marker  --------------------------------------------------------------------------- hover + delete");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
         generalPoints.push("- Right click on a video to add it to the overlay on the right.");
         generalPoints.push("- Right click on the overlay to remove the top video from the stack.");

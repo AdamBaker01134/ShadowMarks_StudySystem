@@ -195,12 +195,13 @@ Controller.prototype.handleKeyPressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
-            if (event.ctrlKey && keyCode === 90) {
-                // Handle ctrl + z pressed
-                event.preventDefault();
-                event.stopPropagation();
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
-                this.model.popLastShadowMark();
+            if (keyCode === 46) {
+                // Handle delete pressed
+                let hit = this.model.checkShadowMarkerHit();
+                if (hit) {
+                    if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
+                    this.model.deleteShadowMarker(hit);
+                }
             }
             if (event.ctrlKey && keyCode === 187) {
                 // Handle ctrl + "+" pressed

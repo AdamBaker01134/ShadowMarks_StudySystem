@@ -452,9 +452,10 @@ Model.prototype.setHoverTarget = function (target) {
     this.notifySubscribers();
 }
 
-Model.prototype.popLastShadowMark = function () {
-    if (this.shadowMarks.length > 0) {
-        this.shadowMarks.pop();
+Model.prototype.deleteShadowMarker = function (shadowMarker) {
+    let index;
+    if ((index = this.shadowMarks.indexOf(shadowMarker)) > -1) {
+        this.shadowMarks.splice(index, 1);
         this.notifySubscribers();
     }
 }
@@ -482,12 +483,47 @@ Model.prototype.checkShadowMarkerHit = function () {
     for (let i = 0; i < this.shadowMarks.length; i++) {
         let shadowMarker = this.shadowMarks[i];
         if (shadowMarker.shape === SHAPES.FREEFORM) {
-            for (let j = 0; j < shadowMarker.path.length; j++) {
-                let point = shadowMarker.path[j];
-                let px = hoverTargetX + hoverTargetW * point.widthRatio;
-                let py = hoverTargetY + hoverTargetH * point.heightRatio;
-                let padding = 5;
-                if (mouseX > px - padding && mouseX < px + padding && mouseY > py - padding && mouseY < py + padding) return shadowMarker;
+            let padding = 5;
+            if (shadowMarker.path.length === 2) {
+                // Need to do more math if its just a line
+                let p1, p2;
+                if (Math.abs(shadowMarker.path[0].widthRatio - shadowMarker.path[1].widthRatio)*hoverTargetW > padding) {
+                    if (shadowMarker.path[0].widthRatio < shadowMarker.path[1].widthRatio) {
+                        p1 = shadowMarker.path[0];
+                        p2 = shadowMarker.path[1];
+                    } else {
+                        p1 = shadowMarker.path[1];
+                        p2 = shadowMarker.path[0];
+                    }
+                } else {
+                    // Close x = infinite slope
+                    let px = hoverTargetX + hoverTargetW * shadowMarker.path[0].widthRatio;
+                    let p1y, p2y;
+                    if (shadowMarker.path[0].heightRatio < shadowMarker.path[1].heightRatio) {
+                        p1y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
+                        p2y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
+                    } else {
+                        p1y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
+                        p2y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
+                    }
+                    if (mouseX > px - padding && mouseX < px + padding && mouseY > p1y - padding && mouseY < p2y + padding ) return shadowMarker;
+                    else continue;
+                }
+                let p1x = hoverTargetX + hoverTargetW * p1.widthRatio;
+                let p1y = hoverTargetY + hoverTargetH * p1.heightRatio;
+                let p2x = hoverTargetX + hoverTargetW * p2.widthRatio;
+                let p2y = hoverTargetY + hoverTargetH * p2.heightRatio;
+                let m = (p2y-p1y)/(p2x-p1x);
+                let b = p1y - m*p1x;
+                let fx = m*mouseX + b;
+                if (mouseX > p1x - padding && mouseX < p2x + padding && mouseY > fx - padding && mouseY < fx + padding) return shadowMarker;
+            } else {
+                for (let j = 0; j < shadowMarker.path.length; j++) {
+                    let point = shadowMarker.path[j];
+                    let px = hoverTargetX + hoverTargetW * point.widthRatio;
+                    let py = hoverTargetY + hoverTargetH * point.heightRatio;
+                    if (mouseX > px - padding && mouseX < px + padding && mouseY > py - padding && mouseY < py + padding) return shadowMarker;
+                }
             }
         } else {
             let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
