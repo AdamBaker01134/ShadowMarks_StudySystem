@@ -18,6 +18,10 @@ async function preload() {
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
     model.setTutorialChecklist(tutorialChecklists[interaction]);
+}
+
+function setup() {
+    createCanvas(windowWidth*0.98, windowHeight*3);
 
     if (tutorial) {
         controller.handleLoadTutorials();
@@ -26,10 +30,6 @@ async function preload() {
     } else {
         controller.handleLoadLemnatec().then(category => model.setCategory(category));
     }
-}
-
-function setup() {
-    createCanvas(windowWidth*0.98, windowHeight*3);
 
     attachUserEventListeners();
     model.addSubscriber(view);
