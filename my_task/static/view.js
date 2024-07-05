@@ -671,19 +671,19 @@ View.prototype.drawHelpMenu = function () {
     fill(101);
     let generalPoints = ["GENERAL"], hotkeysPoints = ["HOTKEYS"], taskPoints = [];
     generalPoints.push("- Drag the scrollbar to play through all videos at once.");
-    hotkeysPoints.push("- Auto-play ---------------------------------------------------------------------------------------------------- spacebar");
-    hotkeysPoints.push("- Zoom in ----------------------------------------------------------------------------------------------------- ctrl + plus");
-    hotkeysPoints.push("- Zoom out ------------------------------------------------------------------------------------------------- ctrl + minus");
-    hotkeysPoints.push("- Select ------------------------------------------------------------------------------------------------------- ctrl + click")
+    hotkeysPoints.push("- Toggle playback ------------------------------------------------------------------------------------------ SPACEBAR");
+    hotkeysPoints.push("- Zoom in ---------------------------------------------------------------------------------------------------------- CTRL +");
+    hotkeysPoints.push("- Zoom out -------------------------------------------------------------------------------------------------------- CTRL -");
+    hotkeysPoints.push("- Select video ------------------------------------------------------------------------------------------------ CTRL click")
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
         generalPoints.push("- Markers can be placed by clicking on a video.");
         generalPoints.push("- Marker shape and colour are controlled in the menus to the right of the scrollbar.");
         generalPoints.push("- The freeform marker (squiggly line) allows you to freely draw shapes in each video.");
         generalPoints.push("- Hovering over a shadow marker will highlight the video it originally came from.");
-        hotkeysPoints.push("- Toggle straight freeform lines ------------------------------------------------------------------ shift + dragging");
-        hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- ctrl + c");
-        hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
-        hotkeysPoints.push("- Delete shadow marker  --------------------------------------------------------------------------- hover + delete");
+        hotkeysPoints.push("- Toggle straight freeform lines -------------------------------------------------------------------------------- SHIFT");
+        hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- CTRL C");
+        hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ CTRL G");
+        hotkeysPoints.push("- Remove shadow marker  ----------------------------------------------------------------------- hover & DELETE");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
         generalPoints.push("- Click on a video to add it to the overlay on the right.");
         generalPoints.push("- Click on the video again to remove it from the overlay.");

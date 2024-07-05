@@ -87,7 +87,7 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
+                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
@@ -110,7 +110,7 @@ Controller.prototype.handleMousePressed = function (event) {
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     }
                     this.model.selectVideo(hit);
-                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
@@ -154,6 +154,7 @@ Controller.prototype.handleMousePressed = function (event) {
             this.currentState = this.savedState;
             break;
         case STATE.HELP:
+            if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             this.model.setHelpMenuOpen(false);
             this.currentState = this.savedState;
             break;
@@ -243,6 +244,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === 32) {
                 // Handle spacebar pressed
                 if (this.currentState === STATE.PLAYING) {
+                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
                 } else {
@@ -321,7 +323,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === SHIFT) {
                 // Handle shift key pressed
-                if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
                     this.model.toggleFreeformStraight();
                 }
@@ -398,6 +400,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     console.log("Loading 6 random lemnatec videos...");
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
+    if (this.model.task === 1) loadImage(`${assets.lemnatec.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
@@ -424,7 +427,6 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
-    if (this.model.task === 1) loadImage(`${assets.lemnatec.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     return category;
 }
 
@@ -432,6 +434,7 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     console.log("Loading 6 random sea ice videos...");
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
+    if (this.model.task === 1) loadImage(`${assets.seaice.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
@@ -458,7 +461,6 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
-    if (this.model.task === 1) loadImage(`${assets.seaice.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     return category;
 }
 
