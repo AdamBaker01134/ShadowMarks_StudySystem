@@ -100,7 +100,7 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
-                if (this.model.interaction === INTERACTIONS.OVERLAYS && event.which === 3) {
+                if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
                     if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
                     return false;
@@ -119,11 +119,8 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.savedState = this.currentState;
                     this.currentState = STATE.MARKING;
                 }
-            } else if (this.model.checkOverlayHit()) {
-                if (event.which === 3) {
-                    this.model.popFromOverlay();
-                    if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
-                } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+            } else if (this.model.checkOverlayHit()) { 
+                if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     let ow = this.model.videos[0].width;
                     let oh = this.model.videos[0].height;
                     let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;

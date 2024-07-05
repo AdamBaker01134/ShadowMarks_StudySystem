@@ -185,17 +185,14 @@ Model.prototype.updateVideoLocations = function () {
 }
 
 Model.prototype.addToOverlay = function (video) {
-    if (!this.overlay.includes(video)) {
+    let index;
+    if ((index = this.overlay.indexOf(video)) === -1) {
         this.overlay.push(video);
-        this.notifySubscribers();
+    } else {
+        this.overlay.splice(index,1);
+        if (tutorial && this.interaction === INTERACTIONS.OVERLAYS && this.currentChecklistPrompt === 2) this.nextPrompt();
     }
-}
-
-Model.prototype.popFromOverlay = function () {
-    if (this.overlay.length > 0) {
-        this.overlay.pop();
-        this.notifySubscribers();
-    }
+    this.notifySubscribers();
 }
 
 Model.prototype.checkOverlayHit = function () {
@@ -212,7 +209,7 @@ Model.prototype.checkOverlayHit = function () {
 }
 
 Model.prototype.checkVideoHit = function () {
-    for (let i = 0; i < this.videos.length; i++) {
+    for (let i = 0; i < 6 && i < this.videos.length; i++) {
         if (this.videos[i].checkHit(mouseX, mouseY)) return this.videos[i];
     }
     return null;

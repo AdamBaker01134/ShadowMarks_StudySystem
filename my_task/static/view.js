@@ -15,7 +15,7 @@ View.prototype.draw = function () {
             let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
-            if (video) image(video.images[this.model.index], x, y, video.width, video.height);
+            image(video.images[this.model.index], x, y, video.width, video.height);
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
@@ -25,6 +25,27 @@ View.prototype.draw = function () {
             fill(255);
             textSize(16);
             text(video.name, x + 5, y + 20);
+            if (this.model.interaction === INTERACTIONS.OVERLAYS) {
+                let eyeW = video.width/5;
+                let eyeH = eyeW/1.3;
+                let eyeX = x + video.width - eyeW/2 - 10;
+                let eyeY = y + eyeH/2 + 10;
+                stroke(105,105,105);
+                fill(220,220,220);
+                ellipse(eyeX,eyeY,eyeW,eyeH);
+                let index;
+                if ((index = this.model.overlay.indexOf(video)) > -1) {
+                    let innerH = eyeW/2;
+                    ellipse(eyeX,eyeY,eyeW,innerH);
+                    circle(eyeX,eyeY,innerH);
+                    noStroke();
+                    fill(105,105,105);
+                    textSize(innerH);
+                    text(index+1,eyeX-textWidth(index+1)/2,eyeY+innerH/3);
+                } else {
+                    line(eyeX-eyeW/2,eyeY,eyeX+eyeW/2,eyeY);
+                }
+            }
     
             noFill();
             if (this.model.selectedVideos.includes(video)) {
@@ -147,6 +168,28 @@ View.prototype.drawTutorials = function () {
         line(video.x + p1[0] + 100, video.y + p1[1] + video.height * (index + 1) / 4, video.x + p2[0] + 100, video.y + p2[1] + video.height * (index + 1) / 4);
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
             this.drawShadowMarkers(video.x, video.y, video.width, video.height);
+        }
+        if (this.model.interaction === INTERACTIONS.OVERLAYS) {
+            let eyeW = video.width/5;
+            let eyeH = eyeW/1.3;
+            let eyeX = video.x + video.width - eyeW/2 - 10;
+            let eyeY = video.y + eyeH/2 + 10;
+            stroke(105,105,105);
+            strokeWeight(1);
+            fill(220,220,220);
+            ellipse(eyeX,eyeY,eyeW,eyeH);
+            let index;
+            if ((index = this.model.overlay.indexOf(video)) > -1) {
+                let innerH = eyeW/2;
+                ellipse(eyeX,eyeY,eyeW,innerH);
+                circle(eyeX,eyeY,innerH);
+                noStroke();
+                fill(105,105,105);
+                textSize(innerH);
+                text(index+1,eyeX-textWidth(index+1)/2,eyeY+innerH/3);
+            } else {
+                line(eyeX-eyeW/2,eyeY,eyeX+eyeW/2,eyeY);
+            }
         }
         noFill();
         if (this.model.selectedVideos.includes(video)) {
@@ -642,8 +685,8 @@ View.prototype.drawHelpMenu = function () {
         hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ ctrl + g");
         hotkeysPoints.push("- Delete shadow marker  --------------------------------------------------------------------------- hover + delete");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
-        generalPoints.push("- Right click on a video to add it to the overlay on the right.");
-        generalPoints.push("- Right click on the overlay to remove the top video from the stack.");
+        generalPoints.push("- Click on a video to add it to the overlay on the right.");
+        generalPoints.push("- Click on the video again to remove it from the overlay.");
     }
     if (tutorial) {
         taskPoints.push("- Follow the prompts displayed above the scrollbar.");
