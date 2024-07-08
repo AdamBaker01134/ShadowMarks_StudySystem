@@ -21,25 +21,31 @@ async function preload() {
 }
 
 function setup() {
-    createCanvas(windowWidth*0.98, windowHeight*3);
+    createCanvas(windowWidth*0.98, windowHeight);
 
     if (tutorial) {
         controller.handleLoadTutorials();
     } else {
-        controller.handleLoadLemnatec().then(category => {
-            model.setCategory(category);
-            switch (model.task) {
-                case 1:
-                    controller.handleLoadSeaIce(model.category[0].name).then(category => model.setCategory(category));
-                    break;
-                case 2:
-                    controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
-                    break;
-                case 3:
+        switch (model.task) {
+            case 1:
+                controller.handleLoadLemnatec().then(category => { 
+                    model.setCategory(category);
                     controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
-                    break;
-            }
-        });
+                });
+                break;
+            case 2:
+                controller.handleLoadSeaIce().then(category => { 
+                    model.setCategory(category);
+                    controller.handleLoadSeaIce().then(category => model.setCategory(category));
+                });
+                break;
+            case 3:
+                controller.handleLoadBaseball().then(category => { 
+                    model.setCategory(category);
+                    controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
+                });
+                break;
+        }
     }
 
     attachUserEventListeners();

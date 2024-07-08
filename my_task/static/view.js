@@ -376,7 +376,7 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
             case MARKS.RECT:
                 if (mark.path.length === 2) {
                     stroke(colour.r, colour.g, colour.b);
-                    strokeWeight(2);
+                    strokeWeight(1);
                     const x1 = vx + vw * mark.path[0].widthRatio;
                     const y1 = vy + vh * mark.path[0].heightRatio;
                     const x2 = vx + vw * mark.path[1].widthRatio;
@@ -391,7 +391,7 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
             case MARKS.CIRCLE:
                 if (mark.path.length === 2) {
                     stroke(colour.r, colour.g, colour.b);
-                    strokeWeight(2);
+                    strokeWeight(1);
                     const x1 = vx + vw * mark.path[0].widthRatio;
                     const y1 = vy + vh * mark.path[0].heightRatio;
                     const x2 = vx + vw * mark.path[1].widthRatio;
@@ -403,7 +403,7 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
             case MARKS.LINE:
             case MARKS.FREEFORM:
                 stroke(colour.r, colour.g, colour.b);
-                strokeWeight(2);
+                strokeWeight(1);
                 for (let i = 0; i < mark.path.length - 1; i++) {
                     const x1 = vx + vw * mark.path[i].widthRatio;
                     const y1 = vy + vh * mark.path[i].heightRatio;
@@ -440,7 +440,7 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
     // Draw current freeform path
     const colour = this.model.shadowMarkColour;
     stroke(colour.r, colour.g, colour.b);
-    strokeWeight(2);
+    strokeWeight(1);
     switch (this.model.shadowMarkType) {
         case MARKS.FREEFORM:
         case MARKS.LINE:

@@ -165,7 +165,8 @@ Model.prototype.addVideo = function (video, labels, name) {
 Model.prototype.updateVideoLocations = function () {
     let x = 0;
     let y = 0;
-    this.videos.forEach(video => {
+    for (let i = 0; i < 6 && i < this.videos.length; i++) {
+        let video = this.videos[i];
         video.setX(x);
         video.setY(y);
         x += video.width;
@@ -184,7 +185,22 @@ Model.prototype.updateVideoLocations = function () {
         //         y += video.height;
         //     }
         // }
-    });
+    }
+    if (this.videos.length > 0) {
+        if (x === 0) {
+            if (y > windowHeight) {
+                resizeCanvas(width, y+110);
+            } else {
+                resizeCanvas(width, windowHeight);
+            }
+        } else {
+            if (y+this.videos[0].height > windowHeight) {
+                resizeCanvas(width, y+this.videos[0].height+110);
+            } else {
+                resizeCanvas(width, windowHeight);
+            }
+        }
+    }
     this.notifySubscribers();
 }
 
@@ -680,20 +696,14 @@ Model.prototype.freeforming = function () {
 }
 
 Model.prototype.getCurrentDataset = function () {
-    switch (this.trial) {
-        case 2:
-            switch (this.task) {
-                case 1:
-                    return "seaice";
-                case 2:
-                    return "baseball";
-                case 3:
-                default:
-                    return "lemnatec";
-            }
+    switch (this.task) {
         case 1:
-        default:
             return "lemnatec";
+        case 2:
+            return "seaice";
+        case 3:
+        default:
+            return "baseball";
     }
 }
 
@@ -725,58 +735,58 @@ Model.prototype.logData = function () {
 }
 
 Model.prototype.addTrialData = function () {
-    // Elapsed time
-    let elapsedTime = new Date().getTime() - this.trialStartTime;
+    // // Elapsed time
+    // let elapsedTime = new Date().getTime() - this.trialStartTime;
 
-    // Errors
-    let falseNegatives = 0;
-    let falsePositives = 0;
-    let correctVideos = [];
-    let trialVideos = [];
-    let category = this.category[0];
-    category.videos.forEach(categoryVideo => {
-        if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) trialVideos.push(categoryVideo);
-    });
-    if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
-    trialVideos.forEach(video => {
-        switch (this.task) {
-            case 1:
-                if (this.getCurrentDataset() === "seaice" && category.name === "northpole") {
-                    // Northpole measures smaller area
-                    if (video.area < category.example_area) correctVideos.push(video);
-                } else {
-                    // All other datasets measure larger area
-                    if (video.area > category.example_area) correctVideos.push(video);
-                }
-                break;
-            case 2:
-                if (correctVideos.length === 0) correctVideos = [ video ];
-                else if (correctVideos[0].dist < video.dist) correctVideos = [ video ];
-                break;
-            case 3:
-            default:
-                if (correctVideos.length === 0) correctVideos = [ video ];
-                else if (correctVideos[0].dist-correctVideos[0].dist_flower < video.dist-video.dist_flower) correctVideos = [ video ];
-                break;
-        }
-    });
-    correctVideos.forEach(video => { if (this.selectedVideos.findIndex(selectedVideo => video.name === selectedVideo.name) === -1) falseNegatives++ });
-    this.selectedVideos.forEach(selectedVideo => { if (correctVideos.findIndex(video => video.name === selectedVideo.name) === -1) falsePositives++ });
+    // // Errors
+    // let falseNegatives = 0;
+    // let falsePositives = 0;
+    // let correctVideos = [];
+    // let trialVideos = [];
+    // let category = this.category[0];
+    // category.videos.forEach(categoryVideo => {
+    //     if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) trialVideos.push(categoryVideo);
+    // });
+    // if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
+    // trialVideos.forEach(video => {
+    //     switch (this.task) {
+    //         case 1:
+    //             if (this.getCurrentDataset() === "seaice" && category.name === "northpole") {
+    //                 // Northpole measures smaller area
+    //                 if (video.area < category.example_area) correctVideos.push(video);
+    //             } else {
+    //                 // All other datasets measure larger area
+    //                 if (video.area > category.example_area) correctVideos.push(video);
+    //             }
+    //             break;
+    //         case 2:
+    //             if (correctVideos.length === 0) correctVideos = [ video ];
+    //             else if (correctVideos[0].dist < video.dist) correctVideos = [ video ];
+    //             break;
+    //         case 3:
+    //         default:
+    //             if (correctVideos.length === 0) correctVideos = [ video ];
+    //             else if (correctVideos[0].dist-correctVideos[0].dist_flower < video.dist-video.dist_flower) correctVideos = [ video ];
+    //             break;
+    //     }
+    // });
+    // correctVideos.forEach(video => { if (this.selectedVideos.findIndex(selectedVideo => video.name === selectedVideo.name) === -1) falseNegatives++ });
+    // this.selectedVideos.forEach(selectedVideo => { if (correctVideos.findIndex(video => video.name === selectedVideo.name) === -1) falsePositives++ });
 
-    // Construct trial data object
-    let trialData = {
-        pID: pID,
-        task: this.task,
-        interaction: this.interaction,
-        trial: this.trial,
-        dataset: this.getCurrentDataset(),
-        category: category.name,
-        videos: this.videos.map(video => video.name),
-        elapsedTime: elapsedTime,
-        falseNegatives: falseNegatives,
-        falsePositives: falsePositives,
-    };
-    this.log.push(trialData);
+    // // Construct trial data object
+    // let trialData = {
+    //     pID: pID,
+    //     task: this.task,
+    //     interaction: this.interaction,
+    //     trial: this.trial,
+    //     dataset: this.getCurrentDataset(),
+    //     category: category.name,
+    //     videos: this.videos.map(video => video.name),
+    //     elapsedTime: elapsedTime,
+    //     falseNegatives: falseNegatives,
+    //     falsePositives: falsePositives,
+    // };
+    // this.log.push(trialData);
 }
 
 Model.prototype.addSubscriber = function (subscriber) {
