@@ -429,9 +429,32 @@ Model.prototype.setFreeformTarget = function (target) {
     }
 }
 
-Model.prototype.toggleFreeformStraight = function () {
-    this.freeformStraight = !this.freeformStraight;
-    this.notifySubscribers();
+Model.prototype.circleOutOfBounds = function (newMarkWidthRatio, newMarkHeightRatio) {
+    let targetX, targetY, targetW, targetH;
+    if (this.freeformTarget === "OVERLAY") {
+        targetW = this.videos[0].width;
+        targetH = this.videos[0].height;
+        targetX = this.getScrollbarX() + this.getScrollbarWidth() + 75 - targetW;
+        targetY = scrollY;
+    } else if (this.freeformTarget !== null) {
+        targetX = this.freeformTarget.x;
+        targetY = this.freeformTarget.y;
+        targetW = this.freeformTarget.width;
+        targetH = this.freeformTarget.height;
+    } else {
+        return false;
+    }
+    if (this.freeformPath.length <= 2) {
+        let p1 = this.freeformPath[0];
+        let p2 = { widthRatio: newMarkWidthRatio, heightRatio: newMarkHeightRatio };
+        let p1x = targetX + targetW * p1.widthRatio;
+        let p1y = targetY + targetH * p1.heightRatio;
+        let p2x = targetX + targetW * p2.widthRatio;
+        let p2y = targetY + targetH * p2.heightRatio;
+        let r = Math.sqrt(Math.pow(p1x-p2x,2)+Math.pow(p1y-p2y,2));
+        if (p1x-r < targetX || p1x+r > targetX+targetW || p1y-r < targetY || p1y+r > targetY+targetH) return true;
+    }
+    return false;
 }
 
 Model.prototype.setHoverTarget = function (target) {

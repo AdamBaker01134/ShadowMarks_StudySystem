@@ -53,7 +53,7 @@ Controller.prototype.handleMouseDragged = function (event) {
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
-            if (this.model.freeforming() && hit && hit === this.model.freeformTarget) {
+            if (this.model.freeforming() && hit && hit === this.model.freeformTarget && !(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-hit.x)/hit.width,(mouseY-hit.y)/hit.height))) {
                 if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
             } else if (this.model.freeforming() && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
@@ -62,7 +62,9 @@ Controller.prototype.handleMouseDragged = function (event) {
                 let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
                 let oy = scrollY;
                 hit = "OVERLAY";
-                this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
+                if (!(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-ox)/ow,(mouseY-oy)/oh))) {
+                    this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
+                }
             }
             this.model.setHoverTarget(hit);
             // if (this.model.gridActive) {
@@ -162,7 +164,7 @@ Controller.prototype.handleMouseReleased = function (event) {
         case STATE.MARKING:
             if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.freeforming()) {
-                    this.model.addFreeformPathToShadowMarks(hit !== null ? hit : "OVERLAY");
+                    this.model.addFreeformPathToShadowMarks(this.model.freeformTarget);
                     this.model.setFreeformTarget(null);
                 } else {
                     if (this.model.checkOverlayHit()) {
