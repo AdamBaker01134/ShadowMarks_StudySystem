@@ -8,7 +8,6 @@ const STATE = {
     MARKING: "marking",
     ZOOMING: "zooming",
     COLOUR_PICKER: "colour_picker",
-    SHAPE_PICKER: "shape_picker",
     HELP: "help",
     NO_INTERACTION: "no_interaction",
 }
@@ -26,16 +25,16 @@ Controller.prototype.handleMouseMoved = function (event) {
         case STATE.READY:
         case STATE.PLAYING:
             this.model.setScrollbarHighlighted(this.model.checkScrollbarHit());
-            this.model.setShapeButtonHighlighted(this.model.checkShapeButtonHit());
+            this.model.setMarkButtonHighlighted(this.model.checkMarkButtonHit());
             this.model.setColourButtonHighlighted(this.model.checkColourButtonHit());
             this.model.setHelpButtonHighlighted(this.model.checkHelpButtonHit());
             let hit = this.model.checkVideoHit();
             if (this.model.checkOverlayHit()) hit = "OVERLAY";
             this.model.setHoverTarget(hit);
             if (hit && this.model.interaction === INTERACTIONS.SHADOW_MARKER) this.model.highlightMarker(this.model.checkShadowMarkerHit());
-            if (this.model.gridActive) {
-                this.model.setGridHighlight(hit);
-            }
+            // if (this.model.gridActive) {
+            //     this.model.setGridHighlight(hit);
+            // }
             break;
         default:
             break;
@@ -54,10 +53,10 @@ Controller.prototype.handleMouseDragged = function (event) {
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
-            if (this.model.shadowMarkShape === SHAPES.FREEFORM && hit && hit === this.model.freeformTarget) {
+            if (this.model.freeforming() && hit && hit === this.model.freeformTarget) {
                 if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
-            } else if (this.model.shadowMarkShape === SHAPES.FREEFORM && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
+            } else if (this.model.freeforming() && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
                 let ow = this.model.videos[0].width;
                 let oh = this.model.videos[0].height;
                 let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
@@ -66,9 +65,9 @@ Controller.prototype.handleMouseDragged = function (event) {
                 this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
             }
             this.model.setHoverTarget(hit);
-            if (this.model.gridActive) {
-                this.model.setGridHighlight(hit);
-            }
+            // if (this.model.gridActive) {
+            //     this.model.setGridHighlight(hit);
+            // }
             break;
         default:
             break;
@@ -78,7 +77,7 @@ Controller.prototype.handleMouseDragged = function (event) {
 
 Controller.prototype.handleMousePressed = function (event) {
     if (!tutorial && this.model.percentLoaded !== 100) return true;
-    let hit = null;
+    let hit = null, mark = null;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -91,10 +90,9 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
-            } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkShapeButtonHit()) {
-                this.model.setShapeMenuOpen(true);
-                this.savedState = this.currentState;
-                this.currentState = STATE.SHAPE_PICKER;
+            } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && (mark = this.model.checkMarkButtonHit())) {
+                this.model.setType(mark);
+                return false;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {
                 this.model.setColourMenuOpen(true);
                 this.savedState = this.currentState;
@@ -112,7 +110,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.model.selectVideo(hit);
                     if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-                    if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                    if (this.model.freeforming()) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
                         this.model.setFreeformTarget(hit);
                     }
@@ -125,7 +123,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     let oh = this.model.videos[0].height;
                     let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
                     let oy = scrollY;
-                    if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                    if (this.model.freeforming()) {
                         this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
                         this.model.setFreeformTarget("OVERLAY");
                     }
@@ -133,16 +131,6 @@ Controller.prototype.handleMousePressed = function (event) {
                     this.currentState = STATE.MARKING;
                 }
             }
-            break;
-        case STATE.SHAPE_PICKER:
-            let shape = null;
-            if (shape = this.model.checkShapeMenuHit()) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 3 && shape === SHAPES.FREEFORM) this.model.nextPrompt();
-                this.model.setShape(shape);
-            }
-            this.model.setShapeMenuOpen(false);
-            this.currentState = this.savedState;
             break;
         case STATE.COLOUR_PICKER:
             let colour = null;
@@ -173,7 +161,7 @@ Controller.prototype.handleMouseReleased = function (event) {
             break;
         case STATE.MARKING:
             if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
-                if (this.model.shadowMarkShape === SHAPES.FREEFORM) {
+                if (this.model.freeforming()) {
                     this.model.addFreeformPathToShadowMarks(hit !== null ? hit : "OVERLAY");
                     this.model.setFreeformTarget(null);
                 } else {
@@ -273,27 +261,18 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
                 return false;
             }
-            if (event.ctrlKey && keyCode === 67 && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-                // Handle ctrl + c pressed
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 8) this.model.nextPrompt();
-                this.model.setShadowing(!this.model.shadowing);
-                let hit = this.model.checkVideoHit();
-                if (this.model.checkOverlayHit()) hit = "OVERLAY";
-                this.model.setHoverTarget(hit);
-                return false;
-            }
-            if (event.ctrlKey && keyCode === 71) {
+            // if (event.ctrlKey && keyCode === 71) {
                 // Handle ctrl + g pressed
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
-                this.model.setGridActive(!this.model.gridActive);
-                let hit = this.model.checkVideoHit();
-                if (this.model.checkOverlayHit()) hit = "OVERLAY";
-                this.model.setHoverTarget(hit);
-                if (this.model.gridActive) {
-                    this.model.setGridHighlight(hit);
-                }
-                return false;
-            }
+                // if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
+                // this.model.setGridActive(!this.model.gridActive);
+                // let hit = this.model.checkVideoHit();
+                // if (this.model.checkOverlayHit()) hit = "OVERLAY";
+                // this.model.setHoverTarget(hit);
+                // if (this.model.gridActive) {
+                //     this.model.setGridHighlight(hit);
+                // }
+                // return false;
+            // }
             if (keyCode === 37) {
                 // Handle left arrow pressed
                 if (this.model.index > 0) {
@@ -319,13 +298,6 @@ Controller.prototype.handleKeyPressed = function (event) {
                         this.model.addTrialData();
                         this.model.logData();  
                     }
-                }
-            }
-            if (keyCode === SHIFT) {
-                // Handle shift key pressed
-                if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-                    if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
-                    this.model.toggleFreeformStraight();
                 }
             }
             break;

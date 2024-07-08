@@ -7,12 +7,13 @@ const INTERACTIONS = {
     SHADOW_MARKER: "shadowMarkers",
 }
 
-const SHAPES = {
-    CROSSHAIR: "crosshair",
-    CROSS: "cross",
-    SQUARE: "square",
+const MARKS = {
+    MARKER: "marker",
+    RECT: "rect",
     CIRCLE: "circle",
     FREEFORM: "freeform",
+    LINE: "line",
+    CURSOR: "cursor", 
 }
 
 const COLOURS = {
@@ -32,26 +33,29 @@ function Model() {
     this.videos = [];
 
     this.shadowMarks = [];
-    this.shadowMarkShape = SHAPES.CROSSHAIR;
+    this.shadowMarkType = MARKS.MARKER;
     this.shadowMarkColour = COLOURS.RED;
     this.freeformPath = [];
     this.freeformTarget = null;
-    this.freeformStraight = false;
 
     this.index = 0;
     this.scrollbarHighlighted = false;
 
-    this.shapeButtonHighlighted = false;
+    this.markerButtonHighlighted = false;
+    this.rectButtonHighlighted = false;
+    this.circleButtonHighlighted = false;
+    this.lineButtonHighlighted = false;
+    this.freeformButtonHighlighted = false;
+    this.cursorButtonHighlighted = false;
     this.colourButtonHighlighted = false;
     this.helpButtonHighlighted = false;
-    this.shapeMenuOpen = false;
+    
     this.colourMenuOpen = false;
     this.helpMenuOpen = false;
 
-    this.shadowing = false;
-    this.gridActive = false;
+    // this.gridActive = false;
     this.hoverTarget = null;
-    this.gridHighlight = -1;
+    // this.gridHighlight = -1;
 
     this.highlightedMarker = null;
     this.selectedVideos = [];
@@ -299,13 +303,6 @@ Model.prototype.setScrollbarHighlighted = function (highlighted) {
     }
 }
 
-Model.prototype.setShapeButtonHighlighted = function (highlighted) {
-    if (this.shapeButtonHighlighted != highlighted) {
-        this.shapeButtonHighlighted = highlighted;
-        this.notifySubscribers();
-    }
-}
-
 Model.prototype.setColourButtonHighlighted = function (highlighted) {
     if (this.colourButtonHighlighted != highlighted) {
         this.colourButtonHighlighted = highlighted;
@@ -320,60 +317,53 @@ Model.prototype.setHelpButtonHighlighted = function (highlighted) {
     }
 }
 
-Model.prototype.setShadowing = function (shadowing) {
-    if (this.shadowing != shadowing) {
-        this.shadowing = shadowing;
-        this.notifySubscribers();
-    }
-}
+// Model.prototype.setGridActive = function (gridActive) {
+//     if (this.gridActive != gridActive) {
+//         this.gridActive = gridActive;
+//         this.notifySubscribers();
+//     }
+// }
 
-Model.prototype.setGridActive = function (gridActive) {
-    if (this.gridActive != gridActive) {
-        this.gridActive = gridActive;
-        this.notifySubscribers();
-    }
-}
-
-Model.prototype.setGridHighlight = function (video) {
-    let index = -1;
-    if (video !== null) {
-        let vx, vy, vw, vh;
-        if (video === "OVERLAY") {
-            vw = this.videos[0].width;
-            vh = this.videos[0].height;
-            vx = width - vw - 1;
-            vy = scrollY;
-        } else {
-            vx = video.x;
-            vy = video.y;
-            vw = video.width;
-            vh = video.height;
-        }
-        let squareSize, numRows = 3, numCols = 3;
-        if (vw > vh) {
-            squareSize = Math.floor(vh / 3);
-            numCols = Math.ceil(vw / squareSize);
-        } else {
-            squareSize = Math.floor(vw / 3);
-            numRows = Math.ceil(vh / squareSize);
-        }
-        let found = false;
-        for (let row = 0; row < numRows && !found; row++) {
-            for (let col = 0; col < numCols && !found; col++) {
-                let squareX = vx + squareSize*col;
-                let squareY = vy + squareSize*row;
-                if (mouseX > squareX && mouseX < squareX+squareSize && mouseY > squareY && mouseY < squareY+squareSize) {
-                    index = numCols*row + col;
-                    found = true;
-                }
-            }
-        }
-    }
-    if (this.gridHighlight != index) {
-        this.gridHighlight = index;
-        this.notifySubscribers();
-    }
-}
+// Model.prototype.setGridHighlight = function (video) {
+//     let index = -1;
+//     if (video !== null) {
+//         let vx, vy, vw, vh;
+//         if (video === "OVERLAY") {
+//             vw = this.videos[0].width;
+//             vh = this.videos[0].height;
+//             vx = width - vw - 1;
+//             vy = scrollY;
+//         } else {
+//             vx = video.x;
+//             vy = video.y;
+//             vw = video.width;
+//             vh = video.height;
+//         }
+//         let squareSize, numRows = 3, numCols = 3;
+//         if (vw > vh) {
+//             squareSize = Math.floor(vh / 3);
+//             numCols = Math.ceil(vw / squareSize);
+//         } else {
+//             squareSize = Math.floor(vw / 3);
+//             numRows = Math.ceil(vh / squareSize);
+//         }
+//         let found = false;
+//         for (let row = 0; row < numRows && !found; row++) {
+//             for (let col = 0; col < numCols && !found; col++) {
+//                 let squareX = vx + squareSize*col;
+//                 let squareY = vy + squareSize*row;
+//                 if (mouseX > squareX && mouseX < squareX+squareSize && mouseY > squareY && mouseY < squareY+squareSize) {
+//                     index = numCols*row + col;
+//                     found = true;
+//                 }
+//             }
+//         }
+//     }
+//     if (this.gridHighlight != index) {
+//         this.gridHighlight = index;
+//         this.notifySubscribers();
+//     }
+// }
 
 Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
     let idx = (int)(map(
@@ -396,7 +386,7 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio, video) {
     this.shadowMarks.push({
         widthRatio: widthRatio,
         heightRatio: heightRatio,
-        shape: this.shadowMarkShape,
+        type: this.shadowMarkType,
         colour: this.shadowMarkColour,
         video: video,
     });
@@ -404,7 +394,7 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio, video) {
 }
 
 Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
-    if (this.freeformStraight && this.freeformPath.length > 1) {
+    if (this.shadowMarkType !== MARKS.FREEFORM && this.freeformPath.length > 1) {
         this.freeformPath = [
             this.freeformPath[0],
             {
@@ -424,7 +414,7 @@ Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
 Model.prototype.addFreeformPathToShadowMarks = function (video) {
     this.shadowMarks.push({
         path: this.freeformPath,
-        shape: this.shadowMarkShape,
+        type: this.shadowMarkType,
         colour: this.shadowMarkColour,
         video: video,
     });
@@ -480,95 +470,132 @@ Model.prototype.checkShadowMarkerHit = function () {
     }
     for (let i = 0; i < this.shadowMarks.length; i++) {
         let shadowMarker = this.shadowMarks[i];
-        if (shadowMarker.shape === SHAPES.FREEFORM) {
-            let padding = 5;
-            if (shadowMarker.path.length === 2) {
-                // Need to do more math if its just a line
-                let p1, p2;
-                if (Math.abs(shadowMarker.path[0].widthRatio - shadowMarker.path[1].widthRatio)*hoverTargetW > padding) {
-                    if (shadowMarker.path[0].widthRatio < shadowMarker.path[1].widthRatio) {
-                        p1 = shadowMarker.path[0];
-                        p2 = shadowMarker.path[1];
-                    } else {
-                        p1 = shadowMarker.path[1];
-                        p2 = shadowMarker.path[0];
-                    }
-                } else {
-                    // Close x = infinite slope
-                    let px = hoverTargetX + hoverTargetW * shadowMarker.path[0].widthRatio;
-                    let p1y, p2y;
-                    if (shadowMarker.path[0].heightRatio < shadowMarker.path[1].heightRatio) {
-                        p1y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
-                        p2y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
-                    } else {
-                        p1y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
-                        p2y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
-                    }
-                    if (mouseX > px - padding && mouseX < px + padding && mouseY > p1y - padding && mouseY < p2y + padding ) return shadowMarker;
-                    else continue;
+        let padding = 5;
+        switch (shadowMarker.type) {
+            case MARKS.MARKER:
+                let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
+                let sy = hoverTargetY + hoverTargetH * shadowMarker.heightRatio;
+                let maxLength = 16;
+                let markLength = Math.min(hoverTargetW, hoverTargetH) / 20;
+                if (shadowMarker.type === MARKS.MARKER) {
+                    maxLength = 16;
+                    markLength = Math.min(hoverTargetW, hoverTargetH) / 16;
                 }
-                let p1x = hoverTargetX + hoverTargetW * p1.widthRatio;
-                let p1y = hoverTargetY + hoverTargetH * p1.heightRatio;
-                let p2x = hoverTargetX + hoverTargetW * p2.widthRatio;
-                let p2y = hoverTargetY + hoverTargetH * p2.heightRatio;
-                let m = (p2y-p1y)/(p2x-p1x);
-                let b = p1y - m*p1x;
-                let fx = m*mouseX + b;
-                if (mouseX > p1x - padding && mouseX < p2x + padding && mouseY > fx - padding && mouseY < fx + padding) return shadowMarker;
-            } else {
+                if (markLength > maxLength) markLength = maxLength;
+                if (mouseX > sx - markLength/2 && mouseX < sx + markLength/2 && mouseY > sy - markLength/2 && mouseY < sy + markLength/2) return shadowMarker;
+                break;
+            case MARKS.RECT:
+                if (shadowMarker.path.length === 2) {
+                    let p1 = shadowMarker.path[0];
+                    let p2 = shadowMarker.path[1];
+                    let p1x = hoverTargetX + hoverTargetW * p1.widthRatio;
+                    let p1y = hoverTargetY + hoverTargetH * p1.heightRatio;
+                    let p2x = hoverTargetX + hoverTargetW * p2.widthRatio;
+                    let p2y = hoverTargetY + hoverTargetH * p2.heightRatio;
+                    if (
+                        (mouseX > p1x-padding && mouseX < p1x+padding && mouseY > p1y-padding && mouseY < p2y+padding) ||
+                        (mouseX > p1x-padding && mouseX < p2x+padding && mouseY > p1y-padding && mouseY < p1y+padding) ||
+                        (mouseX > p2x-padding && mouseX < p2x+padding && mouseY > p1y-padding && mouseY < p2y+padding) ||
+                        (mouseX > p1x-padding && mouseX < p2x+padding && mouseY > p2y-padding && mouseY < p2y+padding)
+                    ) return shadowMarker;
+                }
+                break;
+            case MARKS.CIRCLE: {
+                if (shadowMarker.path.length === 2) {
+                    let p1 = shadowMarker.path[0];
+                    let p2 = shadowMarker.path[1];
+                    let p1x = hoverTargetX + hoverTargetW * p1.widthRatio;
+                    let p1y = hoverTargetY + hoverTargetH * p1.heightRatio;
+                    let p2x = hoverTargetX + hoverTargetW * p2.widthRatio;
+                    let p2y = hoverTargetY + hoverTargetH * p2.heightRatio;
+                    let r = Math.sqrt(Math.pow(p1x-p2x,2)+Math.pow(p1y-p2y,2));
+                    if (Math.pow(mouseX-p1x,2)+Math.pow(mouseY-p1y,2) < Math.pow(r+padding,2) && Math.pow(mouseX-p1x,2)+Math.pow(mouseY-p1y,2) > Math.pow(r-padding,2)) {
+                        return shadowMarker;
+                    }
+                }
+                break;
+            }
+            case MARKS.LINE: {
+                if (shadowMarker.path.length === 2) {
+                    let p1, p2;
+                    if (Math.abs(shadowMarker.path[0].widthRatio - shadowMarker.path[1].widthRatio)*hoverTargetW > padding) {
+                        if (shadowMarker.path[0].widthRatio < shadowMarker.path[1].widthRatio) {
+                            p1 = shadowMarker.path[0];
+                            p2 = shadowMarker.path[1];
+                        } else {
+                            p1 = shadowMarker.path[1];
+                            p2 = shadowMarker.path[0];
+                        }
+                    } else {
+                        // Close x = infinite slope
+                        let px = hoverTargetX + hoverTargetW * shadowMarker.path[0].widthRatio;
+                        let p1y, p2y;
+                        if (shadowMarker.path[0].heightRatio < shadowMarker.path[1].heightRatio) {
+                            p1y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
+                            p2y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
+                        } else {
+                            p1y = hoverTargetY + hoverTargetH * shadowMarker.path[1].heightRatio;
+                            p2y = hoverTargetY + hoverTargetH * shadowMarker.path[0].heightRatio;
+                        }
+                        if (mouseX > px - padding && mouseX < px + padding && mouseY > p1y - padding && mouseY < p2y + padding ) return shadowMarker;
+                        else continue;
+                    }
+                    let p1x = hoverTargetX + hoverTargetW * p1.widthRatio;
+                    let p1y = hoverTargetY + hoverTargetH * p1.heightRatio;
+                    let p2x = hoverTargetX + hoverTargetW * p2.widthRatio;
+                    let p2y = hoverTargetY + hoverTargetH * p2.heightRatio;
+                    let m = (p2y-p1y)/(p2x-p1x);
+                    let b = p1y - m*p1x;
+                    let fx = m*mouseX + b;
+                    if (mouseX > p1x - padding && mouseX < p2x + padding && mouseY > fx - padding && mouseY < fx + padding) return shadowMarker;
+                }
+                break;
+            }
+            case MARKS.FREEFORM:
+            default:
                 for (let j = 0; j < shadowMarker.path.length; j++) {
                     let point = shadowMarker.path[j];
                     let px = hoverTargetX + hoverTargetW * point.widthRatio;
                     let py = hoverTargetY + hoverTargetH * point.heightRatio;
                     if (mouseX > px - padding && mouseX < px + padding && mouseY > py - padding && mouseY < py + padding) return shadowMarker;
                 }
-            }
-        } else {
-            let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
-            let sy = hoverTargetY + hoverTargetH * shadowMarker.heightRatio;
-            let maxLength = 16;
-            let markLength = Math.min(hoverTargetW, hoverTargetH) / 20;
-            if (shadowMarker.shape === SHAPES.CROSSHAIR) {
-                maxLength = 16;
-                markLength = Math.min(hoverTargetW, hoverTargetH) / 16;
-            }
-            if (markLength > maxLength) markLength = maxLength;
-            if (mouseX > sx - markLength/2 && mouseX < sx + markLength/2 && mouseY > sy - markLength/2 && mouseY < sy + markLength/2) return shadowMarker;
+                break;
         }
     }
     return null;
 }
 
-Model.prototype.checkShapeButtonHit = function () {
-    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
-    const y = this.getScrollbarY() - 60;
-    const length = 50;
-    return mouseX > x && mouseX < x + length && mouseY > y && mouseY < y + length;
-}
-
-Model.prototype.setShapeMenuOpen = function (open) {
-    if (this.shapeMenuOpen != open) {
-        this.shapeMenuOpen = open;
-        this.notifySubscribers();
-    }
-}
-
-Model.prototype.checkShapeMenuHit = function () {
-    const width = 30 * 3 + 20;
-    const height = 30 * 2 + 20;
-    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25 + 50 - width;
-    const y = this.getScrollbarY() - 60 + 50 - height;
+Model.prototype.checkMarkButtonHit = function () {
+    let x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
+    let y = this.getScrollbarY() - 60;
+    let length = 50;
     const mx = mouseX, my = mouseY;
-    if (mx>x+10 && mx<x+40 && my>y+10 && my<y+40) return SHAPES.CROSSHAIR;
-    else if (mx>x+40 && mx<x+70 && my>y+10 && my<y+40) return SHAPES.CROSS;
-    else if (mx>x+70 && mx<x+100 && my>y+10 && my<y+40) return SHAPES.SQUARE;
-    else if (mx>x+25 && mx<x+55 && my>y+40 && my<y+70) return SHAPES.CIRCLE;
-    else if (mx>x+55 && mx<x+85 && my>y+40 && my<y+70) return SHAPES.FREEFORM;
-    else return null;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.MARKER;
+    y -= 60;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.RECT;
+    y -= 60;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.CIRCLE;
+    y -= 60;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.LINE;
+    y -= 60;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.FREEFORM;
+    y -= 60;
+    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.CURSOR;
+    return null;
 }
 
-Model.prototype.setShape = function (shape) {
-    this.shadowMarkShape = shape;
+Model.prototype.setMarkButtonHighlighted = function (highlighted) {
+    this.markerButtonHighlighted = highlighted === MARKS.MARKER;
+    this.rectButtonHighlighted = highlighted === MARKS.RECT;
+    this.circleButtonHighlighted = highlighted === MARKS.CIRCLE;
+    this.lineButtonHighlighted = highlighted === MARKS.LINE;
+    this.freeformButtonHighlighted = highlighted === MARKS.FREEFORM;
+    this.cursorButtonHighlighted = highlighted === MARKS.CURSOR;
+    this.notifySubscribers();
+}
+
+Model.prototype.setType = function (type) {
+    this.shadowMarkType = type;
     this.notifySubscribers();
 }
 
@@ -620,6 +647,13 @@ Model.prototype.checkHelpButtonHit = function () {
     const y = this.getScrollbarY() - 12;
     const l = 50;
     return mouseX > x && mouseX < x + l && mouseY > y && mouseY < y + l;
+}
+
+Model.prototype.freeforming = function () {
+    return this.shadowMarkType === MARKS.FREEFORM ||
+        this.shadowMarkType === MARKS.LINE ||
+        this.shadowMarkType === MARKS.RECT ||
+        this.shadowMarkType === MARKS.CIRCLE;
 }
 
 Model.prototype.getCurrentDataset = function () {

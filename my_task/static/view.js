@@ -126,9 +126,13 @@ View.prototype.draw = function () {
         this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-            this.drawMarkModeButton();
+            this.drawMarkerButton();
+            this.drawRectButton();
+            this.drawCircleButton();
+            this.drawLineButton();
+            this.drawFreeformButton();
+            this.drawCursorButton();
             this.drawColourButton();
-            if (this.model.shapeMenuOpen) this.drawShapeMenu();
             if (this.model.colourMenuOpen) this.drawColourMenu();
         }
     } else {
@@ -258,9 +262,13 @@ View.prototype.drawTutorials = function () {
     this.drawHelpButton();
     if (this.model.helpMenuOpen) this.drawHelpMenu();
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-        this.drawMarkModeButton();
+        this.drawMarkerButton();
+        this.drawRectButton();
+        this.drawCircleButton();
+        this.drawLineButton();
+        this.drawFreeformButton();
+        this.drawCursorButton();
         this.drawColourButton();
-        if (this.model.shapeMenuOpen) this.drawShapeMenu();
         if (this.model.colourMenuOpen) this.drawColourMenu();
     }
     stroke(0);
@@ -353,15 +361,11 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
         strokeWeight(2);
         const markerX = vx + vw * mark.widthRatio;
         const markerY = vy + vh * mark.heightRatio;
-        let maxLength = 16;
-        let markLength = Math.min(vw, vh) / 20;
-        if (mark.shape === SHAPES.CROSSHAIR) {
-            maxLength = 16;
-            markLength = Math.min(vw, vh) / 16;
-        }
-        if (markLength > maxLength) markLength = maxLength;
-        switch (mark.shape) {
-            case SHAPES.CROSSHAIR:
+        switch (mark.type) {
+            case MARKS.MARKER:
+                let maxLength = 16;
+                let markLength = Math.min(vw, vh) / 16;
+                if (markLength > maxLength) markLength = maxLength;
                 line(markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
                 line(markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
                 stroke(colour.r, colour.g, colour.b);
@@ -369,27 +373,35 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
                 line(markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
                 line(markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
                 break;
-            case SHAPES.CROSS:
-                line(markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                line(markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
-                stroke(colour.r, colour.g, colour.b);
-                strokeWeight(1);
-                line(markerX - markLength / 2, markerY - markLength / 2, markerX + markLength / 2, markerY + markLength / 2);
-                line(markerX + markLength / 2, markerY - markLength / 2, markerX - markLength / 2, markerY + markLength / 2);
+            case MARKS.RECT:
+                if (mark.path.length === 2) {
+                    stroke(colour.r, colour.g, colour.b);
+                    strokeWeight(2);
+                    const x1 = vx + vw * mark.path[0].widthRatio;
+                    const y1 = vy + vh * mark.path[0].heightRatio;
+                    const x2 = vx + vw * mark.path[1].widthRatio;
+                    const y2 = vy + vh * mark.path[1].heightRatio;
+                    const x = Math.min(x1,x2);
+                    const y = Math.min(y1,y2);
+                    const w = Math.abs(x1-x2);
+                    const h = Math.abs(y1-y2);
+                    rect(x,y,w,h);
+                }
                 break;
-            case SHAPES.SQUARE:
-                square(markerX - markLength / 2, markerY - markLength / 2, markLength);
-                stroke(colour.r, colour.g, colour.b);
-                strokeWeight(1);
-                square(markerX - markLength / 2, markerY - markLength / 2, markLength);
+            case MARKS.CIRCLE:
+                if (mark.path.length === 2) {
+                    stroke(colour.r, colour.g, colour.b);
+                    strokeWeight(2);
+                    const x1 = vx + vw * mark.path[0].widthRatio;
+                    const y1 = vy + vh * mark.path[0].heightRatio;
+                    const x2 = vx + vw * mark.path[1].widthRatio;
+                    const y2 = vy + vh * mark.path[1].heightRatio;
+                    const d = Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2))*2;
+                    circle(x1,y1,d);
+                }
                 break;
-            case SHAPES.CIRCLE:
-                ellipse(markerX, markerY, markLength, markLength);
-                stroke(colour.r, colour.g, colour.b);
-                strokeWeight(1);
-                ellipse(markerX, markerY, markLength, markLength);
-                break;
-            case SHAPES.FREEFORM:
+            case MARKS.LINE:
+            case MARKS.FREEFORM:
                 stroke(colour.r, colour.g, colour.b);
                 strokeWeight(2);
                 for (let i = 0; i < mark.path.length - 1; i++) {
@@ -429,16 +441,48 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
     const colour = this.model.shadowMarkColour;
     stroke(colour.r, colour.g, colour.b);
     strokeWeight(2);
-    for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
-        const x1 = vx + vw * this.model.freeformPath[i].widthRatio;
-        const y1 = vy + vh * this.model.freeformPath[i].heightRatio;
-        const x2 = vx + vw * this.model.freeformPath[i + 1].widthRatio;
-        const y2 = vy + vh * this.model.freeformPath[i + 1].heightRatio;
-        line(x1, y1, x2, y2);
+    switch (this.model.shadowMarkType) {
+        case MARKS.FREEFORM:
+        case MARKS.LINE:
+            for (let i = 0; i < this.model.freeformPath.length - 1; i++) {
+                const x1 = vx + vw * this.model.freeformPath[i].widthRatio;
+                const y1 = vy + vh * this.model.freeformPath[i].heightRatio;
+                const x2 = vx + vw * this.model.freeformPath[i + 1].widthRatio;
+                const y2 = vy + vh * this.model.freeformPath[i + 1].heightRatio;
+                line(x1, y1, x2, y2);
+            }
+            break;
+        case MARKS.RECT:
+            if (this.model.freeformPath.length === 2) {
+                const x1 = vx + vw * this.model.freeformPath[0].widthRatio;
+                const y1 = vy + vh * this.model.freeformPath[0].heightRatio;
+                const x2 = vx + vw * this.model.freeformPath[1].widthRatio;
+                const y2 = vy + vh * this.model.freeformPath[1].heightRatio;
+                const x = Math.min(x1,x2);
+                const y = Math.min(y1,y2);
+                const w = Math.abs(x1-x2);
+                const h = Math.abs(y1-y2);
+                rect(x,y,w,h);
+            }
+            break;
+        case MARKS.CIRCLE:
+            if (this.model.freeformPath.length === 2) {
+                stroke(colour.r, colour.g, colour.b);
+                strokeWeight(2);
+                const x1 = vx + vw * this.model.freeformPath[0].widthRatio;
+                const y1 = vy + vh * this.model.freeformPath[0].heightRatio;
+                const x2 = vx + vw * this.model.freeformPath[1].widthRatio;
+                const y2 = vy + vh * this.model.freeformPath[1].heightRatio;
+                const d = Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2))*2;
+                circle(x1,y1,d);
+            }
+            break;
+        default:
+            break;
     }
 
     // Draw shadow cursor
-    if (this.model.shadowing && this.model.hoverTarget != null) {
+    if (this.model.shadowMarkType === MARKS.CURSOR && this.model.hoverTarget != null) {
         fill(colour.r, colour.g, colour.b, 150);
         stroke(colour.r, colour.g, colour.b, 150);
         // strokeWeight(2);
@@ -464,39 +508,39 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
         line(vx, y, vx + vw, y);
     }
 
-    if (this.model.gridActive) {
-        let squareSize, numRows = 3, numCols = 3;
-        if (vw > vh) {
-            squareSize = Math.floor(vh / 3);
-            numCols = Math.ceil(vw / squareSize);
-        } else {
-            squareSize = Math.floor(vw / 3);
-            numRows = Math.ceil(vh / squareSize)
-        }
-        fill(200, 200, 200, 125);
-        stroke(200, 200, 200, 125);
-        strokeWeight(1);
-        // Draw row lines
-        for (let i = 1; i < numRows; i++) line(vx, vy + squareSize * i, vx + vw, vy + squareSize * i);
-        // Draw column lines
-        for (let j = 1; j < numCols; j++) line(vx + squareSize * j, vy, vx + squareSize * j, vy + vh);
-        // Draw highlight, if any
-        if (this.model.gridHighlight >= 0) {
-            noFill();
-            stroke(colour.r, colour.g, colour.b, 150);
-            strokeWeight(2);
-            let squareX = vx + squareSize * (this.model.gridHighlight % numCols);
-            let squareY = vy + squareSize * Math.floor(this.model.gridHighlight / numCols);
-            if (squareX + squareSize > vx + vw || squareY + squareSize > vy + vh) {
-                let squareW = squareSize, squareH = squareSize;
-                if (squareX + squareW > vx + vw) squareW -= (squareX + squareW - vx - vw);
-                if (squareY + squareH > vy + vh) squareH -= (squareY + squareH - vy - vh);
-                rect(squareX, squareY, squareW, squareH);
-            } else {
-                square(squareX, squareY, squareSize);
-            }
-        }
-    }
+    // if (this.model.gridActive) {
+    //     let squareSize, numRows = 3, numCols = 3;
+    //     if (vw > vh) {
+    //         squareSize = Math.floor(vh / 3);
+    //         numCols = Math.ceil(vw / squareSize);
+    //     } else {
+    //         squareSize = Math.floor(vw / 3);
+    //         numRows = Math.ceil(vh / squareSize)
+    //     }
+    //     fill(200, 200, 200, 125);
+    //     stroke(200, 200, 200, 125);
+    //     strokeWeight(1);
+    //     // Draw row lines
+    //     for (let i = 1; i < numRows; i++) line(vx, vy + squareSize * i, vx + vw, vy + squareSize * i);
+    //     // Draw column lines
+    //     for (let j = 1; j < numCols; j++) line(vx + squareSize * j, vy, vx + squareSize * j, vy + vh);
+    //     // Draw highlight, if any
+    //     if (this.model.gridHighlight >= 0) {
+    //         noFill();
+    //         stroke(colour.r, colour.g, colour.b, 150);
+    //         strokeWeight(2);
+    //         let squareX = vx + squareSize * (this.model.gridHighlight % numCols);
+    //         let squareY = vy + squareSize * Math.floor(this.model.gridHighlight / numCols);
+    //         if (squareX + squareSize > vx + vw || squareY + squareSize > vy + vh) {
+    //             let squareW = squareSize, squareH = squareSize;
+    //             if (squareX + squareW > vx + vw) squareW -= (squareX + squareW - vx - vw);
+    //             if (squareY + squareH > vy + vh) squareH -= (squareY + squareH - vy - vh);
+    //             rect(squareX, squareY, squareW, squareH);
+    //         } else {
+    //             square(squareX, squareY, squareSize);
+    //         }
+    //     }
+    // }
 }
 
 View.prototype.drawScrollbar = function () {
@@ -514,9 +558,10 @@ View.prototype.drawScrollbar = function () {
     }
 }
 
-View.prototype.drawMarkModeButton = function () {
-    stroke(0, 0, 0, this.model.shapeButtonHighlighted ? 255 : 100)
-    fill(101, 101, 101, this.model.shapeButtonHighlighted ? 255 : 100);
+View.prototype.drawMarkerButton = function () {
+    const highlighted = this.model.shadowMarkType === MARKS.MARKER || this.model.markerButtonHighlighted
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
     const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
     const y = this.model.getScrollbarY() - 60;
     const length = 50;
@@ -525,89 +570,99 @@ View.prototype.drawMarkModeButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, this.model.shapeButtonHighlighted ? 255 : 100);
-    switch (this.model.shadowMarkShape) {
-        case SHAPES.CROSSHAIR:
-            line(centerX, centerY - centerLength / 2, centerX, centerY + centerLength / 2);
-            line(centerX + centerLength / 2, centerY, centerX - centerLength / 2, centerY);
-            break;
-        case SHAPES.CROSS:
-            line(centerX - centerLength / 2, centerY - centerLength / 2, centerX + centerLength / 2, centerY + centerLength / 2);
-            line(centerX + centerLength / 2, centerY - centerLength / 2, centerX - centerLength / 2, centerY + centerLength / 2);
-            break;
-        case SHAPES.SQUARE:
-            square(centerX - centerLength / 2, centerY - centerLength / 2, centerLength);
-            break;
-        case SHAPES.CIRCLE:
-            ellipse(centerX, centerY, centerLength, centerLength);
-            break;
-        case SHAPES.FREEFORM:
-            if (this.model.freeformStraight) {
-                line(x + 10, y + 10, x + 10 + (length - 20), y + 10 + (length - 20))
-            } else {
-                beginShape();
-                curveVertex(x + 10, y + 10);
-                curveVertex(x + 15, y + 15);
-                curveVertex(x + 10 + (length - 20) / 2 + 5, y + 10 + (length - 20) / 2 - 5);
-                curveVertex(x + 10 + (length - 20) / 2 - 5, y + 10 + (length - 20) / 2 + 5);
-                curveVertex(x + 10 + (length - 20) - 5, y + 10 + (length - 20) - 5);
-                curveVertex(x + 10 + (length - 20), y + 10 + (length - 20));
-                endShape();
-            }
-            break;
-    }
-}
-
-View.prototype.drawShapeMenu = function () {
-    stroke(0);
-    fill(101);
-    const width = 30 * 3 + 20;
-    const height = 30 * 2 + 20;
-    let x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25 + 50 - width;
-    let y = this.model.getScrollbarY() - 60 + 50 - height;
-    rect(x, y, width, height, 10);
-    noFill();
-
-    stroke(0);
-    square(x + 10, y + 10, 30);
-    square(x + 40, y + 10, 30);
-    square(x + 70, y + 10, 30);
-    square(x + 25, y + 40, 30);
-    square(x + 55, y + 40, 30);
-
-    stroke(255);
-    // Crosshair
-    let centerX = x + 25;
-    let centerY = y + 25;
-    let centerLength = 20;
+    stroke(255, 255, 255, highlighted ? 255 : 100);
     line(centerX, centerY - centerLength / 2, centerX, centerY + centerLength / 2);
     line(centerX + centerLength / 2, centerY, centerX - centerLength / 2, centerY);
-    // Cross
-    centerX += 30;
-    line(centerX - centerLength / 2, centerY - centerLength / 2, centerX + centerLength / 2, centerY + centerLength / 2);
-    line(centerX + centerLength / 2, centerY - centerLength / 2, centerX - centerLength / 2, centerY + centerLength / 2);
-    // Square
-    centerX += 30;
+}
+
+View.prototype.drawRectButton = function () {
+    const highlighted = this.model.shadowMarkType === MARKS.RECT || this.model.rectButtonHighlighted;
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
+    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const y = this.model.getScrollbarY() - 120;
+    const length = 50;
+    const centerX = x + length / 2;
+    const centerY = y + length / 2;
+    const centerLength = 30;
+    square(x, y, length, 10);
+    noFill();
+    stroke(255, 255, 255, highlighted ? 255 : 100);
     square(centerX - centerLength / 2, centerY - centerLength / 2, centerLength);
-    // Circle
-    centerX = x + 40;
-    centerY += 30;
-    ellipse(centerX, centerY, centerLength, centerLength);
-    // Freeform
-    x += 60;
-    y += 45;
-    if (this.model.freeformStraight) {
-        line(x, y, x + 20, y + 20);
-    } else {
-        beginShape();
-        curveVertex(x, y);
-        curveVertex(x + 3, y + 3);
-        curveVertex(x + 13, y + 7);
-        curveVertex(x + 7, y + 13);
-        curveVertex(x + 17, y + 17);
-        curveVertex(x + 20, y + 20);
-        endShape();
-    }
+}
+
+View.prototype.drawCircleButton = function () {
+    const highlighted = this.model.shadowMarkType === MARKS.CIRCLE || this.model.circleButtonHighlighted;
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
+    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const y = this.model.getScrollbarY() - 180;
+    const length = 50;
+    const centerX = x + length / 2;
+    const centerY = y + length / 2;
+    const centerLength = 30;
+    square(x, y, length, 10);
+    noFill();
+    stroke(255, 255, 255, highlighted ? 255 : 100);
+    circle(centerX, centerY, centerLength);
+}
+
+View.prototype.drawLineButton = function () {
+    let highlighted = this.model.shadowMarkType === MARKS.LINE || this.model.lineButtonHighlighted;
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
+    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const y = this.model.getScrollbarY() - 240;
+    const length = 50;
+    const centerLength = 30;
+    square(x, y, length, 10);
+    noFill();
+    stroke(255, 255, 255, highlighted ? 255 : 100);
+    line(x+10, y+10, x+10+centerLength, y+10+centerLength);
+}
+
+View.prototype.drawFreeformButton = function () {
+    const highlighted = this.model.shadowMarkType === MARKS.FREEFORM || this.model.freeformButtonHighlighted;
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
+    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const y = this.model.getScrollbarY() - 300;
+    const length = 50;
+    const centerLength = 30;
+    square(x, y, length, 10);
+    noFill();
+    stroke(255, 255, 255, highlighted ? 255 : 100);
+    beginShape();
+    curveVertex(x + 10, y + 10);
+    curveVertex(x + 15, y + 15);
+    curveVertex(x + 10 + centerLength / 2 + 5, y + 10 + centerLength / 2 - 5);
+    curveVertex(x + 10 + centerLength / 2 - 5, y + 10 + centerLength / 2 + 5);
+    curveVertex(x + 10 + centerLength - 5, y + 10 + centerLength - 5);
+    curveVertex(x + 10 + centerLength, y + 10 + centerLength);
+    endShape();
+}
+
+View.prototype.drawCursorButton = function () {
+    const highlighted = this.model.shadowMarkType === MARKS.CURSOR || this.model.cursorButtonHighlighted;
+    stroke(0, 0, 0, highlighted ? 255 : 100);
+    fill(101, 101, 101, highlighted ? 255 : 100);
+    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const y = this.model.getScrollbarY() - 360;
+    const length = 50;
+    const centerLength = 30;
+    square(x, y, length, 10);
+    noFill();
+    stroke(255, 255, 255, highlighted ? 255 : 100);
+    beginShape();
+    vertex(x+20, y+10);
+    vertex(x+20, y+5+centerLength);
+    vertex(x+25, y+2+centerLength);
+    vertex(x+27, y+7+centerLength);
+    vertex(x+30, y+6+centerLength);
+    vertex(x+29, y+2+centerLength);
+    vertex(x+35, y+1+centerLength);
+    vertex(x+20, y+10);
+    endShape();
 }
 
 View.prototype.drawColourButton = function () {
@@ -677,12 +732,9 @@ View.prototype.drawHelpMenu = function () {
     hotkeysPoints.push("- Select video ------------------------------------------------------------------------------------------------ CTRL click")
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
         generalPoints.push("- Markers can be placed by clicking on a video.");
-        generalPoints.push("- Marker shape and colour are controlled in the menus to the right of the scrollbar.");
-        generalPoints.push("- The freeform marker (squiggly line) allows you to freely draw shapes in each video.");
+        generalPoints.push("- Marker type can be selected from any of the button on the bottom right.");
+        generalPoints.push("- Click the bottom button to open a colour palette to choose from.");
         generalPoints.push("- Hovering over a shadow marker will highlight the video it originally came from.");
-        hotkeysPoints.push("- Toggle straight freeform lines -------------------------------------------------------------------------------- SHIFT");
-        hotkeysPoints.push("- Toggle shadow cursor --------------------------------------------------------------------------------------- CTRL C");
-        hotkeysPoints.push("- Toggle shadow grid ------------------------------------------------------------------------------------------ CTRL G");
         hotkeysPoints.push("- Remove shadow marker  ----------------------------------------------------------------------- hover & DELETE");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
         generalPoints.push("- Click on a video to add it to the overlay on the right.");

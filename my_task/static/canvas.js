@@ -30,7 +30,7 @@ function setup() {
             model.setCategory(category);
             switch (model.task) {
                 case 1:
-                    controller.handleLoadSeaIce(model.category[0].name).then(category => model.setCategory(category));
+                    // controller.handleLoadSeaIce(model.category[0].name).then(category => model.setCategory(category));
                     break;
                 case 2:
                     controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
