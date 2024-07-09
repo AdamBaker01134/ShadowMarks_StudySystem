@@ -342,7 +342,7 @@ View.prototype.drawInstructions = function () {
         noFill();
         rect(iX+w/2-iW/2,iY,iW,iH,10);
 
-        if (this.model.task === 1 || this.model.selectedVideos.length > 0) {
+        if (this.model.task > 1 || this.model.selectedVideos.length > 0) {
             let submitPrompt = "Press ENTER to submit.";
             y += size + 10;
             fill(0)

@@ -105,8 +105,8 @@ Controller.prototype.handleMousePressed = function (event) {
                     if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
                     return false;
                 } else if (event.ctrlKey) {
-                    if (this.model.task > 1) {
-                        // Tasks 2 and 3 do not allow multi-select.
+                    if (this.model.task === 1) {
+                        // Task 1 does not allow multi-select.
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     }
                     this.model.selectVideo(hit);
@@ -292,13 +292,27 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === ENTER) {
                 if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
                     this.model.logData();
-                } else if (confirm("Are you sure you want to submit your selection?")) {
+                } else if ((this.model.task > 1 || this.model.selectedVideos.length > 0) && confirm("Are you sure you want to submit your selection?")) {
                     if (!tutorial && this.model.trial < 2) {
-                        this.model.addTrialData();
-                        this.model.nextTrial();
+                        let results = this.model.addTrialData();
+                        if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                            this.model.nextTrial();
+                        } else {
+                            this.model.tryAgain();
+                            if (this.model.attempt > 2) {
+                                this.model.nextTrial();
+                            }
+                        }
                     } else {
-                        this.model.addTrialData();
-                        this.model.logData();  
+                        let results = this.model.addTrialData();
+                        if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                            this.model.logData();
+                        } else {
+                            this.model.tryAgain();
+                            if (this.model.attempt > 2) {
+                                this.model.logData();
+                            }
+                        }
                     }
                 }
             }

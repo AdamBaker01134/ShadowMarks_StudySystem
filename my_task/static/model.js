@@ -63,6 +63,7 @@ function Model() {
     this.task = 1;
     this.category = [];
     this.trial = 1;
+    this.attempt = 1;
     this.log = [];
     this.trialLog = [];
     this.trialStartTime = 0;
@@ -94,6 +95,7 @@ Model.prototype.setCategory = function (category) {
 
 Model.prototype.nextTrial = function () {
     this.trial++;
+    this.attempt = 1;
     this.videos.splice(0,6);
     this.category.splice(0,1);
     this.exampleImage.splice(0,1);
@@ -109,6 +111,16 @@ Model.prototype.nextTrial = function () {
 
 Model.prototype.startTrial = function () {
     this.trialStartTime = new Date().getTime();
+    this.notifySubscribers();
+}
+
+Model.prototype.tryAgain = function () {
+    this.attempt++;
+    if (this.attempt > 2) {
+        alert("Incorrect. Moving on.")
+    } else {
+        alert("Incorrect. Try again.");
+    }
     this.notifySubscribers();
 }
 
@@ -736,57 +748,74 @@ Model.prototype.logData = function () {
 
 Model.prototype.addTrialData = function () {
     // // Elapsed time
-    // let elapsedTime = new Date().getTime() - this.trialStartTime;
+    let elapsedTime = new Date().getTime() - this.trialStartTime;
 
     // // Errors
-    // let falseNegatives = 0;
-    // let falsePositives = 0;
-    // let correctVideos = [];
-    // let trialVideos = [];
-    // let category = this.category[0];
-    // category.videos.forEach(categoryVideo => {
-    //     if (this.videos.findIndex(video => video.name === categoryVideo.name) > -1) trialVideos.push(categoryVideo);
-    // });
-    // if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
-    // trialVideos.forEach(video => {
-    //     switch (this.task) {
-    //         case 1:
-    //             if (this.getCurrentDataset() === "seaice" && category.name === "northpole") {
-    //                 // Northpole measures smaller area
-    //                 if (video.area < category.example_area) correctVideos.push(video);
-    //             } else {
-    //                 // All other datasets measure larger area
-    //                 if (video.area > category.example_area) correctVideos.push(video);
-    //             }
-    //             break;
-    //         case 2:
-    //             if (correctVideos.length === 0) correctVideos = [ video ];
-    //             else if (correctVideos[0].dist < video.dist) correctVideos = [ video ];
-    //             break;
-    //         case 3:
-    //         default:
-    //             if (correctVideos.length === 0) correctVideos = [ video ];
-    //             else if (correctVideos[0].dist-correctVideos[0].dist_flower < video.dist-video.dist_flower) correctVideos = [ video ];
-    //             break;
-    //     }
-    // });
-    // correctVideos.forEach(video => { if (this.selectedVideos.findIndex(selectedVideo => video.name === selectedVideo.name) === -1) falseNegatives++ });
-    // this.selectedVideos.forEach(selectedVideo => { if (correctVideos.findIndex(video => video.name === selectedVideo.name) === -1) falsePositives++ });
+    let falseNegatives = 0;
+    let falsePositives = 0;
+    let possibleVideos = [];
+    let correctVideos = [];
+    let trialVideos = [];
+    let category = this.category[0];
+    for (let i = 0; i < 6 && i < this.videos.length; i++) {
+        let video = this.videos[i];
+        let index = category.videos.findIndex(categoryVideo => video.name === categoryVideo.name);
+        if (index > -1) trialVideos.push(category.videos[index]);
+    }
+    if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
+    trialVideos.forEach((video,index) => {
+        switch (this.task) {
+            case 1:
+                if (correctVideos.length === 0) correctVideos = [ video ];
+                else if (correctVideos[0].peak < video.peak) correctVideos = [ video ];
+                break;
+            case 2:
+                if (video.extends === 1.0) correctVideos.push(video);
+                else if (video.extends === 0.5) possibleVideos.push(video);
+                break;
+            case 3:
+                if (index > 0) {
+                    let firstVideo = trialVideos[0];
+                    let x1 = firstVideo.release[0];
+                    let y1 = firstVideo.release[1];
+                    let x2 = video.release[0];
+                    let y2 = video.release[1];
+                    let distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+                    if (distance >= 30) correctVideos.push(video);
+                    else if (distance >= 25) possibleVideos.push(video);
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    
+    // Parse false positives
+    this.selectedVideos.forEach(selectedVideo => {
+        if (correctVideos.findIndex(correctVideo => correctVideo.name === selectedVideo.name) === -1 &&
+            possibleVideos.findIndex(possibleVideo => possibleVideo.name === selectedVideo.name) === -1) falsePositives++;
+    });
+    // Parse false negatives
+    correctVideos.forEach(correctVideo => {
+        if (this.selectedVideos.findIndex(selectedVideo => correctVideo.name === selectedVideo.name) === -1) falseNegatives++;
+    });
 
-    // // Construct trial data object
-    // let trialData = {
-    //     pID: pID,
-    //     task: this.task,
-    //     interaction: this.interaction,
-    //     trial: this.trial,
-    //     dataset: this.getCurrentDataset(),
-    //     category: category.name,
-    //     videos: this.videos.map(video => video.name),
-    //     elapsedTime: elapsedTime,
-    //     falseNegatives: falseNegatives,
-    //     falsePositives: falsePositives,
-    // };
-    // this.log.push(trialData);
+    // Construct trial data object
+    let results = {
+        pID: pID,
+        task: this.task,
+        interaction: this.interaction,
+        trial: this.trial,
+        attempt: this.attempt,
+        dataset: this.getCurrentDataset(),
+        category: category.name,
+        videos: this.videos.map(video => video.name),
+        elapsedTime: elapsedTime,
+        falseNegatives: falseNegatives,
+        falsePositives: falsePositives,
+    };
+    this.log.push(results);
+    return results;
 }
 
 Model.prototype.addSubscriber = function (subscriber) {
