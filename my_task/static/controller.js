@@ -191,8 +191,8 @@ Controller.prototype.handleKeyPressed = function (event) {
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
-            if (keyCode === 46) {
-                // Handle delete pressed
+            if (keyCode === 68) {
+                // Handle d pressed
                 let hit = this.model.checkShadowMarkerHit();
                 if (hit) {
                     if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
@@ -347,7 +347,12 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     console.log("Loading 6 random baseball videos...");
     let category;
     while ((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name === undesired);
-    for (let video = 0; video < category.videos.length; video++) {
+    let videos = [];
+    while (videos.length < 6) {
+        let video = getRandomInt(0, category.videos.length);
+        if (!videos.includes(video)) videos.push(video);
+    }
+    for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
         await new Promise((resolve, reject) => {
@@ -374,13 +379,11 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     console.log("Loading 6 random lemnatec videos...");
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
-    if (this.model.task === 1) loadImage(`${assets.lemnatec.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
         if (!videos.includes(video)) videos.push(video);
     }
-    videos.sort((a,b) => a - b); // better to have numbers in order
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
@@ -408,7 +411,6 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     console.log("Loading 6 random sea ice videos...");
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
-    if (this.model.task === 1) loadImage(`${assets.seaice.path}/${category.name}/example.png`, img => this.model.setExampleImage(img));
     let videos = [];
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);

@@ -65,7 +65,7 @@ View.prototype.draw = function () {
         }
 
         // Draw example image 
-        if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage.length > 0) {
+        if (this.model.videos.length > 0 && this.model.exampleImage.length > 0) {
             let iw = this.model.videos[0].width;
             let ih = this.model.videos[0].height;
             let ix = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - iw;
@@ -97,7 +97,7 @@ View.prototype.draw = function () {
             let oy = scrollY;
             if (this.model.overlay.length > 0) {
                 this.model.overlay.forEach((video, index) => {
-                    if (this.model.videos.length > 0 && this.model.task === 1 && this.model.exampleImage.length > 0) {
+                    if (this.model.videos.length > 0 && this.model.exampleImage.length > 0) {
                         tint(255, Math.floor(255 * 1 / (index + 2)))
                     } else {
                         tint(255, Math.floor(255 * 1 / (index + 1)))
@@ -418,24 +418,13 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
     });
 
     // For pixel counting
-    // if (this.model.shadowMarks.length === 2) {
-    //     let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1]];
+    // if (this.model.shadowMarks.length === 1) {
+    //     let mark = this.model.shadowMarks[0];
     //     stroke(0);
     //     fill(0);
     //     strokeWeight(1);
-    //     // text(`${Math.abs(marks[0].widthRatio - marks[1].widthRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-    //     text(`${Math.abs(marks[0].heightRatio - marks[1].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-    //     text(`${(1 - marks[0].heightRatio).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-
-    // } else if (this.model.shadowMarks.length === 4) {
-    //     let marks = [this.model.shadowMarks[0], this.model.shadowMarks[1], this.model.shadowMarks[2], this.model.shadowMarks[3]];
-    //     let a = Math.abs(marks[0].heightRatio - marks[1].heightRatio)/2;
-    //     let b = Math.abs(marks[2].widthRatio - marks[3].widthRatio)/2;
-    //     stroke(0);
-    //     fill(0);
-    //     strokeWeight(1);
-    //     text(`${(PI*a*b).toFixed(4)}px`, vx + vw * marks[0].widthRatio, vy + vh * marks[0].heightRatio);
-    // }
+    //     text(`${(1 - mark.heightRatio).toFixed(4)}px`, vx + vw * mark.widthRatio, vy + vh * mark.heightRatio);
+    // } 
 
     // Draw current freeform path
     const colour = this.model.shadowMarkColour;

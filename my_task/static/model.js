@@ -217,7 +217,7 @@ Model.prototype.addToOverlay = function (video) {
 
 Model.prototype.checkOverlayHit = function () {
     // Overlay rectangle is only in play when the overlay interaction technique is active or during task 1 where it is an example image.
-    if (this.videos.length > 0 && (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1)) {
+    if (this.videos.length > 0 && this.interaction === INTERACTIONS.OVERLAYS) {
         let ow = this.videos[0].width;
         let oh = this.videos[0].height;
         let ox = this.getScrollbarX() + this.getScrollbarWidth() + 75 - ow;

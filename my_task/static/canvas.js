@@ -30,18 +30,21 @@ function setup() {
             case 1:
                 controller.handleLoadLemnatec().then(category => { 
                     model.setCategory(category);
+                    model.updateVideoLocations();
                     controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
                 });
                 break;
             case 2:
                 controller.handleLoadSeaIce().then(category => { 
                     model.setCategory(category);
+                    model.updateVideoLocations();
                     controller.handleLoadSeaIce().then(category => model.setCategory(category));
                 });
                 break;
             case 3:
                 controller.handleLoadBaseball().then(category => { 
                     model.setCategory(category);
+                    model.updateVideoLocations();
                     controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
                 });
                 break;
