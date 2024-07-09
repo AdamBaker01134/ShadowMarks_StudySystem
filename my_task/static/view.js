@@ -456,8 +456,6 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
             break;
         case MARKS.CIRCLE:
             if (this.model.freeformPath.length === 2) {
-                stroke(colour.r, colour.g, colour.b);
-                strokeWeight(2);
                 const x1 = vx + vw * this.model.freeformPath[0].widthRatio;
                 const y1 = vy + vh * this.model.freeformPath[0].heightRatio;
                 const x2 = vx + vw * this.model.freeformPath[1].widthRatio;

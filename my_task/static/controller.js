@@ -412,17 +412,43 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
     let videos = [];
+    let zeros = 0;
+    let halves = 0;
+    let ones = 0;
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
-        if (!videos.includes(video)) videos.push(video);
+        if (!videos.includes(video)) {
+            switch (category.videos[video].extends) {
+                case 0.0:
+                    if (zeros < 2) {
+                        zeros++;
+                        videos.push(video);
+                    }
+                    break;
+                case 0.5:
+                    if (halves < 2) {
+                        halves++;
+                        videos.push(video);
+                    }
+                    break;
+                case 1.0:
+                    if (ones < 2) {
+                        ones++;
+                        videos.push(video);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     videos.sort((a,b) => a - b); // better to have years in order
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
         await new Promise((resolve, reject) => {
-            let completed = 0;
-            for (let frame = 1; frame <= category.frames; frame++) {
+            let completed = 214;
+            for (let frame = 215; frame <= category.frames; frame++) {
                 frames.push(loadImage(`${assets.seaice.path}/${category.name}/${category.videos[videos[video]].name}/${category.videos[videos[video]].name}${String(frame).padStart(4, "0")}.png`,
                     () => {
                         if (++completed >= category.frames) resolve();
