@@ -114,12 +114,16 @@ Model.prototype.startTrial = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.tryAgain = function () {
+Model.prototype.tryAgain = function (falsePositives, falseNegatives) {
     this.attempt++;
     if (this.attempt > 2) {
         alert("Incorrect. Moving on.")
-    } else {
-        alert("Incorrect. Try again.");
+    } else if (falsePositives > 0 && falseNegatives > 0) {
+        alert("Incorrect. Selected some that are not correct and missed a few. Try again.");
+    } else if (falsePositives > 0) {
+        alert("Incorrect: Selected too many. Try again.");
+    } else if (falseNegatives > 0) {
+        alert("Incorrect: Missed a few. Try again.");
     }
     this.notifySubscribers();
 }

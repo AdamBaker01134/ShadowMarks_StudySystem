@@ -298,7 +298,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.nextTrial();
                         } else {
-                            this.model.tryAgain();
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
                             if (this.model.attempt > 2) {
                                 this.model.nextTrial();
                             }
@@ -308,7 +308,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.logData();
                         } else {
-                            this.model.tryAgain();
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
                             if (this.model.attempt > 2) {
                                 this.model.logData();
                             }
