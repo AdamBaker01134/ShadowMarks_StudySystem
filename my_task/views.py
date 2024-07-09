@@ -3,7 +3,6 @@ from flask import Blueprint, render_template
 from BOFS.util import *
 from BOFS.globals import db
 from BOFS.admin.util import verify_admin
-from BOFS.default.views import route_instructions
 
 # The name of this variable must match the folder's name.
 my_task = Blueprint('my_task', __name__,
@@ -29,18 +28,6 @@ def overlays(task):
 @verify_session_valid
 def shadowMarkers(task):
     return comparisonStudy("shadowMarkers", task)
-
-@my_task.route("/tutorials/<tutorial>", methods=['POST', 'GET'])
-@verify_correct_page
-@verify_session_valid
-def tutorials(tutorial):
-    return comparisonStudy(tutorial, 0, True)
-
-@my_task.route("/instructions/<interaction>/<pageName>", methods=['POST', 'GET'])
-@verify_correct_page
-@verify_session_valid
-def instructions(interaction, pageName):
-    return route_instructions(pageName)
 
 @my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
