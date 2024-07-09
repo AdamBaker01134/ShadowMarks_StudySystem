@@ -13,35 +13,36 @@
         baseball: {
             path: "{{url_for('my_task.static', filename = 'assets/baseball')}}",
             categories: [
+                // NOTE: Measurements for release point were taken from videos sized at 723x407. Measurements are not scale-invariant.
                 {
                     name: "busch_stadium",
                     frames: 150,
-                    videos: [{ name: "griffin_jax" }, { name: "michael_fulmer" }, { name: "michael_king" }, { name: "shohei_ohtani" }, { name: "sonny_gray" }, { name: "yency_almonte" },],
+                    videos: [{ name: "griffin_jax", release: [322,193] }, { name: "michael_fulmer", release: [365,166] }, { name: "michael_king", release: [361,169] }, { name: "shohei_ohtani", release: [352,163] }, { name: "sonny_gray", release: [325,171] }, { name: "yency_almonte", release: [323,164] },],
                 },
                 {
                     name: "dodgers_stadium",
                     frames: 150,
-                    videos: [{ name: "gavin_stone" }, { name: "george_soriano" }, { name: "tyler_glasnow" }, { name: "ronel_blanco" }, { name: "seranthony_dominguez" }, { name: "yunior_marte" },],
+                    videos: [{ name: "gavin_stone", release: [381,165] }, { name: "george_soriano", release: [373,177] }, { name: "tyler_glasnow", release: [376,151] }, { name: "ronel_blanco", release: [355,174] }, { name: "seranthony_dominguez", release: [390,189] }, { name: "yunior_marte", release: [392,190] },],
                 },
                 {
                     name: "oriole_park",
                     frames: 150,
-                    videos: [{ name: "corbin_burnes" }, { name: "duane_underwood_jr" }, { name: "john_schreiber" }, { name: "mitch_keller" }, { name: "shohei_ohtani" }, { name: "zach_eflin" },],
+                    videos: [{ name: "corbin_burnes", release: [333,192] }, { name: "duane_underwood_jr", release: [363,195] }, { name: "john_schreiber", release: [388,236] }, { name: "mitch_keller", release: [370,192] }, { name: "shohei_ohtani", release: [375,200] }, { name: "zach_eflin", release: [370,195] },],
                 },
                 {
                     name: "rogers_centre",
                     frames: 150,
-                    videos: [{ name: "bryse_wilson" }, { name: "dean_kremer" }, { name: "felix_bautista" }, { name: "jhony_brito" }, { name: "mitch_white" }, { name: "spencer_strider"},],
+                    videos: [{ name: "bryse_wilson", release: [341,184] }, { name: "dean_kremer", release: [337,199] }, { name: "felix_bautista", release: [221,140] }, { name: "jhony_brito", release: [298,182] }, { name: "mitch_white", release: [298,208] }, { name: "spencer_strider", release: [311,188] },],
                 },
                 {
                     name: "wrigley_field",
                     frames: 150,
-                    videos: [{ name: "aaron_civale" }, { name: "edward_cabrera" }, { name: "james_naile" }, { name: "logan_webb" }, { name: "miles_mikolas" }, { name: "yoshinobu_yamimoto" },],
+                    videos: [{ name: "aaron_civale", release: [291,164] }, { name: "edward_cabrera", release: [340,171] }, { name: "james_naile", release: [321,187] }, { name: "logan_webb", release: [341,229] }, { name: "miles_mikolas", release: [330,153] }, { name: "yoshinobu_yamimoto", release: [312,195] },],
                 },
                 {
                     name: "yankee_stadium",
                     frames: 150,
-                    videos: [{ name: "bryan_woo" }, { name: "eli_morgan" }, { name: "rico_garcia" }, { name: "shane_bieber"}, { name: "joe_boyle" }, { name: "yennier_cano"},],
+                    videos: [{ name: "bryan_woo", release: [336,219] }, { name: "eli_morgan", release: [326,192] }, { name: "rico_garcia", release: [340,186] }, { name: "shane_bieber", release: [341,191] }, { name: "joe_boyle", release: [325,182] }, { name: "yennier_cano", release: [362,197]},],
                 },
             ],
         },

@@ -358,19 +358,19 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 1; frame <= category.frames; frame++) {
-                frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[video].name}/img${String(frame).padStart(3,"0")}.jpg`,
+                frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[videos[video]].name}/img${String(frame).padStart(3,"0")}.jpg`,
                     () => {
                         if (++completed >= category.frames) resolve();
-                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
                     },
                     (err) => {
                         if (++completed >= category.frames) reject(err);
-                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/category.videos.length*100) + (completed/category.frames)*(100/category.videos.length)));
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
                     }));
                 labels.push(`Frame ${frame}`);
             }
         });
-        this.model.addVideo(frames, labels, category.videos[video].name);
+        this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
     return category;
 }

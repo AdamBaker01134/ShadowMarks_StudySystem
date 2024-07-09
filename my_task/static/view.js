@@ -417,13 +417,23 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
         }
     });
 
-    // For pixel counting
+    // For pixel height
     // if (this.model.shadowMarks.length === 1) {
     //     let mark = this.model.shadowMarks[0];
     //     stroke(0);
     //     fill(0);
     //     strokeWeight(1);
     //     text(`${(1 - mark.heightRatio).toFixed(4)}px`, vx + vw * mark.widthRatio, vy + vh * mark.heightRatio);
+    // }
+    // For location marking
+    // if (this.model.shadowMarks.length === 1) {
+    //     let mark = this.model.shadowMarks[0];
+    //     const mx = Math.floor(vw * mark.widthRatio);
+    //     const my = Math.floor(vh * mark.heightRatio);
+    //     stroke(0);
+    //     fill(255);
+    //     strokeWeight(1);
+    //     text(`${mx},${my}`,vx + vw * mark.widthRatio, vy + vh * mark.heightRatio);
     // } 
 
     // Draw current freeform path
