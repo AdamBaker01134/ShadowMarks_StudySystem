@@ -116,7 +116,7 @@ View.prototype.draw = function () {
                 fill(0);
                 textSize(24);
                 text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
-                text("Right click video to add.", ox + ow / 2 - textWidth("Right click video to add.") / 2, oy + oh + 48);
+                text("Click video to add.", ox + ow / 2 - textWidth("Click video to add.") / 2, oy + oh + 48);
             }
         }
         this.drawInstructions();
@@ -253,7 +253,7 @@ View.prototype.drawTutorials = function () {
         fill(0);
         textSize(24);
         text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
-        text("Right click video to add.", ox + ow / 2 - textWidth("Right click video to add.") / 2, oy + oh + 48);
+        text("Click video to add.", ox + ow / 2 - textWidth("Click video to add.") / 2, oy + oh + 48);
     }
 
     stroke(0);

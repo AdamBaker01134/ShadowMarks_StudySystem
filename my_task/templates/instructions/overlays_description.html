@@ -1,0 +1,81 @@
+<style>
+    .fig {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .fig * {
+        max-width: 100%;
+    }
+</style>
+
+
+<h1>Overlays</h1>
+
+An Overlay is an arrangement of displays that are stacked on top of one another. The top layers are made to be translucent so that you can see through to the
+bottom layers. This allows you to compare objects within each display all in the same location. An example of an overlay can be seen in Figure 1.
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/overlays_description_img1.png')}}" alt="Overlay image"/>
+    <small>Fig.1. Two sunflower videos overlaid within a single display.</small>
+</div>
+<br />
+<br />
+
+The workspace you are working in includes an Overlay display to the right of the loaded videos, as seen in Figure 2.
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/overlays_description_img2.jpg')}}" alt="Overlay image"/>
+    <small>Fig.2. Example of a Overlay layout of 20 plant videos.</small>
+</div>
+<br />
+<br />
+
+The "eye" in the top right-hand corner of each video indicate whether or not it is visible within the Overlay. If the eye is closed (Figure 3 left),
+then the video is not in the Overlay. If the eye is open (Figure 3 right), then it is in the Overlay. The number displayed within the eye indicates
+the videos position in the Overlay, where 1 is the bottom layer.
+
+<br />
+<br />
+<div class="fig" style="flex-direction: row;">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/overlays_description_img3.png')}}" alt="Closed eye image" style="max-height: 100px;"/>
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/overlays_description_img4.png')}}" alt="Open eye image" style="max-height: 100px; margin-left: 30px;"/>
+</div>
+<div class="fig"><small>Fig.3. Overlay presence indicator. Closed eye (left) indicates video is not within Overlay. Open eye (right) indicates video is within Overlay.</small></div>
+<br />
+<br />
+
+Clicking on a video will add it to the Overlay. Clicking on it again will remove it from the Overlay.
+<br /><br />
+You can play through the Overlay as well as all the other videos by pressing <b>SPACEBAR</b>, or by dragging the scrollbar located at the bottom of the
+page (as seen in Figure 4).
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/smallmultiples_description_img2.png')}}" alt="Scrollbar image"/>
+    <small>Fig.4. Scrollbar that controls all videos.</small>
+</div>
+<br />
+<br />
+
+You can also zoom in by holding <b>CONTROL</b> and pressing the <b>+</b> key, and zoom out by holding <b>CONTROL</b> and pressing the <b>-</b> key.
+<br/><br />
+If you forget any of the features available, click on the help button located on the left side of the scrollbar (as seen in Figure 5).
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/smallmultiples_description_img3.png')}}" alt="Help button image"/>
+    <small>Fig.5. Help button.</small>
+</div>
+<br />
+<br />
+
+Click <b>Continue</b> to begin the task trials with this technique.
