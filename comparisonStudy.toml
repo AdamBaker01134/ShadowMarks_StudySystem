@@ -45,6 +45,8 @@ COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
 PAGE_LIST = [
     { name = 'Consent', path = 'consent' },
 
+    { name = "Introduction", path = "instructions/introduction" },
+
     { name = "Small Multiples Description", path = "instructions/smallmultiples_description" },
     { name = "Task 1 Instructions", path = "instructions/smallmultiples_task1_instructions" },
     { name = 'Task', path = 'shadowMarkers/1/smallMultiples' },
