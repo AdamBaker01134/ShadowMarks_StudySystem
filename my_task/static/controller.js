@@ -100,17 +100,18 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
-                if (this.model.interaction === INTERACTIONS.OVERLAYS) {
-                    this.model.addToOverlay(hit);
-                    if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
-                    return false;
-                } else if (event.ctrlKey) {
+                if (event.ctrlKey) {
                     if (this.model.task === 1) {
                         // Task 1 does not allow multi-select.
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     }
                     this.model.selectVideo(hit);
                     if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
+                    return false;
+                } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
+                    this.model.addToOverlay(hit);
+                    if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
+                    return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.freeforming()) {
                         this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
@@ -118,6 +119,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     }
                     this.savedState = this.currentState;
                     this.currentState = STATE.MARKING;
+                    return false;
                 }
             } else if (this.model.checkOverlayHit()) { 
                 if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {

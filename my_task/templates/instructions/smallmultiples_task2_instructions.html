@@ -1,38 +1,33 @@
-<style> 
-    img {
-        max-width: 300px;
-        max-height: 300px;
-        margin-right: 10px;
+<style>
+    .fig {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
-</style> 
-<h1>Task 2 - Measuring Spatial Distance</h1>
+
+    .fig * {
+        max-width: 100%;
+    }
+</style>
+<h1>Task 2 - Sea Ice Extent with Small Multiples</h1>
 <br />
-In this task, you will be looking at 1 set of plant growing videos again, and 1 set of baseball
-pitching videos:
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/smallmultiples_task2_img1.png')}}" alt="Small Multiples task 2 image 1"/>
+    <small>Fig.1. Area of interest highlighted in red. Find videos where ice extends into this area.</small>
+</div>
 <br />
+This task has 2 comparison trials. For each trial, 6 Arctic sea ice videos will load in for you to view and compare.
+Your task is to find any videos where the ice extends into the rectangular area highlighted in Figure 1.
 <br />
-<img src="{{url_for('my_task.static', filename = 'assets/instructions/task2-1-1.png')}}"/><img style="max-width: 533px;" src="{{url_for('my_task.static', filename = 'assets/instructions/task2-1-2.jpg')}}"/>
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/smallmultiples_task2_img2.png')}}" alt="Small Multiples task 2 image 2"/>
+    <small>Fig.2. Example of performing small multiples comparison of 6 Arctic sea ice videos.</small>
+</div>
 <br />
-<small>Fig. 1. example plant growth (left), example pitching video (right)</small>
-<br />
-<br />
-Compare each of the videos displayed.
-<br />
-For the <b>plant growing</b> videos, select the video with the plant that grows the <b>tallest</b>.
-Example:
-<br />
-<br />
-<img style="max-width: 600px;" src="{{url_for('my_task.static', filename = 'assets/instructions/task2-2-1.png')}}"/>
-<br />
-<small>Fig. 2. example plant growing videos; green check mark indicates correct video</small>
-<br />
-<br />
-For the <b>pitching</b> videos, select the pitch that moves the farthest <b>horizontally</b> from
-release to catch. Example:
-<br />
-<br />
-<img style="max-width: 450px; max-height: none;" src="{{url_for('my_task.static', filename = 'assets/instructions/task2-3-1.jpg')}}"/><img style="max-width: 450px; max-height: none;" src="{{url_for('my_task.static', filename = 'assets/instructions/task2-3-2.jpg')}}"/>
-<br />
-<small>Fig. 3. example pitching videos, top images are release points, bottom are catch points; green check mark indicates correct videos</small>
-<br />
-<br />
+Play through all the videos and look for any videos where ice (light blue and white) extends into the area of interest.
+Select all videos where this happens.
+<br /><br />
+<b>Reminder</b>: select a video by holding <b>CONTROL</b> and clicking on it. 
+<br /><br />
+Click <b>Continue</b> to begin.

@@ -20,11 +20,11 @@ View.prototype.draw = function () {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
     
-            stroke(0);
-            strokeWeight(1);
-            fill(255);
-            textSize(16);
-            text(video.name, x + 5, y + 20);
+            // stroke(0);
+            // strokeWeight(1);
+            // fill(255);
+            // textSize(16);
+            // text(video.name, x + 5, y + 20);
             if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                 let eyeW = video.width/5;
                 let eyeH = eyeW/1.3;
