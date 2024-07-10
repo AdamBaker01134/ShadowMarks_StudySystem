@@ -1,42 +1,27 @@
-<style> 
-    img {
-        max-width: 300px;
-        max-height: 300px;
-        margin-right: 10px;
+<style>
+    .fig {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
-</style> 
-<h1>Task 1 - Measuring Extent</h1>
+
+    .fig * {
+        max-width: 100%;
+    }
+</style>
+<h1>Task 1 - Tallest Plant</h1>
 <br />
-In this task, you will be looking at 1 set of plant growing videos, and 1 set of satellite timelapse
-videos of Antarctic and Arctic sea ice throughout the year:
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/smallmultiples_task1_img1.jpg')}}" alt="Small Multiples task 1 image 1"/>
+    <small>Fig.1. Example of performing small multiples comparison of 6 sunflower plants.</small>
+</div>
 <br />
-<br />
-<img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-1-1.png')}}"/><img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-1-2.png')}}"/><img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-1-3.png')}}"/>
-<br />
-<small>Fig. 1. example plant growth (left), Antarctic sea ice (middle), Arctic sea ice (right)</small>
-<br />
-<br />
-Compare each video with an example image on the right side of the screen.
-<br />
-For the <b>plant growing</b> and <b>Antarctic</b> videos, select all videos (if any) where the plant or ice grows to have
-a <b>larger</b> area. Example:
-<br />
-<br />
-<img style="max-width: 600px;" src="{{url_for('my_task.static', filename = 'assets/instructions/task1-2-1.png')}}"/><img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-2-2.png')}}"/>
-<br />
-<small>Fig. 2. example plant growing videos (left 2) compared to example image (right); green check mark indicates correct videos</small>
-<br />
-<br />
-<img style="max-width: 600px;" src="{{url_for('my_task.static', filename = 'assets/instructions/task1-3-1.png')}}"/><img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-3-2.png')}}"/>
-<br />
-<small>Fig. 3. Antarctic ice videos (left) compared to example image (right); green check mark indicates correct videos</small>
-<br />
-<br />
-For the <b>videos</b>, select all videos (if any) where the ice shrinks to have a <b>smaller</b> area. Example:
-<br />
-<br />
-<img style="max-width: 600px;" src="{{url_for('my_task.static', filename = 'assets/instructions/task1-4-1.png')}}"/><img src="{{url_for('my_task.static', filename = 'assets/instructions/task1-4-2.png')}}"/>
-<br />
-<small>Fig. 4. Arctic ice videos (left) compared to example image (right); green check mark indicates correct videos</small>
-<br />
-<br />
+This task has 2 comparison trials. For each trial, 6 plant growing videos will load in for you to view and compare.
+Your task is to find the plant that grows the tallest.
+<br /><br />
+Play through all the videos and look for the highest point that each plant reaches. Select the plant whose highest point is the tallest.
+<br /><br />
+<b>Reminder</b>: select a video by holding <b>CONTROL</b> and clicking on it. 
+<br /><br />
+Click <b>Continue</b> to begin.
