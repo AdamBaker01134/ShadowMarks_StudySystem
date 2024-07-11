@@ -3,6 +3,10 @@
     "trialLog": {
       "type": "string",
       "default": ""
+    },
+    "streamLog": {
+      "type": "string",
+      "default": ""
     }
   }
 }

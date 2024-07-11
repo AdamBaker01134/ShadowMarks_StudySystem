@@ -48,7 +48,17 @@ Controller.prototype.handleMouseDragged = function (event) {
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
-            this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+            const previousIndex = this.model.index;
+            const index = this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth());
+            this.model.setIndex(index);
+            if (previousIndex !== index) {
+                this.model.addStreamData("scrollbar_scrub", {
+                    mx: mouseX,
+                    my: mouseY,
+                    previousIndex: previousIndex,
+                    index: index,
+                });
+            }
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
@@ -106,6 +116,12 @@ Controller.prototype.handleMousePressed = function (event) {
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
+                    this.model.addStreamData("added_to_overlay", {
+                        mx: mouseX,
+                        my: mouseY,
+                        addedName: hit.name,
+                        overlayTotal: this.model.overlay.length,
+                    });
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.freeforming()) {
@@ -166,6 +182,11 @@ Controller.prototype.handleMouseReleased = function (event) {
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
+                    this.model.addStreamData("added_mark", {
+                        mx: mouseX,
+                        my: mouseY,
+                        mode: this.model.shadowMarkType,
+                    });
                 } else {
                     if (this.model.checkOverlayHit()) {
                         let ow = this.model.videos[0].width;
@@ -173,9 +194,19 @@ Controller.prototype.handleMouseReleased = function (event) {
                         let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
                         let oy = scrollY;
                         this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
+                        this.model.addStreamData("added_mark", {
+                            mx: mouseX,
+                            my: mouseY,
+                            mode: this.model.shadowMarkType,
+                        });
                     } else {
                         this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
                         if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                        this.model.addStreamData("added_mark", {
+                            mx: mouseX,
+                            my: mouseY,
+                            mode: this.model.shadowMarkType,
+                        });
                     }
                 }
             }
@@ -293,8 +324,9 @@ Controller.prototype.handleKeyPressed = function (event) {
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.nextTrial();
                         } else {
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
-                            if (this.model.attempt > 2) {
+                            const moveOn = this.model.checkMoveOn();
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
+                            if (moveOn) {
                                 this.model.nextTrial();
                             }
                         }
@@ -303,8 +335,9 @@ Controller.prototype.handleKeyPressed = function (event) {
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.logData();
                         } else {
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
-                            if (this.model.attempt > 2) {
+                            const moveOn = this.model.checkMoveOn();
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
+                            if (moveOn) {
                                 this.model.logData();
                             }
                         }

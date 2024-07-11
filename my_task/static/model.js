@@ -65,6 +65,7 @@ function Model() {
     this.trial = 1;
     this.attempt = 1;
     this.log = [];
+    this.streamLog = [];
     this.trialLog = [];
     this.trialStartTime = 0;
 
@@ -116,18 +117,55 @@ Model.prototype.startTrial = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.tryAgain = function (falsePositives, falseNegatives) {
+Model.prototype.tryAgain = function (falsePositives, falseNegatives, moveOn=false) {
     this.attempt++;
-    if (this.attempt > 2) {
-        alert("Incorrect. Moving on.")
-    } else if (falsePositives > 0 && falseNegatives > 0) {
-        alert("Incorrect. Selected some that are not correct and missed a few. Try again.");
-    } else if (falsePositives > 0) {
-        alert("Incorrect: Selected too many. Try again.");
-    } else if (falseNegatives > 0) {
-        alert("Incorrect: Missed a few. Try again.");
+    switch (this.task) {
+        case 1:
+            if (moveOn) {
+                alert("Incorrect. Moving on to the next trial.");
+            } else if (falsePositives > 0 || falseNegatives > 0) {
+                alert("Incorrect. Try again.");
+            }
+            break;
+        case 2:
+        case 3:
+        default:
+            if (moveOn) {
+                alert("Incorrect. Moving on to the next trial.");
+            } else if (falsePositives > 0 && falseNegatives > 0) {
+                alert("Incorrect: Selection includes videos that are not correct and did not select ALL correct videos. Try again.");
+            } else if (falsePositives > 0) {
+                alert("Incorrect: Selection includes videos that are not correct. Try again.");
+            } else if (falseNegatives > 0) {
+                alert("Incorrect: Did not select ALL correct videos. Try again.");
+            }
+            break;
     }
     this.notifySubscribers();
+}
+
+Model.prototype.checkMoveOn = function () {
+    if (new Date().getTime() - this.trialStartTime > 60000) {
+        return true;
+    } else {
+        let scrollbarScrubData = this.streamLog.filter(data => data.event === "scrollbar_scrub");
+        let addedToOverlayData = this.streamLog.filter(data => data.event === "added_to_overlay");
+        let addedMarkData = this.streamLog.filter(data => data.event === "added_mark");
+        switch (this.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+                if (scrollbarScrubData.length > 0) return true;
+                break;
+            case INTERACTIONS.OVERLAYS:
+                if (scrollbarScrubData.length > 0 && addedToOverlayData.length > 0) return true;
+                break;
+            case INTERACTIONS.SHADOW_MARKER:
+                if (scrollbarScrubData.length > 0 && addedMarkData.length > 0) return true;
+                break;
+            default:
+                break;
+        }
+    }
+    return false;
 }
 
 Model.prototype.setInteraction = function (interaction) {
@@ -739,6 +777,14 @@ Model.prototype.logData = function () {
         submitResponses.setAttribute("name", "trialLog");
         submitResponses.style.display = "none";
         submitForm.append(submitResponses);
+
+        // writing to streamLog column
+        submitResponses = document.createElement("input");
+        submitResponses.setAttribute("type", "text");
+        submitResponses.setAttribute("value", JSON.stringify(this.streamLog));
+        submitResponses.setAttribute("name", "streamLog");
+        submitResponses.style.display = "none";
+        submitForm.append(submitResponses);
     }
   
     // Submitting the result. This will redirect to the next page
@@ -821,6 +867,14 @@ Model.prototype.addTrialData = function () {
     };
     this.log.push(results);
     return results;
+}
+
+Model.prototype.addStreamData = function (event, info) {
+    this.streamLog.push({
+        event: event,
+        timestamp: new Date().getTime(),
+        info: info,
+    });
 }
 
 Model.prototype.addSubscriber = function (subscriber) {
