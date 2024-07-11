@@ -173,30 +173,20 @@ View.prototype.drawInstructions = function () {
         let instructions = [];
         switch (this.model.task) {
             case 1:
-                if (this.model.getCurrentDataset() === "lemnatec") {
-                    instructions.push(`Select any videos where the ${this.model.category[0].name} plant gets larger`);
-                    instructions.push(`than the plant in the example image.`);
-                } else {
-                    if (this.model.category[0].name === "northpole") {
-                        instructions.push(`Select any videos where the area of ice gets`);
-                        instructions.push(`smaller than in the example image.`);
-                    } else {
-                        instructions.push(`Select any videos where the area of ice gets`);
-                        instructions.push(`larger than in the example image.`);
-                    }
-                }
+                instructions.push(`Select the ${this.model.category[0].name} plant`);
+                instructions.push(`that grows the tallest.`);
                 break;
             case 2:
-                if (this.model.getCurrentDataset() === "lemnatec") {
-                    instructions.push("Select the plant that grows the largest.");
-                } else {
-                    instructions.push("Select the pitch that moves the farthest horizontally.");
-                }
+                instructions.push(`Select any Arctic sea ice videos`);
+                instructions.push(`where the ice extends into the`);
+                instructions.push(`area between the two islands.`);
                 break;
             case 3:
             default:
-                instructions.push("Select the plant that grows the most during")
-                instructions.push("their flowering cycle.");
+                instructions.push(`Select any videos where the pitcher's`);
+                instructions.push(`release point is close to the release`);
+                instructions.push(`point of the pitcher in the top`);
+                instructions.push(`left-hand corner.`);
                 break;
         }
 
@@ -204,7 +194,7 @@ View.prototype.drawInstructions = function () {
         noStroke();
         strokeWeight(1);
         textSize(size);
-        while (x + textWidth(instructions[0]) > width) {
+        while (size > 1 && x + textWidth(instructions[0])+60 > this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25) {
             size--;
             textSize(size);
         }
@@ -603,13 +593,15 @@ View.prototype.drawHelpMenu = function () {
     hotkeysPoints.push("- Toggle playback ------------------------------------------------------------------------------------------ SPACEBAR");
     hotkeysPoints.push("- Zoom in ---------------------------------------------------------------------------------------------------------- CTRL +");
     hotkeysPoints.push("- Zoom out -------------------------------------------------------------------------------------------------------- CTRL -");
-    hotkeysPoints.push("- Select video ------------------------------------------------------------------------------------------------ CTRL click")
+    hotkeysPoints.push("- One frame back -------------------------------------------------------------------------------------- LEFT ARROW");
+    hotkeysPoints.push("- One frame forward -------------------------------------------------------------------------------- RIGHT ARROW");
+    hotkeysPoints.push("- Select video ------------------------------------------------------------------------------------------------ CTRL click");
     if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-        generalPoints.push("- Markers can be placed by clicking on a video.");
-        generalPoints.push("- Marker type can be selected from any of the button on the bottom right.");
+        generalPoints.push("- Marks can be placed by clicking, dragging, and releasing on a video.");
+        generalPoints.push("- Mark mode can be selected from any of the buttons on the bottom right.");
         generalPoints.push("- Click the bottom button to open a colour palette to choose from.");
         generalPoints.push("- Hovering over a shadow marker will highlight the video it originally came from.");
-        hotkeysPoints.push("- Remove shadow marker  ----------------------------------------------------------------------- hover & DELETE");
+        hotkeysPoints.push("- Remove shadow marker  --------------------------------------------------------------------------------- hover + d");
     } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
         generalPoints.push("- Click on a video to add it to the overlay on the right.");
         generalPoints.push("- Click on the video again to remove it from the overlay.");
