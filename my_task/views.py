@@ -58,4 +58,4 @@ def comparisonStudy(interaction, task):
         return redirect("/redirect_next_page")
     
     # if no post, render our custom html with these variables
-    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task)
+    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task, condition = condition)

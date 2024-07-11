@@ -64,9 +64,8 @@ function Model() {
     this.category = [];
     this.trial = 1;
     this.attempt = 1;
-    this.log = [];
-    this.streamLog = [];
     this.trialLog = [];
+    this.streamLog = [];
     this.trialStartTime = 0;
 
     this.sandboxChecklist = [
@@ -770,10 +769,13 @@ Model.prototype.logData = function () {
     document.body.append(submitForm);
   
     if (this.task !== 0) {
+        // Convert JSONs to formatted strings.
+        let dataToSend = this.cleanLogData();
+
         // writing to trialLog column
         let submitResponses = document.createElement("input");
         submitResponses.setAttribute("type", "text");
-        submitResponses.setAttribute("value", JSON.stringify(this.log));
+        submitResponses.setAttribute("value", JSON.stringify(dataToSend.trialLog));
         submitResponses.setAttribute("name", "trialLog");
         submitResponses.style.display = "none";
         submitForm.append(submitResponses);
@@ -781,7 +783,7 @@ Model.prototype.logData = function () {
         // writing to streamLog column
         submitResponses = document.createElement("input");
         submitResponses.setAttribute("type", "text");
-        submitResponses.setAttribute("value", JSON.stringify(this.streamLog));
+        submitResponses.setAttribute("value", JSON.stringify(dataToSend.streamLog));
         submitResponses.setAttribute("name", "streamLog");
         submitResponses.style.display = "none";
         submitForm.append(submitResponses);
@@ -795,6 +797,52 @@ Model.prototype.logData = function () {
     submitBut.style.display = "none";
     submitForm.append(submitBut);
     submitBut.click();
+}
+
+Model.prototype.cleanLogData = function () {
+    let cleanedTrialData = "";
+    if (this.trialLog.length > 0) {
+        // Cleaning trial log data
+        for (let key in this.trialLog[0]) {
+            cleanedTrialData += key + ",";
+        }
+        cleanedTrialData = cleanedTrialData.slice(0,-1);
+        cleanedTrialData += "|";
+
+        for (let entry = 0; entry < this.trialLog.length; entry++) {
+            let trialLogEntry = this.trialLog[entry];
+            let entryString = "";
+            for (let key in trialLogEntry) {
+                entryString += trialLogEntry[key] + ",";
+            }
+            entryString = entryString.slice(0,-1);
+            entryString += "|";
+            cleanedTrialData += entryString;
+        }
+    }
+
+    let cleanedStreamData = ""
+    if (this.streamLog.length > 0) {
+        // Cleaning stream log data
+        for (let key in this.streamLog[0]) {
+            cleanedStreamData += key + ",";
+        }
+        cleanedStreamData = cleanedStreamData.slice(0,-1);
+        cleanedStreamData += "|";
+
+        for (let entry = 0; entry < this.streamLog.length; entry++) {
+            let streamLogEntry = this.streamLog[entry];
+            let entryString = "";
+            for (let key in streamLogEntry) {
+                entryString += streamLogEntry[key] + ",";
+            }
+            entryString = entryString.slice(0,-1);
+            entryString += "|";
+            cleanedStreamData += entryString;
+        }
+    }
+
+    return { trialLog: cleanedTrialData, streamLog: cleanedStreamData };
 }
 
 Model.prototype.addTrialData = function () {
@@ -854,26 +902,38 @@ Model.prototype.addTrialData = function () {
     // Construct trial data object
     let results = {
         pID: pID,
+        condition: condition,
         task: this.task,
         interaction: this.interaction,
         trial: this.trial,
         attempt: this.attempt,
         dataset: this.getCurrentDataset(),
         category: category.name,
-        videos: this.videos.map(video => video.name),
         elapsedTime: elapsedTime,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
     };
-    this.log.push(results);
+    this.trialLog.push(results);
     return results;
 }
 
-Model.prototype.addStreamData = function (event, info) {
+Model.prototype.addStreamData = function (event) {
     this.streamLog.push({
+        pID: pID,
+        condition: condition,
+        task: this.task,
+        interaction: this.interaction,
+        trial: this.trial,
+        attempt: this.attempt,
         event: event,
         timestamp: new Date().getTime(),
-        info: info,
+        mx: mouseX,
+        my: mouseY,
+        index: this.index,
+        overlaidVideos: this.overlay.length,
+        shadowMarks: this.shadowMarks.length,
+        shadowMarkMode: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkType : "NONE",
+        shadowMarkColour: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkColour : "NONE",
     });
 }
 
