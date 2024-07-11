@@ -17,38 +17,36 @@ async function preload() {
 
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
-    model.setTutorialChecklist(tutorialChecklists[interaction]);
 }
 
 function setup() {
     createCanvas(windowWidth*0.98, windowHeight);
-
-    if (tutorial) {
-        controller.handleLoadTutorials();
-    } else {
-        switch (model.task) {
-            case 1:
-                controller.handleLoadLemnatec().then(category => { 
-                    model.setCategory(category);
-                    model.updateVideoLocations();
-                    controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
-                });
-                break;
-            case 2:
-                controller.handleLoadSeaIce().then(category => { 
-                    model.setCategory(category);
-                    model.updateVideoLocations();
-                    controller.handleLoadSeaIce().then(category => model.setCategory(category));
-                });
-                break;
-            case 3:
-                controller.handleLoadBaseball().then(category => { 
-                    model.setCategory(category);
-                    model.updateVideoLocations();
-                    controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
-                });
-                break;
-        }
+    
+    switch (model.task) {
+        case 0:
+            controller.handleLoadSandbox();
+            break;
+        case 1:
+            controller.handleLoadLemnatec().then(category => { 
+                model.setCategory(category);
+                model.updateVideoLocations();
+                controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
+            });
+            break;
+        case 2:
+            controller.handleLoadSeaIce().then(category => { 
+                model.setCategory(category);
+                model.updateVideoLocations();
+                controller.handleLoadSeaIce().then(category => model.setCategory(category));
+            });
+            break;
+        case 3:
+            controller.handleLoadBaseball().then(category => { 
+                model.setCategory(category);
+                model.updateVideoLocations();
+                controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
+            });
+            break;
     }
 
     attachUserEventListeners();

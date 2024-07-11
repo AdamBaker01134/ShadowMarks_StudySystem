@@ -20,7 +20,8 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.task === 0 && this.model.currentChecklistPrompt === 6 && this.model.shadowMarkType === MARKS.CURSOR && this.model.checkVideoHit()) this.model.nextPrompt();
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -43,18 +44,15 @@ Controller.prototype.handleMouseMoved = function (event) {
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
-            if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
-            if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
             this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
             if (this.model.freeforming() && hit && hit === this.model.freeformTarget && !(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-hit.x)/hit.width,(mouseY-hit.y)/hit.height))) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
             } else if (this.model.freeforming() && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
                 let ow = this.model.videos[0].width;
@@ -78,7 +76,7 @@ Controller.prototype.handleMouseDragged = function (event) {
 }
 
 Controller.prototype.handleMousePressed = function (event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
     let hit = null, mark = null;
     switch (this.currentState) {
         case STATE.READY:
@@ -88,7 +86,6 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
                 this.model.setHelpMenuOpen(true);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
@@ -106,11 +103,9 @@ Controller.prototype.handleMousePressed = function (event) {
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     }
                     this.model.selectVideo(hit);
-                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 5) this.model.nextPrompt();
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
-                    if (tutorial && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.currentChecklistPrompt === 0 && this.model.overlay.length === 3) this.model.nextPrompt();
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.freeforming()) {
@@ -139,14 +134,13 @@ Controller.prototype.handleMousePressed = function (event) {
         case STATE.COLOUR_PICKER:
             let colour = null;
             if (colour = this.model.checkColourMenuHit()) {
-                if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                 this.model.setColour(colour);
+                if (this.model.task === 0 && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             }
             this.model.setColourMenuOpen(false);
             this.currentState = this.savedState;
             break;
         case STATE.HELP:
-            if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             this.model.setHelpMenuOpen(false);
             this.currentState = this.savedState;
             break;
@@ -157,7 +151,7 @@ Controller.prototype.handleMousePressed = function (event) {
 }
 
 Controller.prototype.handleMouseReleased = function (event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -168,6 +162,10 @@ Controller.prototype.handleMouseReleased = function (event) {
                 if (this.model.freeforming()) {
                     this.model.addFreeformPathToShadowMarks(this.model.freeformTarget);
                     this.model.setFreeformTarget(null);
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 2 && this.model.shadowMarkType === MARKS.RECT) this.model.nextPrompt();
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
                 } else {
                     if (this.model.checkOverlayHit()) {
                         let ow = this.model.videos[0].width;
@@ -176,8 +174,8 @@ Controller.prototype.handleMouseReleased = function (event) {
                         let oy = scrollY;
                         this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
                     } else {
-                        if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                         this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
+                        if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     }
                 }
             }
@@ -189,7 +187,7 @@ Controller.prototype.handleMouseReleased = function (event) {
 }
 
 Controller.prototype.handleKeyPressed = function (event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -197,13 +195,12 @@ Controller.prototype.handleKeyPressed = function (event) {
                 // Handle d pressed
                 let hit = this.model.checkShadowMarkerHit();
                 if (hit) {
-                    if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
                     this.model.deleteShadowMarker(hit);
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                 }
             }
             if (event.ctrlKey && [61,187].includes(keyCode)) {
                 // Handle ctrl + "+" pressed
-                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                 this.model.zoomIn();
                 this.model.updateVideoLocations();
                 if (keyCode === 187) {
@@ -219,7 +216,6 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (event.ctrlKey && [173,189].includes(keyCode)) {
                 // Handle ctrl + "-" pressed
-                if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                 this.model.zoomOut();
                 this.model.updateVideoLocations();
                 if (keyCode === 189) {
@@ -236,11 +232,9 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === 32) {
                 // Handle spacebar pressed
                 if (this.currentState === STATE.PLAYING) {
-                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
                 } else {
-                    if (tutorial && this.model.interaction === INTERACTIONS.SMALL_MULTIPLES && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
                     if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
                         this.model.setIndex(0);
                     }
@@ -267,7 +261,6 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             // if (event.ctrlKey && keyCode === 71) {
                 // Handle ctrl + g pressed
-                // if (tutorial && this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
                 // this.model.setGridActive(!this.model.gridActive);
                 // let hit = this.model.checkVideoHit();
                 // if (this.model.checkOverlayHit()) hit = "OVERLAY";
@@ -292,10 +285,10 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (keyCode === ENTER) {
-                if (tutorial && this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length) {
+                if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.logData();
                 } else if ((this.model.task > 1 || this.model.selectedVideos.length > 0) && confirm("Are you sure you want to submit your selection?")) {
-                    if (!tutorial && this.model.trial < 2) {
+                    if (this.model.task !== 0 && this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.nextTrial();
@@ -326,7 +319,7 @@ Controller.prototype.handleKeyPressed = function (event) {
 }
 
 Controller.prototype.handleKeyReleased = function(event) {
-    if (!tutorial && this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100) return true;
     switch (this.currentState) {
         case STATE.ZOOMING:
             if ([187,189].includes(keyCode)) {
@@ -346,17 +339,31 @@ Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
 
-Controller.prototype.handleLoadTutorials = async function () {
-    console.log("Loading tutorials into the model...");
-    for (let i = 1; i <= 3; i++) {
+Controller.prototype.handleLoadSandbox = async function () {
+    console.log("Loading 6 sandbox videos...");
+    let category = assets.sandbox.categories[0];
+    let videos = [0,1,2,3,4,5];
+    for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
-        for (let j = 1; j <= 360; j++) {
-            frames.push({ width: 420, height: 420 });
-            labels.push(`Frame ${j}`);
-        }
-        this.model.addVideo(frames, labels, `video-${i}`)
+        await new Promise((resolve, reject) => {
+            let completed = 0;
+            for (let frame = 0; frame < category.frames.length; frame++) {
+                frames.push(loadImage(`${assets.sandbox.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.png`,
+                    () => {
+                        if (++completed >= category.frames.length) resolve();
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                    },
+                    (err) => {
+                        if (++completed >= category.frames.length) reject(err);
+                        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                    }));
+                labels.push(category.frames[frame]);
+            }
+        });
+        this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
+    return category;
 }
 
 Controller.prototype.handleLoadBaseball = async function (undesired="") {

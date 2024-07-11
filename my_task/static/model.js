@@ -68,7 +68,16 @@ function Model() {
     this.trialLog = [];
     this.trialStartTime = 0;
 
-    this.tutorialChecklist = [];
+    this.sandboxChecklist = [
+        "Place a marker on one of the flowers by clicking on it.",
+        "Delete the marker by hovering over it and pressing the d key.",
+        "Select the rectangle tool and draw a rectangle around the area of a sunflower.",
+        "Select the circle tool and draw a circle around the area of a different sunflower.",
+        "Select the line tool and draw a line from the left side to the right side of a different sunflower.",
+        "Select the freeform tool and draw around the perimeter of a different sunflower.",
+        "Select the cursor tool and move the cursor around within any of the videos.",
+        "Select a new colour for your marks from the colour palette.",
+    ];
     this.currentChecklistPrompt = 0;
 
     this.overlay = [];
@@ -76,16 +85,9 @@ function Model() {
     this.exampleImage = [];
 }
 
-Model.prototype.setTutorialChecklist = function (checklist) {
-    this.tutorialChecklist = checklist;
-    this.notifySubscribers();
-}
-
 Model.prototype.nextPrompt = function () {
-    if (this.tutorialChecklist.length > 0) {
-        this.currentChecklistPrompt++;
-        this.notifySubscribers();
-    }
+    this.currentChecklistPrompt++;
+    this.notifySubscribers();
 }
 
 Model.prototype.setCategory = function (category) {
@@ -226,7 +228,6 @@ Model.prototype.addToOverlay = function (video) {
         this.overlay.push(video);
     } else {
         this.overlay.splice(index,1);
-        if (tutorial && this.interaction === INTERACTIONS.OVERLAYS && this.currentChecklistPrompt === 2) this.nextPrompt();
     }
     this.notifySubscribers();
 }
@@ -730,7 +731,7 @@ Model.prototype.logData = function () {
     submitForm.style.display = "none";
     document.body.append(submitForm);
   
-    if (!tutorial) {
+    if (this.task !== 0) {
         // writing to trialLog column
         let submitResponses = document.createElement("input");
         submitResponses.setAttribute("type", "text");

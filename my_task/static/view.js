@@ -7,9 +7,7 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
-    if (tutorial) {
-        this.drawTutorials();
-    } else if (this.model.percentLoaded === 100) {
+    if (this.model.percentLoaded === 100) {
         // Draw videos from the model
         for (let i = 0; i < 6 && i < this.model.videos.length; i++) {
             let video = this.model.videos[i];
@@ -135,6 +133,20 @@ View.prototype.draw = function () {
             this.drawColourButton();
             if (this.model.colourMenuOpen) this.drawColourMenu();
         }
+
+        if (this.model.task === 0) {
+            stroke(0);
+            strokeWeight(1);
+            fill(0);
+            textSize(24);
+            let prompt = this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length ? `You've completed the sandbox tutorial. Press ENTER to begin tasks.` : this.model.sandboxChecklist[this.model.currentChecklistPrompt];
+            let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
+            let promptY = this.model.getScrollbarY() - 50;
+            fill(255);
+            rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
+            fill(0);
+            text(prompt, promptX, promptY);
+        }
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);
@@ -147,141 +159,6 @@ View.prototype.draw = function () {
         noStroke();
         rect(width / 2 - 100, windowHeight / 2 + scrollY + 50, 200 * this.model.percentLoaded / 100, 25)
     }
-}
-
-View.prototype.drawTutorials = function () {
-    this.model.videos.forEach((video, index) => {
-        stroke(0);
-        strokeWeight(1);
-        fill(121, 121, 121);
-        rect(video.x, video.y, video.width, video.height);
-        // Moving circle
-        fill(255, 0, 0);
-        circle(video.x + 55 + (this.model.index / 360) * (video.width - 110), video.y + video.height * (index + 1) / 3 - 70, 100);
-        // Scaling square
-        stroke(0);
-        strokeWeight(1);
-        fill(0, 0, 255);
-        square(video.x + video.width * (index + 1) / 6, video.y + 100, 20 + 150 * (this.model.index / 360));
-        // Spinning line
-        stroke(0, 255, 0);
-        strokeWeight(3);
-        angleMode(DEGREES);
-        let p1 = [0, 0];
-        let p2 = [90 * cos(this.model.index), 90 * sin(this.model.index)];
-        line(video.x + p1[0] + 100, video.y + p1[1] + video.height * (index + 1) / 4, video.x + p2[0] + 100, video.y + p2[1] + video.height * (index + 1) / 4);
-        if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-            this.drawShadowMarkers(video.x, video.y, video.width, video.height);
-        }
-        if (this.model.interaction === INTERACTIONS.OVERLAYS) {
-            let eyeW = video.width/5;
-            let eyeH = eyeW/1.3;
-            let eyeX = video.x + video.width - eyeW/2 - 10;
-            let eyeY = video.y + eyeH/2 + 10;
-            stroke(105,105,105);
-            strokeWeight(1);
-            fill(220,220,220);
-            ellipse(eyeX,eyeY,eyeW,eyeH);
-            let index;
-            if ((index = this.model.overlay.indexOf(video)) > -1) {
-                let innerH = eyeW/2;
-                ellipse(eyeX,eyeY,eyeW,innerH);
-                circle(eyeX,eyeY,innerH);
-                noStroke();
-                fill(105,105,105);
-                textSize(innerH);
-                text(index+1,eyeX-textWidth(index+1)/2,eyeY+innerH/3);
-            } else {
-                line(eyeX-eyeW/2,eyeY,eyeX+eyeW/2,eyeY);
-            }
-        }
-        noFill();
-        if (this.model.selectedVideos.includes(video)) {
-            stroke(255,255,0);
-            strokeWeight(4);
-            rect(video.x, video.y, video.width, video.height);
-        }
-        stroke(0);
-        strokeWeight(1);
-        rect(video.x, video.y, video.width, video.height);
-        let highlightedMarker = this.model.highlightedMarker;
-        if (highlightedMarker && highlightedMarker.video === video) {
-            strokeWeight(5);
-            stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
-            rect(video.x + 1, video.y + 1, video.width - 2, video.height - 2);
-        }
-        if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.includes(video)) {
-            let ow = this.model.videos[0].width;
-            let oh = this.model.videos[0].height;
-            let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-            let oy = scrollY;
-            stroke(0, 0, 0, 255 / (index + 1));
-            strokeWeight(1);
-            fill(121, 121, 121, 255 / (index + 1));
-            rect(ox, oy, ow, oh);
-            // Moving circle
-            fill(255, 0, 0, 255 / (index + 1));
-            circle(ox + 55 + (this.model.index / 360) * (ow - 110), oy + oh * (index + 1) / 3 - 70, 100);
-            // Scaling square
-            stroke(0, 0, 0, 255 / (index + 1));
-            strokeWeight(1);
-            fill(0, 0, 255, 255 / (index + 1));
-            square(ox + ow * (index + 1) / 6, oy + 100, 20 + 150 * (this.model.index / 360));
-            // Spinning line
-            stroke(0, 255, 0, 255 / (index + 1));
-            strokeWeight(3);
-            angleMode(DEGREES);
-            let p1 = [0, 0];
-            let p2 = [90 * cos(this.model.index), 90 * sin(this.model.index)];
-            line(ox + p1[0] + 100, oy + p1[1] + oh * (index + 1) / 4, ox + p2[0] + 100, oy + p2[1] + oh * (index + 1) / 4);
-            noFill();
-            stroke(0);
-            strokeWeight(1);
-            rect(ox, oy, ow, oh);
-        }
-    });
-
-    if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS && this.model.overlay.length === 0) {
-        let ow = this.model.videos[0].width;
-        let oh = this.model.videos[0].height;
-        let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-        let oy = scrollY;
-        noFill();
-        stroke(0);
-        rect(ox, oy, ow, oh);
-        noStroke();
-        fill(0);
-        textSize(24);
-        text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
-        text("Click video to add.", ox + ow / 2 - textWidth("Click video to add.") / 2, oy + oh + 48);
-    }
-
-    stroke(0);
-    strokeWeight(1);
-    this.drawScrollbar();
-    this.drawHelpButton();
-    if (this.model.helpMenuOpen) this.drawHelpMenu();
-    if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-        this.drawMarkerButton();
-        this.drawRectButton();
-        this.drawCircleButton();
-        this.drawLineButton();
-        this.drawFreeformButton();
-        this.drawCursorButton();
-        this.drawColourButton();
-        if (this.model.colourMenuOpen) this.drawColourMenu();
-    }
-    stroke(0);
-    strokeWeight(1);
-    fill(0);
-    textSize(24);
-    let prompt = this.model.currentChecklistPrompt >= this.model.tutorialChecklist.length ? `! You've completed the tutorial. Press ENTER to begin tasks.` : this.model.tutorialChecklist[this.model.currentChecklistPrompt];
-    let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
-    let promptY = this.model.getScrollbarY() - 50;
-    fill(255);
-    rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
-    fill(0);
-    text(prompt, promptX, promptY);
 }
 
 View.prototype.drawInstructions = function () {
@@ -737,7 +614,7 @@ View.prototype.drawHelpMenu = function () {
         generalPoints.push("- Click on a video to add it to the overlay on the right.");
         generalPoints.push("- Click on the video again to remove it from the overlay.");
     }
-    if (tutorial) {
+    if (this.model.task === 0) {
         taskPoints.push("- Follow the prompts displayed above the scrollbar.");
     } else {
         taskPoints.push("- Follow the instruction displayed on the right.")

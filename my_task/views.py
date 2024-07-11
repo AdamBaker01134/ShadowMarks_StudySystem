@@ -32,7 +32,7 @@ def shadowMarkers(task):
 @my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
 @verify_session_valid
-def comparisonStudy(interaction, task, tutorial=False):
+def comparisonStudy(interaction, task):
     # interaction is the variable passed from custom routes
 
     # getting the participant ID from the session variable
@@ -57,4 +57,4 @@ def comparisonStudy(interaction, task, tutorial=False):
         return redirect("/redirect_next_page")
     
     # if no post, render our custom html with these variables
-    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task, tutorial = tutorial)
+    return render_template("simple/shadowMarkers.html", pID = pID, interaction = interaction, task = task)

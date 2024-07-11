@@ -8,10 +8,7 @@ function Video(images, labels, name, x, y) {
     this.x = x;
     this.y = y;
     this.aspectRatio = this.images[0].width / this.images[0].height;
-    if (tutorial) {
-        this.width = width/4-25;
-        this.height = this.width/this.aspectRatio;
-    } else if (this.aspectRatio > 1.0) {
+    if (this.aspectRatio > 1.0) {
         this.width = width/3-20;
         this.height = this.width/this.aspectRatio;
     } else {
