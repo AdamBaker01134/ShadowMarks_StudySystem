@@ -48,7 +48,7 @@ Controller.prototype.handleMouseDragged = function (event) {
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
-            const previousIndex = this.model.index;
+            const previousIndex = this.model.getIndex();
             const index = this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth());
             this.model.setIndex(index);
             if (previousIndex !== index) {
@@ -244,7 +244,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
                 } else {
-                    if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
+                    if (this.model.getIndex() + 1 >= this.model.getScrollbarSegments()) {
                         this.model.setIndex(0);
                     }
                     this.timer = setInterval(() => {
@@ -252,7 +252,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             case STATE.READY:
                             case STATE.PLAYING:
                             case STATE.MARKING:
-                                if (this.model.index + 1 >= this.model.getScrollbarSegments()) {
+                                if (this.model.getIndex() + 1 >= this.model.getScrollbarSegments()) {
                                     clearInterval(this.timer);
                                     if (this.currentState === STATE.MARKING) {
                                         this.savedState = STATE.READY;
@@ -260,7 +260,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                                         this.currentState = STATE.READY;
                                     }
                                 } else {
-                                    this.model.setIndex(this.model.index + 1);
+                                    this.model.setIndex(this.model.getIndex() + 1);
                                 }
                         }
                     }, 50);
@@ -281,15 +281,15 @@ Controller.prototype.handleKeyPressed = function (event) {
             // }
             if (keyCode === 37) {
                 // Handle left arrow pressed
-                if (this.model.index > 0) {
-                    this.model.setIndex(this.model.index - 1);
+                if (this.model.getIndex() > 0) {
+                    this.model.setIndex(this.model.getIndex() - 1);
                     return false;
                 }
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
-                if (this.model.index < this.model.getScrollbarSegments() - 1) {
-                    this.model.setIndex(this.model.index + 1);
+                if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
+                    this.model.setIndex(this.model.getIndex() + 1);
                     return false;
                 }
             }

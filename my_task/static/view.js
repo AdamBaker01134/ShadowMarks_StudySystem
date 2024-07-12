@@ -13,7 +13,7 @@ View.prototype.draw = function () {
             let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
-            image(video.images[this.model.index], x, y, video.width, video.height);
+            image(video.images[this.model.getIndex()], x, y, video.width, video.height);
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
@@ -100,7 +100,7 @@ View.prototype.draw = function () {
                     } else {
                         tint(255, Math.floor(255 * 1 / (index + 1)))
                     }
-                    image(video.images[this.model.index], ox, oy, ow, oh);
+                    image(video.images[this.model.getIndex()], ox, oy, ow, oh);
                 });
                 noTint();
                 noFill();
@@ -174,36 +174,45 @@ View.prototype.drawInstructions = function () {
         switch (this.model.task) {
             case 1:
                 instructions.push(`Select the ${this.model.category[0].name} plant`);
-                instructions.push(`that grows the tallest.`);
+                instructions.push(`that grows the tallest, by`);
+                instructions.push(`Control-clicking the video.`)
                 break;
             case 2:
-                instructions.push(`Select any Arctic sea ice videos`);
-                instructions.push(`where the ice extends into the`);
-                instructions.push(`area between the two islands.`);
+                instructions.push(`Select any Arctic sea ice`);
+                instructions.push(`videos where the ice`);
+                instructions.push(`extends into the area`);
+                instructions.push(`between the two islands, by`);
+                instructions.push(`Control-clicking the video.`);
                 break;
             case 3:
             default:
-                instructions.push(`Select any videos where the pitcher's`);
-                instructions.push(`release point is close to the release`);
-                instructions.push(`point of the pitcher in the top`);
-                instructions.push(`left-hand corner.`);
+                instructions.push(`Select any videos where the`);
+                instructions.push(`pitcher's release point is`);
+                instructions.push(`close to the release point`);
+                instructions.push(`of the pitcher in the top`);
+                instructions.push(`left-hand corner, by`);
+                instructions.push(`Control-clicking the video.`)
                 break;
         }
 
+        let largestInstruction = instructions.reduce((prev,curr) => {
+            if (textWidth(curr) > textWidth(prev)) return curr;
+            else return prev;
+        }, instructions[0]);
         let size = 24;
+        fill(0);
         noStroke();
         strokeWeight(1);
         textSize(size);
-        while (size > 1 && x + textWidth(instructions[0])+60 > this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25) {
+        while (size > 1 && iX+w/2-(textWidth(largestInstruction)+20)/2 + textWidth(largestInstruction)+30 > this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25) {
             size--;
             textSize(size);
         }
-        fill(0);
         instructions.forEach(instruction => {
             text(instruction, x+w/2-textWidth(instruction)/2-10,y);
             y+=(size+10);
         });
-        let iW = textWidth(instructions[0]+20);
+        let iW = textWidth(largestInstruction)+20;
         let iH = y-iY-size+10;
         stroke(0);
         noFill();
@@ -413,12 +422,12 @@ View.prototype.drawScrollbar = function () {
     fill(101, 101, 101, this.model.scrollbarHighlighted ? 255 : 100);
     rect(this.model.getScrollbarX(), this.model.getScrollbarY(), this.model.getScrollbarWidth(), this.model.getScrollbarHeight(), 20);
     fill(151, 151, 151, this.model.scrollbarHighlighted ? 255 : 100);
-    circle(this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth(), this.model.getScrollbarY() + this.model.getScrollbarHeight() / 2, 30);
+    circle(this.model.getScrollbarX() + this.model.index / (this.model.getScrollbarSegments()-1) * this.model.getScrollbarWidth(), this.model.getScrollbarY() + this.model.getScrollbarHeight() / 2, 30);
     if (this.model.scrollbarHighlighted) {
         stroke(0);
         fill(0);
         textSize(16);
-        text(this.model.videos[0].labels[this.model.index], this.model.getScrollbarX() + this.model.index / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.videos[0].labels[this.model.index]) / 2, this.model.getScrollbarY() - 20);
+        text(this.model.videos[0].labels[this.model.getIndex()], this.model.getScrollbarX() + this.model.getIndex() / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.videos[0].labels[this.model.getIndex()]) / 2, this.model.getScrollbarY() - 20);
     }
 }
 

@@ -357,8 +357,12 @@ Model.prototype.getScrollbarHeight = function () {
 
 // Slightly larger hitbox.
 Model.prototype.checkScrollbarHit = function () {
-    return mouseX > 100 && mouseX < width-100 &&
+    return mouseX > 100-15 && mouseX < width-100+15 &&
         mouseY > windowHeight+scrollY-100 && mouseY < windowHeight+scrollY-50;
+}
+
+Model.prototype.getIndex = function () {
+    return Math.floor(this.index);
 }
 
 Model.prototype.setIndex = function (index) {
@@ -436,16 +440,16 @@ Model.prototype.setHelpButtonHighlighted = function (highlighted) {
 // }
 
 Model.prototype.getIndexFromMouse = function (x, mx, segments, width) {
-    let idx = (int)(map(
+    let idx = map(
         mx,                 // value to map
         x,                  // min value of mx
         x + width,          // max value of mx
         0,                  // min value of desired index
         segments            // max value of desired index
-    ));
+    );
 
-    if (idx >= segments) {
-        idx = segments - 1;
+    if (idx >= segments-1) {
+        idx = segments-1;
     } else if (idx < 0) {
         idx = 0;
     }
@@ -929,7 +933,7 @@ Model.prototype.addStreamData = function (event) {
         timestamp: new Date().getTime(),
         mx: mouseX,
         my: mouseY,
-        index: this.index,
+        index: this.getIndex(),
         overlaidVideos: this.overlay.length,
         shadowMarks: this.shadowMarks.length,
         shadowMarkMode: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkType : "NONE",
