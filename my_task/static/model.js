@@ -147,9 +147,9 @@ Model.prototype.checkMoveOn = function () {
     if (new Date().getTime() - this.trialStartTime > 60000) {
         return true;
     } else {
-        let scrollbarScrubData = this.streamLog.filter(data => data.event === "scrollbar_scrub");
-        let addedToOverlayData = this.streamLog.filter(data => data.event === "added_to_overlay");
-        let addedMarkData = this.streamLog.filter(data => data.event === "added_mark");
+        let scrollbarScrubData = this.streamLog.filter(data => data.trial === this.trial && data.event === "scrollbar_scrub");
+        let addedToOverlayData = this.streamLog.filter(data => data.trial === this.trial && data.event === "added_to_overlay");
+        let addedMarkData = this.streamLog.filter(data => data.trial === this.trial && data.event === "added_mark");
         switch (this.interaction) {
             case INTERACTIONS.SMALL_MULTIPLES:
                 if (scrollbarScrubData.length > 0) return true;
