@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    if(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height)) {
+        window.location.href = "/redirect_next_page";
+    }
+    document.addEventListener("submit", (event) => {
+        if(!(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+            event.preventDefault();
+            event.stopPropagation();
+            let warning = document.querySelector("#fullscreen-warning");
+            if (warning === null) {
+                warning = document.createElement("div");
+                warning.style = "font-style: italic; color: red;";
+                warning.id = "fullscreen-warning";
+                warning.innerText = "Enter Fullscreen mode by pressing F11 before continuing.";
+                document.querySelector("#instructions-title")?.after(warning);
+            }
+        }
+    });
+</script>
+
+<h1 id="instructions-title">Fullscreen Verification</h1>
+
+<div>
+    To optimize your experience, we request that you perform the remainder of the experiment in
+    Fullscreen mode. Press F11 to enter Fullscreen mode before you continue.
+</div>

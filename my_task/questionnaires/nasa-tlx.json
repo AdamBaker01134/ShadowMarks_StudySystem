@@ -1,7 +1,7 @@
 {
   "title": "NASA-TLX Questionnaire",
   "instructions": "Please rate your experience performing the last task....",
-  "code": "",
+  "code": "<script type='text/javascript'>const slider1 = document.querySelector('#slider_1'); slider1.addEventListener('input', () => slider1.classList.add('tapped')); const slider2 = document.querySelector('#slider_2'); slider2.addEventListener('input', () => slider2.classList.add('tapped')); const slider3 = document.querySelector('#slider_3');slider3.addEventListener('input', () => slider3.classList.add('tapped'));const slider4 = document.querySelector('#slider_4');slider4.addEventListener('input', () => slider4.classList.add('tapped'));const slider5 = document.querySelector('#slider_5');slider5.addEventListener('input', () => slider5.classList.add('tapped'));const slider6 = document.querySelector('#slider_6');slider6.addEventListener('input', () => slider6.classList.add('tapped'));document.addEventListener('submit', (event) => { if (document.querySelectorAll('.tapped').length !== 6) { event.preventDefault(); event.stopPropagation(); } for (let i = 1; i <= 6; i++) { let slider = document.querySelector('#slider_'+i);if (slider && !slider.classList.contains('tapped')) { let warning = document.querySelector('#slider_'+i+'_warning');if (warning) { warning.remove(); }const node = document.createElement('div');node.style = 'font-style: italic; color: red';node.id='slider_'+i+'_warning';node.innerText = 'Please rate your experience here.';slider.after(node);} else if (slider) {let warning = document.querySelector('#slider_'+i+'_warning');if (warning) { warning.remove(); }}} });</script>",
   "questions": [
     {
       "questiontype": "slider",
@@ -10,7 +10,7 @@
       "left": "Very Low",
       "right": "Very High",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     },
     {
       "questiontype": "slider",
@@ -19,7 +19,7 @@
       "left": "Very Low",
       "right": "Very High",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     },
     {
       "questiontype": "slider",
@@ -28,7 +28,7 @@
       "left": "Very Low",
       "right": "Very High",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     },
     {
       "questiontype": "slider",
@@ -37,7 +37,7 @@
       "left": "Perfect",
       "right": "Failure",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     },
     {
       "questiontype": "slider",
@@ -46,16 +46,16 @@
       "left": "Very Low",
       "right": "Very High",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     },
     {
       "questiontype": "slider",
       "instructions": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
-      "id": "slider_5",
+      "id": "slider_6",
       "left": "Very Low",
       "right": "Very High",
       "tick_count": 7,
-      "width": 500
+      "width": 420
     }
   ]
 }
