@@ -300,22 +300,26 @@ Controller.prototype.handleKeyPressed = function (event) {
                     if (this.model.task !== 0 && this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                            this.model.addCategoriesToCookies();
                             this.model.nextTrial();
                         } else {
                             const moveOn = this.model.checkMoveOn();
                             this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
                             if (moveOn) {
+                                this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             }
                         }
                     } else {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                            this.model.addCategoriesToCookies();
                             this.model.logData();
                         } else {
                             const moveOn = this.model.checkMoveOn();
                             this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
                             if (moveOn) {
+                                this.model.addCategoriesToCookies();
                                 this.model.logData();
                             }
                         }
@@ -379,8 +383,10 @@ Controller.prototype.handleLoadSandbox = async function () {
 
 Controller.prototype.handleLoadBaseball = async function (undesired="") {
     console.log("Loading 6 random baseball videos...");
+    let previousCategories = this.model.getCookieCategories();
+    if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
     let category;
-    while ((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name === undesired);
+    while (previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) || category.name === undesired);
     let videos = [];
     while (videos.length < 1) {
         // Retrieve first video (must be visible on release)

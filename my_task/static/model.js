@@ -765,6 +765,34 @@ Model.prototype.getCurrentDataset = function () {
     }
 }
 
+Model.prototype.getCookieCategories = function () {
+    let cookieValue = document.cookie.split("; ").find((row) => row.startsWith("previousCategories="))?.split("=")[1];
+    if (cookieValue) {
+        return cookieValue.split("|");
+    } else {
+        return [];
+    }
+}
+
+Model.prototype.addCategoriesToCookies = function () {
+    let previousCategories = this.getCookieCategories();
+    if (!previousCategories.includes(this.category[0].name)) previousCategories.push(this.category[0].name);
+    let cookieString = "";
+    previousCategories.forEach(previousCategory => cookieString += previousCategory + "|");
+    cookieString = cookieString.slice(0,-1);
+    document.cookie = `previousCategories=${cookieString}; Secure`;
+}
+
+Model.prototype.removeCategoryCookies = function (total) {
+    let previousCategories = this.getCookieCategories();
+    previousCategories = previousCategories.slice(0, -total);
+    let cookieString = "";
+    previousCategories.forEach(previousCategory => cookieString += previousCategory + "|");
+    cookieString = cookieString.slice(0,-1);
+    document.cookie = `previousCategories=${cookieString}; Secure`;
+    return previousCategories;
+}
+
 Model.prototype.logData = function () {
     let submitForm = document.createElement("form");
     submitForm.setAttribute("action", "#");
