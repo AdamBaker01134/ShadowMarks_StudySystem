@@ -457,33 +457,20 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
     let videos = [];
-    let zeros = 0;
-    let halves = 0;
-    let ones = 0;
+    let extendings = 0;
     while (videos.length < 6) {
         let video = getRandomInt(0, category.videos.length);
         if (!videos.includes(video)) {
-            switch (category.videos[video].extends) {
-                case 0.0:
-                    if (zeros < 2) {
-                        zeros++;
-                        videos.push(video);
-                    }
-                    break;
-                case 0.5:
-                    if (halves < 2) {
-                        halves++;
-                        videos.push(video);
-                    }
-                    break;
-                case 1.0:
-                    if (ones < 2) {
-                        ones++;
-                        videos.push(video);
-                    }
-                    break;
-                default:
-                    break;
+            if (extendings > 0) {
+                if (category.videos[video].extends) {
+                    extendings++;
+                }
+                videos.push(video);
+            } else {
+                if (category.videos[video].extends) {
+                    extendings++;
+                    video.push(video);
+                }
             }
         }
     }

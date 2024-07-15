@@ -873,8 +873,7 @@ Model.prototype.addTrialData = function () {
                 else if (correctVideos[0].peak < video.peak) correctVideos = [ video ];
                 break;
             case 2:
-                if (video.extends === 1.0) correctVideos.push(video);
-                else if (video.extends === 0.5) possibleVideos.push(video);
+                if (video.extends) correctVideos.push(video);
                 break;
             case 3:
                 if (index > 0) {
