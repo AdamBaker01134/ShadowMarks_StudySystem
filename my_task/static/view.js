@@ -171,6 +171,7 @@ View.prototype.drawInstructions = function () {
         let iX = x-10;
         let iY = y-30;
         let instructions = [];
+        let reminders = [];
         switch (this.model.task) {
             case 1:
                 instructions.push(`Select the ${this.model.category[0].name} plant`);
@@ -191,7 +192,10 @@ View.prototype.drawInstructions = function () {
                 instructions.push(`close to the release point`);
                 instructions.push(`of the pitcher in the top`);
                 instructions.push(`left-hand corner, by`);
-                instructions.push(`Control-clicking the video.`)
+                instructions.push(`Control-clicking the video.`);
+                reminders.push(`Reminder:`);
+                reminders.push(`Nagivate frame-by-frame`);
+                reminders.push(`with the arrow keys.`);
                 break;
         }
 
@@ -199,6 +203,10 @@ View.prototype.drawInstructions = function () {
             if (textWidth(curr) > textWidth(prev)) return curr;
             else return prev;
         }, instructions[0]);
+        let largestReminder = reminders.reduce((prev, curr) => {
+            if (textWidth(curr) > textWidth(prev)) return curr;
+            else return prev;
+        }, reminders[0]);
         let size = 24;
         fill(0);
         noStroke();
@@ -217,6 +225,23 @@ View.prototype.drawInstructions = function () {
         stroke(0);
         noFill();
         rect(iX+w/2-iW/2,iY,iW,iH,10);
+
+        if (reminders.length > 0) {
+            y+=size+10;
+            fill(0);
+            noStroke();
+            strokeWeight(1);
+            iY = y-30;
+            reminders.forEach(reminder => {
+                text(reminder, x+w/2-textWidth(reminder)/2-10,y);
+                y+=(size+10);
+            });
+            iW = textWidth(largestReminder)+20;
+            iH = y-iY-size+10;
+            stroke(0);
+            noFill();
+            rect(iX+w/2-iW/2,iY,iW,iH,10);
+        }
 
         if (this.model.task > 1 || this.model.selectedVideos.length > 0) {
             let submitPrompt = "Press ENTER to submit.";
@@ -427,7 +452,14 @@ View.prototype.drawScrollbar = function () {
         stroke(0);
         fill(0);
         textSize(16);
-        text(this.model.videos[0].labels[this.model.getIndex()], this.model.getScrollbarX() + this.model.getIndex() / this.model.getScrollbarSegments() * this.model.getScrollbarWidth() - textWidth(this.model.videos[0].labels[this.model.getIndex()]) / 2, this.model.getScrollbarY() - 20);
+        let txt = this.model.videos[0].labels[this.model.getIndex()];
+        if (this.model.getIndex() > 0) {
+            txt = "<   " + txt;
+        }
+        if (this.model.getIndex() < this.model.getScrollbarSegments()-1) {
+            txt = txt + "   >";
+        }
+        text(txt, this.model.getScrollbarX() + this.model.index / (this.model.getScrollbarSegments()-1) * this.model.getScrollbarWidth() - textWidth(txt) / 2, this.model.getScrollbarY() - 20);
     }
 }
 

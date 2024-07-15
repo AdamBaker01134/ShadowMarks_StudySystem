@@ -14,36 +14,36 @@
             path: "{{url_for('my_task.static', filename = 'assets/baseball')}}",
             categories: [
                 // NOTE: Measurements for release point were taken from videos sized at 723x407. Measurements are not scale-invariant.
-                {
-                    name: "busch_stadium",
-                    frames: 150,
-                    videos: [{ name: "griffin_jax", release: [322,193] }, { name: "michael_fulmer", release: [365,166] }, { name: "michael_king", release: [361,169] }, { name: "shohei_ohtani", release: [352,163] }, { name: "sonny_gray", release: [325,171] }, { name: "yency_almonte", release: [323,164] },],
-                },
+                // {
+                //     name: "busch_stadium",
+                //     frames: 150,
+                //     videos: [{ name: "griffin_jax", release: [322,193], visible: true }, { name: "michael_fulmer", release: [365,166], visible: false }, { name: "michael_king", release: [361,169], visible: true }, { name: "shohei_ohtani", release: [352,163], visible: false }, { name: "sonny_gray", release: [325,171], visible: false }, { name: "yency_almonte", release: [323,164], visible: false },],
+                // },
                 {
                     name: "dodgers_stadium",
                     frames: 150,
-                    videos: [{ name: "gavin_stone", release: [381,165] }, { name: "george_soriano", release: [373,177] }, { name: "tyler_glasnow", release: [376,151] }, { name: "ronel_blanco", release: [355,174] }, { name: "seranthony_dominguez", release: [390,189] }, { name: "yunior_marte", release: [392,190] },],
+                    videos: [{ name: "gavin_stone", release: [381,165], visible: true }, { name: "george_soriano", release: [373,177], visible: false }, { name: "tyler_glasnow", release: [376,151], visible: true }, { name: "ronel_blanco", release: [355,174], visible: true }, { name: "seranthony_dominguez", release: [390,189], visible: true }, { name: "yunior_marte", release: [392,190], visible: false },],
                 },
                 {
                     name: "oriole_park",
                     frames: 150,
-                    videos: [{ name: "corbin_burnes", release: [333,192] }, { name: "duane_underwood_jr", release: [363,195] }, { name: "john_schreiber", release: [388,236] }, { name: "mitch_keller", release: [370,192] }, { name: "shohei_ohtani", release: [375,200] }, { name: "zach_eflin", release: [370,195] },],
+                    videos: [{ name: "corbin_burnes", release: [333,192], visible: true }, { name: "duane_underwood_jr", release: [363,195], visible: true }, { name: "john_schreiber", release: [388,236], visible: true }, { name: "mitch_keller", release: [370,192], visible: true }, { name: "shohei_ohtani", release: [375,200], visible: true }, { name: "zach_eflin", release: [370,195], visible: true },],
                 },
                 {
                     name: "rogers_centre",
                     frames: 150,
-                    videos: [{ name: "bryse_wilson", release: [341,184] }, { name: "dean_kremer", release: [337,199] }, { name: "felix_bautista", release: [221,140] }, { name: "jhony_brito", release: [298,182] }, { name: "mitch_white", release: [298,208] }, { name: "spencer_strider", release: [311,188] },],
+                    videos: [{ name: "bryse_wilson", release: [341,184], visible: true }, { name: "dean_kremer", release: [337,199], visible: true }, { name: "felix_bautista", release: [221,140], visible: true }, { name: "jhony_brito", release: [298,182], visible: true }, { name: "mitch_white", release: [298,208], visible: false }, { name: "spencer_strider", release: [311,188], visible: false },],
                 },
                 {
                     name: "wrigley_field",
                     frames: 150,
-                    videos: [{ name: "aaron_civale", release: [291,164] }, { name: "edward_cabrera", release: [340,171] }, { name: "james_naile", release: [321,187] }, { name: "logan_webb", release: [341,229] }, { name: "miles_mikolas", release: [330,153] }, { name: "yoshinobu_yamimoto", release: [312,195] },],
+                    videos: [{ name: "aaron_civale", release: [291,164], visible: false }, { name: "edward_cabrera", release: [340,171], visible: true }, { name: "james_naile", release: [321,187], visible: true }, { name: "logan_webb", release: [341,229], visible: true }, { name: "miles_mikolas", release: [330,153], visible: true }, { name: "yoshinobu_yamimoto", release: [312,195], visible: false },],
                 },
-                {
-                    name: "yankee_stadium",
-                    frames: 150,
-                    videos: [{ name: "bryan_woo", release: [336,219] }, { name: "eli_morgan", release: [326,192] }, { name: "rico_garcia", release: [340,186] }, { name: "shane_bieber", release: [341,191] }, { name: "joe_boyle", release: [325,182] }, { name: "yennier_cano", release: [362,197]},],
-                },
+                // {
+                //     name: "yankee_stadium",
+                //     frames: 150,
+                //     videos: [{ name: "bryan_woo", release: [336,219] }, { name: "eli_morgan", release: [326,192] }, { name: "rico_garcia", release: [340,186] }, { name: "shane_bieber", release: [341,191] }, { name: "joe_boyle", release: [325,182] }, { name: "yennier_cano", release: [362,197]},],
+                // },
             ],
         },
         lemnatec: {
@@ -52,22 +52,22 @@
                 {
                     name: "canna",
                     frames: ["2019-07-13","2019-07-14","2019-07-15","2019-07-17","2019-07-19","2019-07-21","2019-07-23","2019-07-25","2019-07-27","2019-07-29","2019-07-31","2019-08-02","2019-08-04","2019-08-06","2019-08-08","2019-08-10","2019-08-12","2019-08-14","2019-08-16","2019-08-18","2019-08-20","2019-08-22","2019-08-24","2019-08-26","2019-08-28","2019-08-30","2019-09-01","2019-09-03"],
-                    videos: [{ name: "canna1", peak: 0.8404 }, { name: "canna2", peak: 0.8479 }, { name: "canna3", peak: 0.8178 }, { name: "canna4", peak: 0.8185 }, { name: "canna5", peak: 0.8693 }, { name: "canna6", peak: 0.8712 }, { name: "canna7", peak: 0.8931 }, { name: "canna8", peak: 0.9063 }, { name: "canna9", peak: 0.8385 }, { name: "canna10", peak: 0.8000 }, { name: "canna11", peak: 0.9356 }, { name: "canna12", peak: 0.9017 }, { name: "canna13", peak: 0.9515 }, { name: "canna14", peak: 0.9647 }, { name: "canna15", peak: 0.9665 }, { name: "canna16", peak: 0.8623 }, { name: "canna17", peak: 0.7888 }, { name: "canna18", peak: 0.8152 }, { name: "canna19", peak: 0.8307 }, { name: "canna20", peak: 0.9041 },],
+                    videos: [{ name: "canna1", peak: 0.8404 }, { name: "canna2", peak: 0.8479 }, { name: "canna3", peak: 0.8178 }, { name: "canna4", peak: 0.8185 }, { name: "canna5", peak: 0.8693 }, { name: "canna6", peak: 0.8712 }, { name: "canna7", peak: 0.8931 }, { name: "canna8", peak: 0.9063 }, { name: "canna9", peak: 0.8385 }, { name: "canna10", peak: 0.8000 }, /*{ name: "canna11", peak: 0.9356 },*/ { name: "canna12", peak: 0.9017 }, /*{ name: "canna13", peak: 0.9515 }, { name: "canna14", peak: 0.9647 }, { name: "canna15", peak: 0.9665 },*/ { name: "canna16", peak: 0.8623 }, { name: "canna17", peak: 0.7888 }, { name: "canna18", peak: 0.8152 }, { name: "canna19", peak: 0.8307 }, { name: "canna20", peak: 0.9041 },],
                 },
                 {
                     name: "coleus",
                     frames: ["2019-07-13","2019-07-14","2019-07-15","2019-07-17","2019-07-19","2019-07-21","2019-07-23","2019-07-27","2019-08-02","2019-08-04","2019-08-06","2019-08-08","2019-08-10","2019-08-12","2019-08-16","2019-08-18","2019-08-20","2019-08-22","2019-08-24","2019-08-26","2019-08-28","2019-08-30","2019-09-01","2019-09-03"],
-                    videos: [{ name: "coleus1", peak: 0.8305 }, { name: "coleus2", peak: 0.8192 }, { name: "coleus3", peak: 0.7947 }, { name: "coleus4", peak: 0.7673 }, { name: "coleus5", peak: 0.8784 }, { name: "coleus6", peak: 0.6675 }, { name: "coleus7", peak: 0.6442 }, { name: "coleus8", peak: 0.9322 }, { name: "coleus9", peak: 0.4312 }, { name: "coleus10", peak: 0.7690 }, { name: "coleus11", peak: 0.8783 }, { name: "coleus12", peak: 0.8651 }, { name: "coleus13", peak: 0.8682 }, { name: "coleus14", peak: 0.8926 }, { name: "coleus15", peak: 0.9586 }, { name: "coleus16", peak: 0.9257 }, { name: "coleus17", peak: 0.7995 }, { name: "coleus18", peak: 0.9596 }, { name: "coleus19", peak: 0.7346 }, { name: "coleus20", peak: 0.5783 },],
+                    videos: [{ name: "coleus1", peak: 0.8305 }, { name: "coleus2", peak: 0.8192 }, { name: "coleus3", peak: 0.7947 }, { name: "coleus4", peak: 0.7673 }, { name: "coleus5", peak: 0.8784 }, /*{ name: "coleus6", peak: 0.6675 }, { name: "coleus7", peak: 0.6442 }, { name: "coleus8", peak: 0.9322 }, { name: "coleus9", peak: 0.4312 },*/ { name: "coleus10", peak: 0.7690 }, { name: "coleus11", peak: 0.8783 }, { name: "coleus12", peak: 0.8651 }, { name: "coleus13", peak: 0.8682 }, { name: "coleus14", peak: 0.8926 }, /*{ name: "coleus15", peak: 0.9586 }, { name: "coleus16", peak: 0.9257 },*/ { name: "coleus17", peak: 0.7995 }, /*{ name: "coleus18", peak: 0.9596 },*/ { name: "coleus19", peak: 0.7346 }, /*{ name: "coleus20", peak: 0.5783 },*/ ],
                 },
                 {
                     name: "sunflower",
                     frames: ["2019-07-14","2019-07-15","2019-07-17","2019-07-19","2019-07-21","2019-07-23","2019-07-27","2019-07-29","2019-07-31","2019-08-02","2019-08-04","2019-08-06","2019-08-08","2019-08-10","2019-08-12","2019-08-14","2019-08-16","2019-08-18"],
-                    videos: [{ name: "sunflower1", peak: 0.8964 }, { name: "sunflower2", peak: 0.9943 }, { name: "sunflower3", peak: 0.9134 }, { name: "sunflower4", peak: 0.9741 }, { name: "sunflower5", peak: 0.9628 }, { name: "sunflower6", peak: 0.9741 }, { name: "sunflower7", peak: 0.9585 }, { name: "sunflower8", peak: 0.9660 }, { name: "sunflower9", peak: 0.9604 }, { name: "sunflower10", peak: 0.9992 }, { name: "sunflower11", peak: 0.9597 }, { name: "sunflower12", peak: 0.9992 }, { name: "sunflower13", peak: 0.9905 }, { name: "sunflower14", peak: 0.9754 }, { name: "sunflower15", peak: 0.9641 }, { name: "sunflower16", peak: 0.9094 }, { name: "sunflower17", peak: 0.9992 }, { name: "sunflower18", peak: 0.9659 }, { name: "sunflower19", peak: 0.8721 }, { name: "sunflower20", peak: 0.9154 },],
+                    videos: [{ name: "sunflower1", peak: 0.8964 }, /*{ name: "sunflower2", peak: 0.9943 },*/ { name: "sunflower3", peak: 0.9134 }, { name: "sunflower4", peak: 0.9741 }, { name: "sunflower5", peak: 0.9628 }, { name: "sunflower6", peak: 0.9741 }, { name: "sunflower7", peak: 0.9585 }, { name: "sunflower8", peak: 0.9660 }, { name: "sunflower9", peak: 0.9604 }, /*{ name: "sunflower10", peak: 0.9992 },*/ { name: "sunflower11", peak: 0.9597 }, /*{ name: "sunflower12", peak: 0.9992 }, { name: "sunflower13", peak: 0.9905 },*/ { name: "sunflower14", peak: 0.9754 }, { name: "sunflower15", peak: 0.9641 }, { name: "sunflower16", peak: 0.9094 }, /*{ name: "sunflower17", peak: 0.9992 },*/ { name: "sunflower18", peak: 0.9659 }, { name: "sunflower19", peak: 0.8721 }, { name: "sunflower20", peak: 0.9154 },],
                 },
                 {
                     name: "maize",
                     frames: ["Day_001","Day_002","Day_003","Day_004","Day_005","Day_006","Day_007","Day_008","Day_009","Day_010","Day_011","Day_012","Day_013","Day_014","Day_015","Day_016","Day_017","Day_018","Day_019","Day_020","Day_021","Day_022","Day_023","Day_024","Day_025","Day_026","Day_027"],
-                    videos: [{ name: "maize1", peak: 0.6859 }, { name: "maize2", peak: 0.6859 }, { name: "maize3", peak: 0.7104 }, { name: "maize4", peak: 0.3588 }, { name: "maize5", peak: 0.7561 }, { name: "maize6", peak: 0.7637 }, { name: "maize7", peak: 0.6818 }, { name: "maize8", peak: 0.7138 }, { name: "maize9", peak: 0.8042 }, { name: "maize10", peak: 0.6213 }, { name: "maize11", peak: 0.6891 }, { name: "maize12", peak: 0.6985 }, { name: "maize13", peak: 0.6363 },],
+                    videos: [{ name: "maize1", peak: 0.6859 }, { name: "maize2", peak: 0.6859 }, { name: "maize3", peak: 0.7104 }, /*{ name: "maize4", peak: 0.3588 },*/ { name: "maize5", peak: 0.7561 }, /*{ name: "maize6", peak: 0.7637 },*/ { name: "maize7", peak: 0.6818 }, { name: "maize8", peak: 0.7138 }, /*{ name: "maize9", peak: 0.8042 },*/ { name: "maize10", peak: 0.6213 }, { name: "maize11", peak: 0.6891 }, { name: "maize12", peak: 0.6985 }, { name: "maize13", peak: 0.6363 },],
                 },
             ],
         },

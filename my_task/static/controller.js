@@ -382,7 +382,13 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     let category;
     while ((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name === undesired);
     let videos = [];
+    while (videos.length < 1) {
+        // Retrieve first video (must be visible on release)
+        let video = getRandomInt(0, category.videos.length);
+        if (category.videos[video].visible) videos.push(video);
+    }
     while (videos.length < 6) {
+        // Retrieve the remaining videos
         let video = getRandomInt(0, category.videos.length);
         if (!videos.includes(video)) videos.push(video);
     }
@@ -418,6 +424,11 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         let video = getRandomInt(0, category.videos.length);
         if (!videos.includes(video)) videos.push(video);
     }
+    // const n = category.videos.length;
+    // videos = videos.map(video => category.videos[video]);
+    // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
+    // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
+    // debugger;
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
