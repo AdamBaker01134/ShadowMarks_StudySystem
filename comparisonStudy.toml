@@ -50,6 +50,7 @@ COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
 # If USE_BREADCRUMBS is true, then the pages with identical names will have (#) beside them.
 PAGE_LIST = [
     { name = 'Consent', path = 'consent' },
+    { name = "Demographics Questionnaire", path = "questionnaire/demographics" },
 
     { name = "Introduction", path = "instructions/introduction" },
     { name = "Fullscreen Verification", path = "fullscreen/1" },
@@ -326,6 +327,8 @@ PAGE_LIST = [
             { name = 'Questionnaire', path = "questionnaire/nasa-tlx/smallmultiples3" },
         ] },
     ] },
+
+    { name = "Summary Questionnaire", path = "questionnaire/summary" },
 
     { name = 'End', path = 'end' },
 ]

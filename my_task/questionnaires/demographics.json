@@ -1,0 +1,106 @@
+{
+    "title": "Demographics Questionnaire",
+    "instructions": "Please fill out the following demographics questionnaire...",
+    "code": "",
+    "questions": [
+        {
+            "questiontype": "drop_down",
+            "instructions": "I identify as:",
+            "id": "identify_1",
+            "required": true,
+            "items": ["Woman","Man","Non-binary","Not on the list","Prefer not to say"]
+        },
+        {
+            "questiontype": "field",
+            "instructions": "If you selected 'Not on the list', please self identify.",
+            "id": "identify_2",
+            "required": false
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "Age:",
+            "id": "age_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 1,
+            "max": 100
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend using a computer with mouse and keyboard?",
+            "id": "computer_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend playing video games?",
+            "id": "games_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend editing videos?",
+            "id": "video_editing_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend comparing videos?",
+            "id": "video_comparison_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend comparing data visualizations?",
+            "id": "visualization_comparison_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "checklist",
+            "instructions": "If any, select the data visualizations that you are familiar with.",
+            "id": "data_visualizations_1",
+            "required": false,
+            "questions": [
+                {
+                    "id": "line_chart_1",
+                    "text": "Line chart"
+                },
+                {
+                    "id": "bar_chart_1",
+                    "text": "Bar chart"
+                },
+                {
+                    "id": "scatter_plot_1",
+                    "text": "Scatter plot"
+                },
+                {
+                    "id": "area_chart_1",
+                    "text": "Area chart"
+                },
+                {
+                    "id": "pie_chart_1",
+                    "text": "Pie chart"
+                },
+                {
+                    "id": "box_and_whisker_plot_1",
+                    "text": "Box and whisker plot"
+                }
+            ]
+        }
+    ]
+  }

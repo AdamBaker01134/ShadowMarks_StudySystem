@@ -1,0 +1,40 @@
+{
+    "title": "Summary Questionnaire",
+    "instructions": "You have now ran through all the tasks with each technique. Please rate your experiences with all three techniques....",
+    "code": "",
+    "questions": [
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique did you feel helped you to complete the tasks the fastest?",
+            "id": "speed_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique did you feel helped you to complete the tasks most accurately?",
+            "id": "accuracy_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique did you prefer the most overall while performing the tasks?",
+            "id": "preference_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        }
+    ]
+  }
