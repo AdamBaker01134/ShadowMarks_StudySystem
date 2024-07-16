@@ -103,8 +103,8 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
                 if (event.ctrlKey) {
-                    if (this.model.task === 1) {
-                        // Task 1 does not allow multi-select.
+                    if (this.model.task === 1 || this.model.task === 4) {
+                        // Task 1 && Task 4 do not allow multi-select.
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     }
                     this.model.selectVideo(hit);
@@ -164,28 +164,26 @@ Controller.prototype.handleMouseReleased = function (event) {
             this.currentState = this.savedState;
             break;
         case STATE.MARKING:
-            if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
-                if (this.model.freeforming()) {
-                    this.model.addFreeformPathToShadowMarks(this.model.freeformTarget);
-                    this.model.setFreeformTarget(null);
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 2 && this.model.shadowMarkType === MARKS.RECT) this.model.nextPrompt();
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
+            if (this.model.freeforming()) {
+                this.model.addFreeformPathToShadowMarks(this.model.freeformTarget);
+                this.model.setFreeformTarget(null);
+                if (this.model.task === 0 && this.model.currentChecklistPrompt === 2 && this.model.shadowMarkType === MARKS.RECT) this.model.nextPrompt();
+                if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
+                if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
+                if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
+                this.model.addStreamData("added_mark");
+            } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
+                if (this.model.checkOverlayHit()) {
+                    let ow = this.model.videos[0].width;
+                    let oh = this.model.videos[0].height;
+                    let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
+                    let oy = scrollY;
+                    this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
                     this.model.addStreamData("added_mark");
                 } else {
-                    if (this.model.checkOverlayHit()) {
-                        let ow = this.model.videos[0].width;
-                        let oh = this.model.videos[0].height;
-                        let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-                        let oy = scrollY;
-                        this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
-                        this.model.addStreamData("added_mark");
-                    } else {
-                        this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
-                        if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
-                        this.model.addStreamData("added_mark");
-                    }
+                    this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    this.model.addStreamData("added_mark");
                 }
             }
             this.currentState = this.savedState;
@@ -296,7 +294,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === ENTER) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.logData();
-                } else if ((this.model.task > 1 || this.model.selectedVideos.length > 0) && confirm("Are you sure you want to submit your selection?")) {
+                } else if (((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Are you sure you want to submit your selection?")) {
                     if (this.model.task !== 0 && this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
@@ -480,7 +478,6 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
             }
         }
     }
-    videos.sort((a,b) => a - b); // better to have years in order
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
@@ -500,6 +497,27 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
             }
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
+    }
+    return category;
+}
+
+Controller.prototype.handleLoadScatterplots = async function () {
+    console.log("Loading 6 scatterplots...");
+    let category = assets.scatterplots.categories[0];
+    let videos = [];
+    while (videos.length < 6) {
+        let video = getRandomInt(0, category.videos.length);
+        if (!videos.includes(video)) videos.push(video);
+    }
+    for (let video = 0; video < videos.length; video++) {
+        let frames = [];
+        let labels = [];
+        await new Promise((resolve, reject) => {
+            frames.push(loadImage(`${assets.scatterplots.path}/${category.name}/${category.videos[videos[video]].name}.png`, () => resolve(), (err) => reject(err)));
+            labels.push(`scatterplot-${videos[video]}`);
+        });
+        if (this.model.videos.length < 6) this.model.setPercentLoaded(Math.round(100*((video+1)/6)));
+        this.model.addVideo(frames, labels, `scatterplot-${videos[video]}`);
     }
     return category;
 }

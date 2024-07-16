@@ -120,7 +120,7 @@ View.prototype.draw = function () {
         this.drawInstructions();
 
         strokeWeight(1);
-        this.drawScrollbar();
+        if (this.model.videos.length > 0 && this.model.videos[0].images.length > 1) this.drawScrollbar();
         this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
@@ -186,7 +186,6 @@ View.prototype.drawInstructions = function () {
                 instructions.push(`Control-clicking the video.`);
                 break;
             case 3:
-            default:
                 instructions.push(`Select any videos where the`);
                 instructions.push(`pitcher's release point is`);
                 instructions.push(`close to the release point`);
@@ -197,6 +196,11 @@ View.prototype.drawInstructions = function () {
                 reminders.push(`Nagivate frame-by-frame`);
                 reminders.push(`with the arrow keys.`);
                 break;
+            case 4:
+                instructions.push(`Select the scatterplot with`);
+                instructions.push(`the farthest outlier in the`);
+                instructions.push(`top left half of the plot, by`);
+                instructions.push(`Control-clicking the image.`);
         }
 
         let largestInstruction = instructions.reduce((prev,curr) => {
@@ -243,7 +247,7 @@ View.prototype.drawInstructions = function () {
             rect(iX+w/2-iW/2,iY,iW,iH,10);
         }
 
-        if (this.model.task > 1 || this.model.selectedVideos.length > 0) {
+        if ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) {
             let submitPrompt = "Press ENTER to submit.";
             y += size + 10;
             fill(0)

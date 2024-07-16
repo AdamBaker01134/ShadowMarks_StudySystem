@@ -120,6 +120,7 @@ Model.prototype.tryAgain = function (falsePositives, falseNegatives, moveOn=fals
     this.attempt++;
     switch (this.task) {
         case 1:
+        case 4:
             if (moveOn) {
                 alert("Incorrect. Moving on to the next trial.");
             } else if (falsePositives > 0 || falseNegatives > 0) {
@@ -357,6 +358,7 @@ Model.prototype.getScrollbarHeight = function () {
 
 // Slightly larger hitbox.
 Model.prototype.checkScrollbarHit = function () {
+    if (this.videos.length > 0 && this.videos[0].images.length === 1) return false; 
     return mouseX > 100-15 && mouseX < width-100+15 &&
         mouseY > windowHeight+scrollY-100 && mouseY < windowHeight+scrollY-50;
 }
@@ -760,8 +762,11 @@ Model.prototype.getCurrentDataset = function () {
         case 2:
             return "seaice";
         case 3:
-        default:
             return "baseball";
+        case 4:
+            return "scatterplots";
+        default:
+            return "";
     }
 }
 
@@ -914,6 +919,10 @@ Model.prototype.addTrialData = function () {
                     if (distance >= 30) correctVideos.push(video);
                     else if (distance >= 25) possibleVideos.push(video);
                 }
+                break;
+            case 4:
+                if (correctVideos.length === 0) correctVideos = [ video ];
+                else if (correctVideos[0].outlier < video.outlier) correctVideos = [ video ];
                 break;
             default:
                 break;

@@ -47,6 +47,13 @@ function setup() {
                 controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
             });
             break;
+        case 4:
+            controller.handleLoadScatterplots().then(category => {
+                model.setCategory(category);
+                model.updateVideoLocations();
+                controller.handleLoadScatterplots().then(category => model.setCategory(category));
+            });
+            break;
     }
 
     attachUserEventListeners();
