@@ -384,7 +384,7 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     let previousCategories = this.model.getCookieCategories();
     if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
     let category;
-    while (previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) || category.name === undesired);
+    while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < 6) || category.name === undesired);
     let videos = [];
     while (videos.length < 1) {
         // Retrieve first video (must be visible on release)

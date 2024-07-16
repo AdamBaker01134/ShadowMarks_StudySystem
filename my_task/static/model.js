@@ -780,6 +780,7 @@ Model.prototype.getCookieCategories = function () {
 }
 
 Model.prototype.addCategoriesToCookies = function () {
+    if (this.task !== 3) return;
     let previousCategories = this.getCookieCategories();
     if (!previousCategories.includes(this.category[0].name)) previousCategories.push(this.category[0].name);
     let cookieString = "";
