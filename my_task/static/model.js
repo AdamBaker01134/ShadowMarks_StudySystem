@@ -107,6 +107,7 @@ Model.prototype.nextTrial = function () {
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
     this.index = 0;
     this.clearShadowMarks();
+    this.updateVideoDimensions();
     this.updateVideoLocations();
     this.startTrial();
     this.notifySubscribers();
@@ -215,6 +216,43 @@ Model.prototype.addVideo = function (video, labels, name) {
     this.notifySubscribers();
 }
 
+Model.prototype.updateVideoDimensions = function () {
+    this.verifyVideoDimensions();
+    if (this.videos.length > 0) {
+        const maxWidth = 3*width/4 - 20;
+        const maxHeight = this.getScrollbarY() - 30;
+        let vWidth, vHeight;
+        if (this.videos[0].aspectRatio > 1.0) {
+            vWidth = maxWidth/2;
+            vHeight = vWidth / this.videos[0].aspectRatio;
+            while (vWidth*2 > maxWidth) {
+                vWidth -= 5;
+                vHeight -= (5/this.videos[0].aspectRatio);
+            }
+            while (vHeight*3 > maxHeight) {
+                vWidth -= 5;
+                vHeight -= (5/this.videos[0].aspectRatio);
+            }
+        } else {
+            vHeight = maxHeight/2;
+            vWidth = vHeight * this.videos[0].aspectRatio;
+            while (vWidth*3 > maxWidth) {
+                vWidth -= 5;
+                vHeight -= (5/this.videos[0].aspectRatio);
+            }
+            while (vHeight*2 > maxHeight) {
+                vWidth -= 5;
+                vHeight -= (5/this.videos[0].aspectRatio);
+            }
+        }
+        for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
+            let video = this.videos[i];
+            video.setWidth(vWidth);
+            video.setHeight(vHeight);
+        }
+    }
+}
+
 Model.prototype.verifyVideoDimensions = function () {
     if (this.videos.length > 0) {
         const vWidth = this.videos[0].width;
@@ -238,21 +276,11 @@ Model.prototype.updateVideoLocations = function () {
         video.setX(x);
         video.setY(y);
         x += video.width;
-        if (x + video.width > width - video.width - 20) {
+        const maxWidth = 3*width/4 - 20;
+        if (x + video.width > maxWidth) {
             x = 0;
             y += video.height;
         }
-        // if (this.interaction === INTERACTIONS.OVERLAYS || this.task === 1) {
-        //     if (x + video.width > width - video.width - 20) {
-        //         x = 0;
-        //         y += video.height;
-        //     }
-        // } else {
-        //     if (x + video.width > width) {
-        //         x = 0;
-        //         y += video.height;
-        //     }
-        // }
     }
     if (this.videos.length > 0) {
         if (x === 0) {

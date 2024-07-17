@@ -29,6 +29,7 @@ function setup() {
         case 1:
             controller.handleLoadLemnatec().then(category => { 
                 model.setCategory(category);
+                model.updateVideoDimensions();
                 model.updateVideoLocations();
                 controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
             });
@@ -36,6 +37,7 @@ function setup() {
         case 2:
             controller.handleLoadSeaIce().then(category => { 
                 model.setCategory(category);
+                model.updateVideoDimensions();
                 model.updateVideoLocations();
                 controller.handleLoadSeaIce().then(category => model.setCategory(category));
             });
@@ -43,6 +45,7 @@ function setup() {
         case 3:
             controller.handleLoadBaseball().then(category => { 
                 model.setCategory(category);
+                model.updateVideoDimensions();
                 model.updateVideoLocations();
                 controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
             });
@@ -50,6 +53,7 @@ function setup() {
         case 4:
             controller.handleLoadScatterplots().then(category => {
                 model.setCategory(category);
+                model.updateVideoDimensions();
                 model.updateVideoLocations();
                 controller.handleLoadScatterplots().then(category => model.setCategory(category));
             });

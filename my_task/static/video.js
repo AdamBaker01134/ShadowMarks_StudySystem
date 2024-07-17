@@ -7,18 +7,9 @@ function Video(images, labels, name, x, y) {
     this.name = name;
     this.x = x;
     this.y = y;
-    this.aspectRatio = this.images[0].width / this.images[0].height;
-    if (this.aspectRatio > 1.0) {
-        // this.width = width/4-20;
-        // this.height = this.width/this.aspectRatio;
-        this.height = (windowHeight-110)/3;
-        this.width = this.height * this.aspectRatio;
-    } else {
-        this.height = (windowHeight-110)/2;
-        this.width = this.height * this.aspectRatio;
-    }
-    // this.height = (windowHeight-110)/2;
-    // this.width = this.height * this.aspectRatio;
+    this.width = this.images[0].width;
+    this.height = this.images[0].height;
+    this.aspectRatio = this.width / this.height;
 }
 
 Video.prototype.setWidth = function(width) {
