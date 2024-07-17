@@ -473,7 +473,7 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
             } else {
                 if (category.videos[video].extends) {
                     extendings++;
-                    video.push(video);
+                    videos.push(video);
                 }
             }
         }
