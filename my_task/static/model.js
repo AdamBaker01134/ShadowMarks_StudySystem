@@ -150,13 +150,13 @@ Model.prototype.checkMoveOn = function () {
         let addedMarkData = this.streamLog.filter(data => data.trial === this.trial && data.event === "added_mark");
         switch (this.interaction) {
             case INTERACTIONS.SMALL_MULTIPLES:
-                if (scrollbarScrubData.length > 0) return true;
+                if (this.task === 4 || scrollbarScrubData.length > 0) return true;
                 break;
             case INTERACTIONS.OVERLAYS:
-                if (scrollbarScrubData.length > 0 && addedToOverlayData.length > 0) return true;
+                if (this.task === 4 || (scrollbarScrubData.length > 0 && (this.task === 2 || addedToOverlayData.length > 0))) return true;
                 break;
             case INTERACTIONS.SHADOW_MARKER:
-                if (scrollbarScrubData.length > 0 && addedMarkData.length > 0) return true;
+                if ((this.task === 4 || scrollbarScrubData.length > 0) && addedMarkData.length > 0) return true;
                 break;
             default:
                 break;

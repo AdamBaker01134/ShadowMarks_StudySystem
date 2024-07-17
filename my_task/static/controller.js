@@ -49,9 +49,8 @@ Controller.prototype.handleMouseDragged = function (event) {
     switch (this.currentState) {
         case STATE.NAVIGATING:
             const previousIndex = this.model.getIndex();
-            const index = this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth());
-            this.model.setIndex(index);
-            if (previousIndex !== index) {
+            this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+            if (previousIndex !== this.model.index) {
                 this.model.addStreamData("scrollbar_scrub");
             }
             break;
@@ -87,7 +86,11 @@ Controller.prototype.handleMousePressed = function (event) {
         case STATE.READY:
         case STATE.PLAYING:
             if (this.model.checkScrollbarHit()) {
+                const previousIndex = this.model.getIndex();
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
+                if (previousIndex !== this.model.index) {
+                    this.model.addStreamData("scrollbar_scrub");
+                }
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
@@ -106,6 +109,8 @@ Controller.prototype.handleMousePressed = function (event) {
                     if (this.model.task === 1 || this.model.task === 4) {
                         // Task 1 && Task 4 do not allow multi-select.
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
+                    } else if (this.model.task === 3 && this.model.videos[0] === hit) {
+                        return true;
                     }
                     this.model.selectVideo(hit);
                     return false;
