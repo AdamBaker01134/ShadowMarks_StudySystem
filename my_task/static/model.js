@@ -148,7 +148,7 @@ Model.prototype.checkMoveOn = function () {
     } else {
         let scrollbarScrubData = this.streamLog.filter(data => data.trial === this.trial && data.event === "scrollbar_scrub");
         let addedToOverlayData = this.streamLog.filter(data => data.trial === this.trial && data.event === "added_to_overlay");
-        let addedMarkData = this.streamLog.filter(data => data.trial === this.trial && data.event === "added_mark");
+        let addedMarkData = this.streamLog.filter(data => data.trial === this.trial && (data.event === "added_mark" || data.event === "shadow_cursor_moved"));
         switch (this.interaction) {
             case INTERACTIONS.SMALL_MULTIPLES:
                 if (this.task === 4 || scrollbarScrubData.length > 0) return true;

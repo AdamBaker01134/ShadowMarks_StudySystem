@@ -21,7 +21,6 @@ function Controller(model) {
 
 Controller.prototype.handleMouseMoved = function (event) {
     if (this.model.percentLoaded !== 100) return true;
-    if (this.model.task === 0 && this.model.currentChecklistPrompt === 6 && this.model.shadowMarkType === MARKS.CURSOR && this.model.checkVideoHit()) this.model.nextPrompt();
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -32,7 +31,13 @@ Controller.prototype.handleMouseMoved = function (event) {
             let hit = this.model.checkVideoHit();
             if (this.model.checkOverlayHit()) hit = "OVERLAY";
             this.model.setHoverTarget(hit);
-            if (hit && this.model.interaction === INTERACTIONS.SHADOW_MARKER) this.model.highlightMarker(this.model.checkShadowMarkerHit());
+            if (hit && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
+                this.model.highlightMarker(this.model.checkShadowMarkerHit());
+                if (this.model.shadowMarkType === MARKS.CURSOR) {
+                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
+                    this.model.addStreamData("shadow_cursor_moved");
+                }
+            }
             // if (this.model.gridActive) {
             //     this.model.setGridHighlight(hit);
             // }
@@ -369,7 +374,7 @@ Controller.prototype.handleLoadSandbox = async function () {
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 0; frame < category.frames.length; frame++) {
-                frames.push(loadImage(`${assets.sandbox.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.png`,
+                frames.push(loadImage(`${assets.sandbox.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.webp`,
                     () => {
                         if (++completed >= category.frames.length) resolve();
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
@@ -409,7 +414,7 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 1; frame <= category.frames; frame++) {
-                frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[videos[video]].name}/img${String(frame).padStart(3,"0")}.jpg`,
+                frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[videos[video]].name}/img${String(frame).padStart(3,"0")}.webp`,
                     () => {
                         if (++completed >= category.frames) resolve();
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
@@ -446,7 +451,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 0; frame < category.frames.length; frame++) {
-                frames.push(loadImage(`${assets.lemnatec.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.png`,
+                frames.push(loadImage(`${assets.lemnatec.path}/${category.name}/${category.videos[videos[video]].name}/${category.frames[frame]}.webp`,
                     () => {
                         if (++completed >= category.frames.length) resolve();
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
@@ -491,7 +496,7 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
         await new Promise((resolve, reject) => {
             let completed = 214;
             for (let frame = 215; frame <= category.frames; frame++) {
-                frames.push(loadImage(`${assets.seaice.path}/${category.name}/${category.videos[videos[video]].name}/${category.videos[videos[video]].name}${String(frame).padStart(4, "0")}.png`,
+                frames.push(loadImage(`${assets.seaice.path}/${category.name}/${category.videos[videos[video]].name}/${category.videos[videos[video]].name}${String(frame).padStart(4, "0")}.webp`,
                     () => {
                         if (++completed >= category.frames) resolve();
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
@@ -520,7 +525,7 @@ Controller.prototype.handleLoadScatterplots = async function () {
         let frames = [];
         let labels = [];
         await new Promise((resolve, reject) => {
-            frames.push(loadImage(`${assets.scatterplots.path}/${category.name}/${category.videos[videos[video]].name}.png`, () => resolve(), (err) => reject(err)));
+            frames.push(loadImage(`${assets.scatterplots.path}/${category.name}/${category.videos[videos[video]].name}.webp`, () => resolve(), (err) => reject(err)));
             labels.push(`scatterplot-${videos[video]}`);
         });
         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round(100*((video+1)/this.model.videosPerTrial)));
