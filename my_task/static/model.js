@@ -117,23 +117,19 @@ Model.prototype.startTrial = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.tryAgain = function (falsePositives, falseNegatives, moveOn=false) {
+Model.prototype.tryAgain = function (falsePositives, falseNegatives) {
     this.attempt++;
     switch (this.task) {
         case 1:
         case 4:
-            if (moveOn) {
-                alert("Incorrect. Moving on to the next trial.");
-            } else if (falsePositives > 0 || falseNegatives > 0) {
+            if (falsePositives > 0 || falseNegatives > 0) {
                 alert("Incorrect. Try again.");
             }
             break;
         case 2:
         case 3:
         default:
-            if (moveOn) {
-                alert("Incorrect. Moving on to the next trial.");
-            } else if (falsePositives > 0 && falseNegatives > 0) {
+            if (falsePositives > 0 && falseNegatives > 0) {
                 alert("Incorrect: Selection includes videos that are not correct and did not select ALL correct videos. Try again.");
             } else if (falsePositives > 0) {
                 alert("Incorrect: Selection includes videos that are not correct. Try again.");

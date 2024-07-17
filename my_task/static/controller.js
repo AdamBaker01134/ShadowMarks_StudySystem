@@ -302,10 +302,11 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.model.nextTrial();
                         } else {
                             const moveOn = this.model.checkMoveOn();
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
                             if (moveOn) {
                                 this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
+                            } else {
+                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
                             }
                         }
                     } else {
@@ -315,10 +316,11 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.model.logData();
                         } else {
                             const moveOn = this.model.checkMoveOn();
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives, moveOn);
                             if (moveOn) {
                                 this.model.addCategoriesToCookies();
                                 this.model.logData();
+                            } else {
+                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
                             }
                         }
                     }
