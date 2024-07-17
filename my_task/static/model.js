@@ -30,6 +30,7 @@ const COLOURS = {
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
+    this.videosPerTrial = 6;
     this.videos = [];
 
     this.shadowMarks = [];
@@ -98,12 +99,12 @@ Model.prototype.setCategory = function (category) {
 Model.prototype.nextTrial = function () {
     this.trial++;
     this.attempt = 1;
-    this.videos.splice(0,6);
+    this.videos.splice(0,this.videosPerTrial);
     this.category.splice(0,1);
     this.exampleImage.splice(0,1);
     this.overlay = [];
     this.selectedVideos = [];
-    if (this.videos.length < 6) this.percentLoaded = 0;
+    if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
     this.index = 0;
     this.clearShadowMarks();
     this.updateVideoLocations();
@@ -218,10 +219,25 @@ Model.prototype.addVideo = function (video, labels, name) {
     this.notifySubscribers();
 }
 
+Model.prototype.verifyVideoDimensions = function () {
+    if (this.videos.length > 0) {
+        const vWidth = this.videos[0].width;
+        const vHeight = this.videos[0].height;
+        for (let i = 1; i < this.videosPerTrial && i < this.videos.length; i++) {
+            let video = this.videos[i];
+            if (video.width !== vWidth || video.height !== vHeight) {
+                video.setWidth(vWidth);
+                video.setHeight(vHeight);
+            }
+        }
+    }
+}
+
 Model.prototype.updateVideoLocations = function () {
+    this.verifyVideoDimensions();
     let x = 0;
     let y = 0;
-    for (let i = 0; i < 6 && i < this.videos.length; i++) {
+    for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
         let video = this.videos[i];
         video.setX(x);
         video.setY(y);
@@ -284,7 +300,7 @@ Model.prototype.checkOverlayHit = function () {
 }
 
 Model.prototype.checkVideoHit = function () {
-    for (let i = 0; i < 6 && i < this.videos.length; i++) {
+    for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
         if (this.videos[i].checkHit(mouseX, mouseY)) return this.videos[i];
     }
     return null;
@@ -894,12 +910,12 @@ Model.prototype.addTrialData = function () {
     let correctVideos = [];
     let trialVideos = [];
     let category = this.category[0];
-    for (let i = 0; i < 6 && i < this.videos.length; i++) {
+    for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
         let video = this.videos[i];
         let index = category.videos.findIndex(categoryVideo => video.name === categoryVideo.name);
         if (index > -1) trialVideos.push(category.videos[index]);
     }
-    if (trialVideos.length !== 6) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
+    if (trialVideos.length !== this.videosPerTrial) console.error("DID NOT GET THE CORRECT NUMBER OF VIDEOS");
     trialVideos.forEach((video,index) => {
         switch (this.task) {
             case 1:

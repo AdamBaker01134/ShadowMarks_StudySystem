@@ -9,7 +9,7 @@ View.prototype.draw = function () {
     clear();
     if (this.model.percentLoaded === 100) {
         // Draw videos from the model
-        for (let i = 0; i < 6 && i < this.model.videos.length; i++) {
+        for (let i = 0; i < this.model.videosPerTrial && i < this.model.videos.length; i++) {
             let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
