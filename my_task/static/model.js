@@ -990,6 +990,7 @@ Model.prototype.addTrialData = function () {
         attempt: this.attempt,
         dataset: this.getCurrentDataset(),
         category: category.name,
+        videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
         elapsedTime: elapsedTime,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
@@ -1012,9 +1013,10 @@ Model.prototype.addStreamData = function (event) {
         my: mouseY,
         index: this.getIndex(),
         overlaidVideos: this.overlay.length,
+        selectedVideos: this.selectedVideos.length,
         shadowMarks: this.shadowMarks.length,
         shadowMarkMode: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkType : "NONE",
-        shadowMarkColour: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkColour : "NONE",
+        shadowMarkColour: this.interaction === INTERACTIONS.SHADOW_MARKER ? `(r:${this.shadowMarkColour.r};g:${this.shadowMarkColour.g};b:${this.shadowMarkColour.b})` : "NONE",
     });
 }
 

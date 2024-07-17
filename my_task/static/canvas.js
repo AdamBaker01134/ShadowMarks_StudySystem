@@ -10,6 +10,8 @@ p5.disableFriendlyErrors = true;
 
 let model, view, controller;
 
+let mouseMovementLoop = 0;
+
 async function preload() {
     model = new Model();
     view = new View(model);

@@ -21,6 +21,8 @@ function Controller(model) {
 
 Controller.prototype.handleMouseMoved = function (event) {
     if (this.model.percentLoaded !== 100) return true;
+    mouseMovementLoop++;
+    if (mouseMovementLoop % 50 === 0) this.model.addStreamData("mouse_moved");
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -50,14 +52,12 @@ Controller.prototype.handleMouseMoved = function (event) {
 
 Controller.prototype.handleMouseDragged = function (event) {
     if (this.model.percentLoaded !== 100) return true;
+    mouseMovementLoop++;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
-            const previousIndex = this.model.getIndex();
             this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
-            if (previousIndex !== this.model.index) {
-                this.model.addStreamData("scrollbar_scrub");
-            }
+            if (mouseMovementLoop % 50 === 0) this.model.addStreamData("scrollbar_scrub");
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
@@ -91,22 +91,22 @@ Controller.prototype.handleMousePressed = function (event) {
         case STATE.READY:
         case STATE.PLAYING:
             if (this.model.checkScrollbarHit()) {
-                const previousIndex = this.model.getIndex();
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
-                if (previousIndex !== this.model.index) {
-                    this.model.addStreamData("scrollbar_scrub");
-                }
+                this.model.addStreamData("scrollbar_scrub");
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
                 this.model.setHelpMenuOpen(true);
+                this.model.addStreamData("opened_help_menu");
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && (mark = this.model.checkMarkButtonHit())) {
                 this.model.setType(mark);
+                this.model.addStreamData("toggled_" + mark + "_button");
                 return false;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {
                 this.model.setColourMenuOpen(true);
+                this.model.addStreamData("opened_colour_menu");
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
@@ -118,6 +118,7 @@ Controller.prototype.handleMousePressed = function (event) {
                         return true;
                     }
                     this.model.selectVideo(hit);
+                    this.model.addStreamData("selected_video");
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
@@ -154,10 +155,12 @@ Controller.prototype.handleMousePressed = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             }
             this.model.setColourMenuOpen(false);
+            this.model.addStreamData("selected_colour");
             this.currentState = this.savedState;
             break;
         case STATE.HELP:
             this.model.setHelpMenuOpen(false);
+            this.model.addStreamData("closed_help_menu");
             this.currentState = this.savedState;
             break;
         default:
@@ -214,11 +217,13 @@ Controller.prototype.handleKeyPressed = function (event) {
                 if (hit) {
                     this.model.deleteShadowMarker(hit);
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    this.model.addStreamData("deleted_shadow_mark");
                 }
             }
             if (event.ctrlKey && [61,187].includes(keyCode)) {
                 // Handle ctrl + "+" pressed
                 this.model.zoomIn();
+                this.model.addStreamData("zoomed_in");
                 this.model.updateVideoLocations();
                 if (keyCode === 187) {
                     // Firefox does not like this behaviour
@@ -234,6 +239,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (event.ctrlKey && [173,189].includes(keyCode)) {
                 // Handle ctrl + "-" pressed
                 this.model.zoomOut();
+                this.model.addStreamData("zoomed_out");
                 this.model.updateVideoLocations();
                 if (keyCode === 189) {
                     // Firefox does not like this behaviour
@@ -248,6 +254,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === 32) {
                 // Handle spacebar pressed
+                this.model.addStreamData("toggled_autoplayback");
                 if (this.currentState === STATE.PLAYING) {
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
@@ -290,12 +297,14 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === 37) {
                 // Handle left arrow pressed
                 if (this.model.getIndex() > 0) {
+                    this.model.addStreamData("navigated_frame_back");
                     this.model.setIndex(this.model.getIndex() - 1);
                     return false;
                 }
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
+                this.model.addStreamData("navigated_frame_forward");
                 if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
                     this.model.setIndex(this.model.getIndex() + 1);
                     return false;
