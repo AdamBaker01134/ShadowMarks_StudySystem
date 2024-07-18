@@ -31,6 +31,7 @@ function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
     this.videosPerTrial = 6;
+    this.correctVideos = 0;
     this.videos = [];
 
     this.shadowMarks = [];
@@ -70,13 +71,13 @@ function Model() {
     this.trialStartTime = 0;
 
     this.sandboxChecklist = [
-        "Place a marker on one of the flowers by clicking on it.",
-        "Delete the marker by hovering over it and pressing the d key.",
-        "Select the rectangle tool and draw a rectangle around the area of a sunflower.",
-        "Select the circle tool and draw a circle around the area of a different sunflower.",
-        "Select the line tool and draw a line from the left side to the right side of a different sunflower.",
-        "Select the freeform tool and draw around the perimeter of a different sunflower.",
-        "Select the cursor tool and move the cursor around within any of the videos.",
+        "The Marker tool has been selected from the toolbar at right. Now, place the Marker by clicking on one of the videos.",
+        "Delete the Marker by hovering over it and pressing the d key.",
+        "Select the Rectangle tool and draw a rectangle around the area of a sunflower.",
+        "Select the Circle tool and draw a circle around the area of a different sunflower. (Note: the circle tool starts at the center of the circle)",
+        "Select the Line tool and draw a line from the left side to the right side of a different sunflower.",
+        "Select the Freeform tool and draw around the perimeter of a different sunflower.",
+        "Select the Cursor tool and move the cursor around within any of the videos.",
         "Select a new colour for your marks from the colour palette.",
     ];
     this.currentChecklistPrompt = 0;
@@ -109,6 +110,7 @@ Model.prototype.nextTrial = function () {
     this.clearShadowMarks();
     this.updateVideoDimensions();
     this.updateVideoLocations();
+    this.updateCorrectVideos();
     this.startTrial();
     this.notifySubscribers();
 }
@@ -216,11 +218,16 @@ Model.prototype.addVideo = function (video, labels, name) {
     this.notifySubscribers();
 }
 
+Model.prototype.updateCorrectVideos = function () {
+    this.correctVideos = this.getCorrectVideos()[0].length;
+    this.notifySubscribers();
+}
+
 Model.prototype.updateVideoDimensions = function () {
     this.verifyVideoDimensions();
     if (this.videos.length > 0) {
         const maxWidth = 3*width/4 - 20;
-        const maxHeight = this.getScrollbarY() - 30;
+        const maxHeight = this.task > 0 ? this.getScrollbarY() - 30 : this.getScrollbarY() - 100;
         let vWidth, vHeight;
         if (this.videos[0].aspectRatio > 1.0) {
             vWidth = maxWidth/2;
@@ -923,15 +930,9 @@ Model.prototype.cleanLogData = function () {
     return { trialLog: cleanedTrialData, streamLog: cleanedStreamData };
 }
 
-Model.prototype.addTrialData = function () {
-    // // Elapsed time
-    let elapsedTime = new Date().getTime() - this.trialStartTime;
-
-    // // Errors
-    let falseNegatives = 0;
-    let falsePositives = 0;
-    let possibleVideos = [];
+Model.prototype.getCorrectVideos = function () {
     let correctVideos = [];
+    let possibleVideos = [];
     let trialVideos = [];
     let category = this.category[0];
     for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
@@ -969,6 +970,18 @@ Model.prototype.addTrialData = function () {
                 break;
         }
     });
+    return [ correctVideos, possibleVideos ];
+}
+
+Model.prototype.addTrialData = function () {
+    // // Elapsed time
+    let elapsedTime = new Date().getTime() - this.trialStartTime;
+
+    // // Errors
+    let falseNegatives = 0;
+    let falsePositives = 0;
+    let correctVideos, possibleVideos;
+    [ correctVideos, possibleVideos ] = this.getCorrectVideos();
     
     // Parse false positives
     this.selectedVideos.forEach(selectedVideo => {
@@ -989,7 +1002,7 @@ Model.prototype.addTrialData = function () {
         trial: this.trial,
         attempt: this.attempt,
         dataset: this.getCurrentDataset(),
-        category: category.name,
+        category: this.category[0].name,
         videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
         elapsedTime: elapsedTime,
         falseNegatives: falseNegatives,

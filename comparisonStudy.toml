@@ -150,7 +150,7 @@ PAGE_LIST = [
             { name = 'Questionnaire', path = "questionnaire/nasa-tlx/shadowmarkers3" },
             { name = "Task 4 Instructions", path = "instructions/shadowmarkers_task4_instructions" },
             { name = "Fullscreen Verification", path = "fullscreen/9" },
-            { name = 'Task', path = 'shadowMarkers/3/shadowMarkers' },
+            { name = 'Task', path = 'shadowMarkers/4/shadowMarkers' },
             { name = 'Questionnaire', path = "questionnaire/nasa-tlx/shadowmarkers4" },
 
             { name = "Overlays Description", path = "instructions/overlays_description" },

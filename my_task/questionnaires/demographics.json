@@ -1,6 +1,6 @@
 {
     "title": "Demographics Questionnaire",
-    "instructions": "Please fill out the following demographics questionnaire...",
+    "instructions": "Please fill out the following demographics questionnaire.",
     "code": "",
     "questions": [
         {
@@ -56,6 +56,15 @@
             "questiontype": "num_field",
             "instructions": "In an average week, how many hours do you spend comparing videos?",
             "id": "video_comparison_experience_1",
+            "required": true,
+            "datatype": "integer",
+            "min": 0,
+            "max": 168
+        },
+        {
+            "questiontype": "num_field",
+            "instructions": "In an average week, how many hours do you spend working with visualizations?",
+            "id": "visualization_experience_1",
             "required": true,
             "datatype": "integer",
             "min": 0,

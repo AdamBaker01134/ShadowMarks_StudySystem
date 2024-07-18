@@ -139,7 +139,7 @@ View.prototype.draw = function () {
             strokeWeight(1);
             fill(0);
             textSize(24);
-            let prompt = this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length ? `You've completed the sandbox tutorial. Press ENTER to begin tasks.` : this.model.sandboxChecklist[this.model.currentChecklistPrompt];
+            let prompt = this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length ? `You have now completed the Shadow Marks tutorial. Press ENTER to begin tasks.` : this.model.sandboxChecklist[this.model.currentChecklistPrompt];
             let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
             let promptY = this.model.getScrollbarY() - 50;
             fill(255);
@@ -173,26 +173,36 @@ View.prototype.drawInstructions = function () {
         let instructions = [];
         let reminders = [];
         switch (this.model.task) {
+            case 0:
+                instructions.push(`Shadow Marks Sandbox Tutorial`);
+                reminders.push(`Follow the instructions at`);
+                reminders.push(`the bottom of the page`);
+                reminders.push(`above the scrollbar.`)
+                break;
             case 1:
-                instructions.push(`Select the ${this.model.category[0].name} plant`);
-                instructions.push(`that grows the tallest, by`);
-                instructions.push(`Control-clicking the video.`)
+                instructions.push(`Select the ${this.model.category[0].name} plant that`);
+                instructions.push(`grows the tallest (at its highest extent),`);
+                instructions.push(`by Control-clicking the video.`)
                 break;
             case 2:
-                instructions.push(`Select any Arctic sea ice`);
-                instructions.push(`videos where the ice`);
-                instructions.push(`extends into the area`);
-                instructions.push(`between the two islands, by`);
+                instructions.push(`Select ${this.model.correctVideos} Arctic sea ice`);
+                instructions.push(`video${this.model.correctVideos > 1 ? "s" : ""} where the ice`);
+                instructions.push(`extends close to or past the`);
+                instructions.push(`right-side edge of the two`);
+                instructions.push(`islands of interest, by`)
                 instructions.push(`Control-clicking the video.`);
                 break;
             case 3:
-                instructions.push(`Select any videos where the`);
+                instructions.push(`Select ${this.model.correctVideos} video${this.model.correctVideos > 1 ? "s" : ""} where the`);
                 instructions.push(`pitcher's release point is`);
                 instructions.push(`close to the release point`);
                 instructions.push(`of the pitcher in the top`);
                 instructions.push(`left-hand corner, by`);
                 instructions.push(`Control-clicking the video.`);
-                reminders.push(`Reminder:`);
+                reminders.push(`Reminders:`);
+                reminders.push(`The release point is the`);
+                reminders.push(`location of the ball in the`);
+                reminders.push(`first frame it is in flight.`);
                 reminders.push(`Nagivate frame-by-frame`);
                 reminders.push(`with the arrow keys.`);
                 break;
@@ -479,7 +489,7 @@ View.prototype.drawMarkerButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     line(centerX, centerY - centerLength / 2, centerX, centerY + centerLength / 2);
     line(centerX + centerLength / 2, centerY, centerX - centerLength / 2, centerY);
 }
@@ -496,7 +506,7 @@ View.prototype.drawRectButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     square(centerX - centerLength / 2, centerY - centerLength / 2, centerLength);
 }
 
@@ -512,7 +522,7 @@ View.prototype.drawCircleButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     circle(centerX, centerY, centerLength);
 }
 
@@ -526,7 +536,7 @@ View.prototype.drawLineButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     line(x+10, y+10, x+10+centerLength, y+10+centerLength);
 }
 
@@ -540,7 +550,7 @@ View.prototype.drawFreeformButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     beginShape();
     curveVertex(x + 10, y + 10);
     curveVertex(x + 15, y + 15);
@@ -561,7 +571,7 @@ View.prototype.drawCursorButton = function () {
     const centerLength = 30;
     square(x, y, length, 10);
     noFill();
-    stroke(255, 255, 255, highlighted ? 255 : 100);
+    stroke(255);
     beginShape();
     vertex(x+20, y+10);
     vertex(x+20, y+5+centerLength);
@@ -652,9 +662,9 @@ View.prototype.drawHelpMenu = function () {
         generalPoints.push("- Click on the video again to remove it from the overlay.");
     }
     if (this.model.task === 0) {
-        taskPoints.push("- Follow the prompts displayed above the scrollbar.");
+        taskPoints.push("- Follow the instructions displayed above the scrollbar.");
     } else {
-        taskPoints.push("- Follow the instruction displayed on the right.")
+        taskPoints.push("- Follow the instructions displayed on the right.")
     }
     let helpPoints = [
         "---------------------------------------------------------------------------------------------------- Click anywhere to exit",

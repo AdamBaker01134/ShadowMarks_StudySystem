@@ -313,7 +313,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === ENTER) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.logData();
-                } else if (((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Are you sure you want to submit your selection?")) {
+                } else if (((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
                     if (this.model.task !== 0 && this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
@@ -407,15 +407,30 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     let category;
     while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < this.model.videosPerTrial) || category.name === undesired);
     let videos = [];
-    while (videos.length < 1) {
+    let found = 0;
+    while (found === 0 || found > 3) {
+        found = 0;
+        videos = [];
         // Retrieve first video (must be visible on release)
-        let video = getRandomInt(0, category.videos.length);
-        if (category.videos[video].visible) videos.push(video);
-    }
-    while (videos.length < this.model.videosPerTrial) {
-        // Retrieve the remaining videos
-        let video = getRandomInt(0, category.videos.length);
-        if (!videos.includes(video)) videos.push(video);
+        while (videos.length < 1) {
+            let video = getRandomInt(0, category.videos.length);
+            if (category.videos[video].visible) videos.push(video);
+        }
+        while (videos.length < this.model.videosPerTrial) {
+            // Retrieve the remaining videos
+            let video = getRandomInt(0, category.videos.length);
+            if (!videos.includes(video)) videos.push(video);
+        }
+        for (let i = 1; i < videos.length; i++) {
+            // Ensure at least 1 video is registered
+            let firstVideo = category.videos[videos[0]];
+            let x1 = firstVideo.release[0];
+            let y1 = firstVideo.release[1];
+            let x2 = category.videos[videos[i]].release[0];
+            let y2 = category.videos[videos[i]].release[1];
+            let distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+            if (distance >= 30) found++;
+        }
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
@@ -489,8 +504,10 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
             if (extendings > 0) {
                 if (category.videos[video].extends) {
                     extendings++;
+                    if (extendings <= 3) videos.push(video);
+                } else {
+                    videos.push(video);
                 }
-                videos.push(video);
             } else {
                 if (category.videos[video].extends) {
                     extendings++;

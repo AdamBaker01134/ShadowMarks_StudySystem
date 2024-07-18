@@ -26,13 +26,18 @@ function setup() {
     
     switch (model.task) {
         case 0:
-            controller.handleLoadSandbox();
+            controller.handleLoadSandbox().then(category => {
+                model.setCategory(category);
+                model.updateVideoDimensions();
+                model.updateVideoLocations();
+            });
             break;
         case 1:
             controller.handleLoadLemnatec().then(category => { 
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
+                model.updateCorrectVideos();
                 controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
             });
             break;
@@ -41,6 +46,7 @@ function setup() {
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
+                model.updateCorrectVideos();
                 controller.handleLoadSeaIce().then(category => model.setCategory(category));
             });
             break;
@@ -49,6 +55,7 @@ function setup() {
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
+                model.updateCorrectVideos();
                 controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
             });
             break;
@@ -57,6 +64,7 @@ function setup() {
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
+                model.updateCorrectVideos();
                 controller.handleLoadScatterplots().then(category => model.setCategory(category));
             });
             break;
