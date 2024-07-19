@@ -79,13 +79,13 @@ if __name__ == "__main__":
         combinedStreamEntries = combineEntries(streamRows)
 
         today = datetime.datetime.now().date()
-        csvName = "shadowmarksTrialData_{}.csv".format(today.isoformat())
+        csvName = "data/shadowmarksTrialData_{}.csv".format(today.isoformat())
         with open(csvName, mode="w", newline="", encoding="utf-8") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(combinedTrialEntries[0])
             writer.writerows(combinedTrialEntries[1])
 
-        csvName = "shadowmarksStreamData_{}.csv".format(today.isoformat())
+        csvName = "data/shadowmarksStreamData_{}.csv".format(today.isoformat())
         with open(csvName, mode="w", newline="", encoding="utf-8") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(combinedStreamEntries[0])
