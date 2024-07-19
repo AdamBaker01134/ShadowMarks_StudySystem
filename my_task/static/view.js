@@ -187,8 +187,8 @@ View.prototype.drawInstructions = function () {
             case 2:
                 instructions.push(`Select ${this.model.correctVideos} Arctic sea ice`);
                 instructions.push(`video${this.model.correctVideos > 1 ? "s" : ""} where the ice`);
-                instructions.push(`extends close to or past the`);
-                instructions.push(`right-side edge of the two`);
+                instructions.push(`extends past an imaginary`);
+                instructions.push(`line between the two`);
                 instructions.push(`islands of interest, by`)
                 instructions.push(`Control-clicking the video.`);
                 break;
