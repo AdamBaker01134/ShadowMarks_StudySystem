@@ -7,7 +7,7 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
-    if (this.model.percentLoaded === 100) {
+    if (this.model.percentLoaded === 100 && this.model.start) {
         // Draw videos from the model
         for (let i = 0; i < this.model.videosPerTrial && i < this.model.videos.length; i++) {
             let video = this.model.videos[i];
@@ -147,6 +147,18 @@ View.prototype.draw = function () {
             fill(0);
             text(prompt, promptX, promptY);
         }
+    } else if (this.model.percentLoaded === 100 && !this.model.start) {
+        let txt = "Click on the circle below to begin.";
+        let x = width/2;
+        let y = (windowHeight+scrollY)/2;
+        let l = 100;
+        noStroke();
+        fill(0);
+        textSize(36);
+        text(txt,x-textWidth(txt)/2,y-l);
+        stroke(0);
+        fill(255);
+        circle(x,y,l);
     } else {
         let txt = this.model.percentLoaded + "%";
         fill(0);

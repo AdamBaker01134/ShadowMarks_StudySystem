@@ -30,6 +30,7 @@ const COLOURS = {
 function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
+    this.start = false;
     this.videosPerTrial = 6;
     this.correctVideos = 0;
     this.videos = [];
@@ -99,6 +100,7 @@ Model.prototype.setCategory = function (category) {
 
 Model.prototype.nextTrial = function () {
     this.trial++;
+    this.start = false;
     this.attempt = 1;
     this.videos.splice(0,this.videosPerTrial);
     this.category.splice(0,1);
@@ -111,11 +113,11 @@ Model.prototype.nextTrial = function () {
     this.updateVideoDimensions();
     this.updateVideoLocations();
     this.updateCorrectVideos();
-    this.startTrial();
     this.notifySubscribers();
 }
 
 Model.prototype.startTrial = function () {
+    this.start = true;
     this.trialStartTime = new Date().getTime();
     this.notifySubscribers();
 }
@@ -185,12 +187,7 @@ Model.prototype.setExampleImage = function (image) {
 
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
-    if (this.percentLoaded == 100) {
-        // User and percentage bar are racing. Whoever finishes last sets the start trial time.
-        this.startTrial();
-    } else {
-        this.notifySubscribers();
-    }
+    this.notifySubscribers();
 }
 
 Model.prototype.addVideo = function (video, labels, name) {
@@ -793,6 +790,14 @@ Model.prototype.checkHelpButtonHit = function () {
     const y = this.getScrollbarY() - 12;
     const l = 50;
     return mouseX > x && mouseX < x + l && mouseY > y && mouseY < y + l;
+}
+
+Model.prototype.checkStartButtonHit = function () {
+    const x = width/2;
+    const y = (windowHeight+scrollY)/2;
+    const l = 100;
+    const r = l/2;
+    return Math.sqrt(Math.pow(mouseX-x,2)+Math.pow(mouseY-y,2)) <= r;
 }
 
 Model.prototype.freeforming = function () {

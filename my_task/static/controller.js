@@ -86,6 +86,13 @@ Controller.prototype.handleMouseDragged = function (event) {
 
 Controller.prototype.handleMousePressed = function (event) {
     if (this.model.percentLoaded !== 100) return true;
+    if (!this.model.start) {
+        if (this.model.checkStartButtonHit()) {
+            this.model.startTrial();
+            return false;
+        }
+        return true;
+    }
     let hit = null, mark = null;
     switch (this.currentState) {
         case STATE.READY:
