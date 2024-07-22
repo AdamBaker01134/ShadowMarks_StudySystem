@@ -12,7 +12,7 @@ APPLICATION_ROOT = ''  # Rarely adjusted, used to set the project to be accessib
 TITLE = 'Visual Comparison Study' # What users see at the top of the page
 
 # Please have an actual password...
-ADMIN_PASSWORD = '1234' # Used to log in to the admin pages at /admin
+ADMIN_PASSWORD = 'SamwiseGamgee2980' # Used to log in to the admin pages at /admin
 USE_BREADCRUMBS = false # Show breadcrumbs-style progress bar
 
 # Make sure this does not overlap with another studies port!!
@@ -39,7 +39,7 @@ EXTERNAL_ID_PROMPT = "Please enter your Prolific ID. You can find this on your P
 #STATIC_COMPLETION_CODE = ''        # Set this if you want all participants to be given the same completion code at the end of the survey.
 GENERATE_COMPLETION_CODE = false                                                 # Generate a random completion code for the user.
 COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
-# OUTGOING_URL = 'prolificURL' # On the /end route, participants can be optionally redirected to an external page instead of being given a code
+OUTGOING_URL = 'https://app.prolific.com/submissions/complete?cc=CCOO3XAG' # On the /end route, participants can be optionally redirected to an external page instead of being given a code
 
 # ---------
 # Page List
@@ -50,6 +50,7 @@ COMPLETION_CODE_MESSAGE = 'Please copy and paste this code into the MTurk form:'
 # If USE_BREADCRUMBS is true, then the pages with identical names will have (#) beside them.
 PAGE_LIST = [
     { name = 'Consent', path = 'consent' },
+    { name = "External ID", path="external_id" },
     { name = "Demographics Questionnaire", path = "questionnaire/demographics" },
 
     { name = "Introduction", path = "instructions/introduction" },
