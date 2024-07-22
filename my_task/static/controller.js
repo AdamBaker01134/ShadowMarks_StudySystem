@@ -320,8 +320,8 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === ENTER) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.logData();
-                } else if (((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
-                    if (this.model.task !== 0 && this.model.trial < 2) {
+                } else if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
+                    if (this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
                             this.model.addCategoriesToCookies();
