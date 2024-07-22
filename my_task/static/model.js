@@ -123,6 +123,8 @@ Model.prototype.nextTrial = function () {
 Model.prototype.startTrial = function () {
     this.start = true;
     this.trialStartTime = new Date().getTime();
+    this.updateVideoDimensions();
+    this.updateVideoLocations();
     this.notifySubscribers();
 }
 

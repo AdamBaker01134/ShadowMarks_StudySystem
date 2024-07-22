@@ -176,6 +176,10 @@ View.prototype.drawInstructions = function () {
                 instructions.push(`line drawn between the middle`);
                 instructions.push(`of the two islands of interest, by`)
                 instructions.push(`Control-clicking the video.`);
+                reminders.push(`Reminder:`);
+                reminders.push(`The islands of interest are the`);
+                reminders.push(`two closest to the right of the`);
+                reminders.push(`large island in the middle.`);
                 break;
             case 3:
                 instructions.push(`Select ${this.model.correctVideos} video${this.model.correctVideos > 1 ? "s" : ""} where the`);
