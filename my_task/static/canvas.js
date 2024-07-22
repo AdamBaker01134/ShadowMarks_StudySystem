@@ -23,7 +23,9 @@ async function preload() {
 
 function setup() {
     createCanvas(windowWidth*0.98, windowHeight);
-    
+
+    let startTime = new Date().getTime();
+
     switch (model.task) {
         case 0:
             controller.handleLoadSandbox().then(category => {
@@ -38,7 +40,12 @@ function setup() {
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
-                controller.handleLoadLemnatec(model.category[0].name).then(category => model.setCategory(category));
+                let nowTime = new Date().getTime();
+                model.setTrialLoadTime(nowTime-startTime);
+                controller.handleLoadLemnatec(model.category[0].name).then(category => {
+                    model.setCategory(category);
+                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                });
             });
             break;
         case 2:
@@ -47,7 +54,12 @@ function setup() {
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
-                controller.handleLoadSeaIce().then(category => model.setCategory(category));
+                let nowTime = new Date().getTime();
+                model.setTrialLoadTime(nowTime-startTime);
+                controller.handleLoadSeaIce().then(category => {
+                    model.setCategory(category);
+                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                });
             });
             break;
         case 3:
@@ -56,7 +68,12 @@ function setup() {
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
-                controller.handleLoadBaseball(model.category[0].name).then(category => model.setCategory(category));
+                let nowTime = new Date().getTime();
+                model.setTrialLoadTime(nowTime-startTime);
+                controller.handleLoadBaseball(model.category[0].name).then(category => {
+                    model.setCategory(category);
+                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                });
             });
             break;
         case 4:
@@ -65,7 +82,12 @@ function setup() {
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
-                controller.handleLoadScatterplots().then(category => model.setCategory(category));
+                let nowTime = new Date().getTime();
+                model.setTrialLoadTime(nowTime-startTime);
+                controller.handleLoadScatterplots().then(category => {
+                    model.setCategory(category);
+                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                });
             });
             break;
     }

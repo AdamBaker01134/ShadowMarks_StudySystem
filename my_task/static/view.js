@@ -62,31 +62,6 @@ View.prototype.draw = function () {
             }
         }
 
-        // Draw example image 
-        if (this.model.videos.length > 0 && this.model.exampleImage.length > 0) {
-            let iw = this.model.videos[0].width;
-            let ih = this.model.videos[0].height;
-            let ix = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - iw;
-            let iy = scrollY;
-            image(this.model.exampleImage[0], ix, iy, iw, ih);
-            if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) this.drawShadowMarkers(ix, iy, iw, ih);
-            noFill();
-            strokeWeight(1);
-            stroke(0);
-            rect(ix, iy, iw, ih);
-            let highlightedMarker = this.model.highlightedMarker;
-            if (highlightedMarker && highlightedMarker.video === "OVERLAY") {
-                strokeWeight(5);
-                stroke(highlightedMarker.colour.r, highlightedMarker.colour.g, highlightedMarker.colour.b, 125);
-                rect(ix + 1, iy + 1, iw - 2, ih - 2);
-            }
-            strokeWeight(1);
-            stroke(0);
-            fill(255);
-            textSize(16);
-            text("Example Image", ix + 5, iy + 20);
-        }
-
         // Draw overlay items, if any
         if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS) {
             let ow = this.model.videos[0].width;
@@ -95,11 +70,7 @@ View.prototype.draw = function () {
             let oy = scrollY;
             if (this.model.overlay.length > 0) {
                 this.model.overlay.forEach((video, index) => {
-                    if (this.model.videos.length > 0 && this.model.exampleImage.length > 0) {
-                        tint(255, Math.floor(255 * 1 / (index + 2)))
-                    } else {
-                        tint(255, Math.floor(255 * 1 / (index + 1)))
-                    }
+                    tint(255, Math.floor(255 * 1 / (index + 1)));
                     image(video.images[this.model.getIndex()], ox, oy, ow, oh);
                 });
                 noTint();
@@ -156,6 +127,8 @@ View.prototype.draw = function () {
         fill(0);
         textSize(36);
         text(txt,x-textWidth(txt)/2,y-l);
+        txt = "Please complete the task as quickly and as accurately as possible.";
+        text(txt,x-textWidth(txt)/2,y+l);
         stroke(0);
         fill(255);
         circle(x,y,l);

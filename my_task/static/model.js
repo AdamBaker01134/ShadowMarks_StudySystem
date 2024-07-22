@@ -66,6 +66,7 @@ function Model() {
     this.task = 1;
     this.category = [];
     this.trial = 1;
+    this.trialLoadTime = [];
     this.attempt = 1;
     this.trialLog = [];
     this.streamLog = [];
@@ -84,8 +85,6 @@ function Model() {
     this.currentChecklistPrompt = 0;
 
     this.overlay = [];
-
-    this.exampleImage = [];
 }
 
 Model.prototype.nextPrompt = function () {
@@ -98,13 +97,18 @@ Model.prototype.setCategory = function (category) {
     this.notifySubscribers();
 }
 
+Model.prototype.setTrialLoadTime = function (time) {
+    this.trialLoadTime.push(time);
+    this.notifySubscribers();
+}
+
 Model.prototype.nextTrial = function () {
     this.trial++;
     this.start = false;
     this.attempt = 1;
     this.videos.splice(0,this.videosPerTrial);
     this.category.splice(0,1);
-    this.exampleImage.splice(0,1);
+    this.trialLoadTime.splice(0,1);
     this.overlay = [];
     this.selectedVideos = [];
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
@@ -177,11 +181,6 @@ Model.prototype.setInteraction = function (interaction) {
 
 Model.prototype.setTask = function (task) {
     this.task = task;
-    this.notifySubscribers();
-}
-
-Model.prototype.setExampleImage = function (image) {
-    this.exampleImage.push(image);
     this.notifySubscribers();
 }
 
@@ -1009,6 +1008,7 @@ Model.prototype.addTrialData = function () {
         dataset: this.getCurrentDataset(),
         category: this.category[0].name,
         videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
+        loadTime: this.trialLoadTime[0],
         elapsedTime: elapsedTime,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
