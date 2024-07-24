@@ -191,6 +191,10 @@ Model.prototype.setPercentLoaded = function (percent) {
     this.notifySubscribers();
 }
 
+Model.prototype.getWorkspaceWidth = function () {
+    return (this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY) + 300;
+}
+
 Model.prototype.addVideo = function (video, labels, name) {
     let x = 0;
     let y = 0;
@@ -224,7 +228,7 @@ Model.prototype.updateCorrectVideos = function () {
 Model.prototype.updateVideoDimensions = function () {
     this.verifyVideoDimensions();
     if (this.videos.length > 0) {
-        const maxHeight = this.task > 0 ? this.getScrollbarY() - 30 : this.getScrollbarY() - 100;
+        const maxHeight = this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY;
         const maxWidth = maxHeight;
         let vHeight = maxHeight/3;
         let vWidth = vHeight * this.videos[0].aspectRatio;
@@ -267,7 +271,7 @@ Model.prototype.updateVideoLocations = function () {
         video.setX(x);
         video.setY(y);
         x += video.width;
-        const maxWidth = Math.min(video.width * 3, this.task > 0 ? this.getScrollbarY() - 30 : this.getScrollbarY() - 100);
+        const maxWidth = Math.min(video.width * 3, this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY);
         if (x + video.width > maxWidth) {
             x = 0;
             y += video.height;
@@ -301,13 +305,20 @@ Model.prototype.addToOverlay = function (video) {
     this.notifySubscribers();
 }
 
+Model.prototype.getOverlayDimensions = function () {
+    let padding = 100;
+    let ow = width - this.getWorkspaceWidth() - padding*2;
+    let oh = ow;
+    let ox = this.getWorkspaceWidth() + padding;
+    let oy = scrollY;
+    return { ow, oh, ox, oy };
+}
+
 Model.prototype.checkOverlayHit = function () {
     // Overlay rectangle is only in play when the overlay interaction technique is active or during task 1 where it is an example image.
     if (this.videos.length > 0 && this.interaction === INTERACTIONS.OVERLAYS) {
-        let ow = this.videos[0].width;
-        let oh = this.videos[0].height;
-        let ox = this.getScrollbarX() + this.getScrollbarWidth() + 75 - ow;
-        let oy = scrollY;
+        let ow, oh, ox, oy;
+        ({ ow, oh, ox, oy } = this.getOverlayDimensions());
         return mouseX > ox && mouseX < ox + ow && mouseY > oy && mouseY < oy + oh;
     } else {
         return false;
@@ -363,6 +374,10 @@ Model.prototype.zoomOut = function () {
     this.notifySubscribers();
 }
 
+Model.prototype.getMarkButtonX = function () {
+    return width-75;
+}
+
 Model.prototype.getScrollbarSegments = function () {
     if (this.videos.length > 0) {
         // Assuming all loaded videos have the same number of frames.
@@ -380,7 +395,7 @@ Model.prototype.getScrollbarY = function () {
 }
 
 Model.prototype.getScrollbarWidth = function () {
-    return width-200;
+    return this.getWorkspaceWidth()-200;
 }
 
 Model.prototype.getScrollbarHeight = function () {
@@ -539,10 +554,7 @@ Model.prototype.setFreeformTarget = function (target) {
 Model.prototype.circleOutOfBounds = function (newMarkWidthRatio, newMarkHeightRatio) {
     let targetX, targetY, targetW, targetH;
     if (this.freeformTarget === "OVERLAY") {
-        targetW = this.videos[0].width;
-        targetH = this.videos[0].height;
-        targetX = this.getScrollbarX() + this.getScrollbarWidth() + 75 - targetW;
-        targetY = scrollY;
+        ({ ow: targetW, oh: targetH, ox: targetX, oy: targetY } = this.getOverlayDimensions());
     } else if (this.freeformTarget !== null) {
         targetX = this.freeformTarget.x;
         targetY = this.freeformTarget.y;
@@ -586,10 +598,7 @@ Model.prototype.clearShadowMarks = function () {
 Model.prototype.checkShadowMarkerHit = function () {
     let hoverTargetX, hoverTargetY, hoverTargetW, hoverTargetH;
     if (this.hoverTarget === "OVERLAY") {
-        hoverTargetW = this.videos[0].width;
-        hoverTargetH = this.videos[0].height;
-        hoverTargetX = this.getScrollbarX() + this.getScrollbarWidth() + 75 - hoverTargetW;
-        hoverTargetY = scrollY;
+        ({ ow: hoverTargetW, oh: hoverTargetH, ox: hoverTargetX, oy: hoverTargetY } = this.getOverlayDimensions());
     } else if (this.hoverTarget !== null) {
         hoverTargetX = this.hoverTarget.x;
         hoverTargetY = this.hoverTarget.y;
@@ -696,7 +705,7 @@ Model.prototype.checkShadowMarkerHit = function () {
 }
 
 Model.prototype.checkMarkButtonHit = function () {
-    let x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
+    let x = this.getMarkButtonX();
     let y = this.getScrollbarY() - 60;
     let length = 50;
     const mx = mouseX, my = mouseY;
@@ -730,7 +739,7 @@ Model.prototype.setType = function (type) {
 }
 
 Model.prototype.checkColourButtonHit = function () {
-    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25;
+    const x = this.getMarkButtonX();
     const y = this.getScrollbarY();
     const length = 50;
     return mouseX > x && mouseX < x + length && mouseY > y && mouseY < y + length;
@@ -746,7 +755,7 @@ Model.prototype.setColourMenuOpen = function (open) {
 Model.prototype.checkColourMenuHit = function () {
     const width = 30 * 4 + 20;
     const height = 30 * 2 + 20;
-    const x = this.getScrollbarX() + this.getScrollbarWidth() + 25 + 50 - width;
+    const x = this.getMarkButtonX() + 50 - width;
     const y = this.getScrollbarY() + 50 - height;
     const mx = mouseX, my = mouseY;
     if (mx>x+10 && mx<x+40 && my>y+10 && my<y+40) return COLOURS.BLACK;

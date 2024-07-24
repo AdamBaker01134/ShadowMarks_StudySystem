@@ -8,6 +8,11 @@ function View(model) {
 View.prototype.draw = function () {
     clear();
     if (this.model.percentLoaded === 100 && this.model.start) {
+        // Draw divider line
+        stroke(0);
+        fill(0);
+        line(this.model.getWorkspaceWidth(), 0, this.model.getWorkspaceWidth(), height)
+        
         // Draw videos from the model
         for (let i = 0; i < this.model.videosPerTrial && i < this.model.videos.length; i++) {
             let video = this.model.videos[i];
@@ -64,10 +69,8 @@ View.prototype.draw = function () {
 
         // Draw overlay items, if any
         if (this.model.videos.length > 0 && this.model.interaction === INTERACTIONS.OVERLAYS) {
-            let ow = this.model.videos[0].width;
-            let oh = this.model.videos[0].height;
-            let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-            let oy = scrollY;
+            let ow, oh, ox, oy;
+            ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
             if (this.model.overlay.length > 0) {
                 this.model.overlay.forEach((video, index) => {
                     tint(255, Math.floor(255 * 1 / (index + 1)));
@@ -148,14 +151,13 @@ View.prototype.draw = function () {
 
 View.prototype.drawInstructions = function () {
     if (this.model.videos.length > 0 && this.model.category.length > 0) {
-        let w = this.model.videos[0].width;
-        let h = this.model.videos[0].height;
-        let x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - w;
-        let y = scrollY + h + 120;
+        let w,h,x,y;
+        ({ ow: w, oh: h, ox: x, oy: y } = this.model.getOverlayDimensions());
+        y += h + 120;
 
         let iX = x-10;
         let iY = y-30;
-        let instructions = [];
+        let instructions = "";
         let reminders = [];
         switch (this.model.task) {
             case 0:
@@ -196,63 +198,77 @@ View.prototype.drawInstructions = function () {
                 reminders.push(`with the arrow keys.`);
                 break;
             case 4:
-                instructions.push(`Select the scatterplot with`);
-                instructions.push(`the farthest outlier in the`);
-                instructions.push(`top left half of the plot, by`);
-                instructions.push(`Control-clicking the image.`);
+                instructions = `Select the scatterplot with the farthest outlier in the top half of the plot, by Control-clicking the image.`;
         }
 
-        let largestInstruction = instructions.reduce((prev,curr) => {
-            if (textWidth(curr) > textWidth(prev)) return curr;
-            else return prev;
-        }, instructions[0]);
-        let largestReminder = reminders.reduce((prev, curr) => {
-            if (textWidth(curr) > textWidth(prev)) return curr;
-            else return prev;
-        }, reminders[0]);
-        let size = 24;
+        instructions = instructions.split(" ");
+        let txt = "";
         fill(0);
         noStroke();
         strokeWeight(1);
-        textSize(size);
-        while (size > 1 && iX+w/2-(textWidth(largestInstruction)+20)/2 + textWidth(largestInstruction)+30 > this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25) {
-            size--;
-            textSize(size);
-        }
-        instructions.forEach(instruction => {
-            text(instruction, x+w/2-textWidth(instruction)/2-10,y);
-            y+=(size+10);
+        textSize(24);
+        instructions.forEach(word => {
+            if (textWidth(txt + word + " " ) > w) {
+                text(txt, x+w/2-textWidth(txt)/2-10,y);
+                y+=34;
+                txt = "";
+            }
+            txt+=word+" ";
         });
-        let iW = textWidth(largestInstruction)+20;
-        let iH = y-iY-size+10;
-        stroke(0);
-        noFill();
-        rect(iX+w/2-iW/2,iY,iW,iH,10);
+        text(txt, x+w/2-textWidth(txt)/2-10,y);
+        y+=34;
 
-        if (reminders.length > 0) {
-            y+=size+10;
-            fill(0);
-            noStroke();
-            strokeWeight(1);
-            iY = y-30;
-            reminders.forEach(reminder => {
-                text(reminder, x+w/2-textWidth(reminder)/2-10,y);
-                y+=(size+10);
-            });
-            iW = textWidth(largestReminder)+20;
-            iH = y-iY-size+10;
-            stroke(0);
-            noFill();
-            rect(iX+w/2-iW/2,iY,iW,iH,10);
-        }
+        // let largestInstruction = instructions.reduce((prev,curr) => {
+        //     if (textWidth(curr) > textWidth(prev)) return curr;
+        //     else return prev;
+        // }, instructions[0]);
+        // let largestReminder = reminders.reduce((prev, curr) => {
+        //     if (textWidth(curr) > textWidth(prev)) return curr;
+        //     else return prev;
+        // }, reminders[0]);
+        // let size = 24;
+        // fill(0);
+        // noStroke();
+        // strokeWeight(1);
+        // textSize(size);
+        // while (size > 1 && iX+w/2-(textWidth(largestInstruction)+20)/2 + textWidth(largestInstruction)+30 > this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25) {
+        //     size--;
+        //     textSize(size);
+        // }
+        // instructions.forEach(instruction => {
+        //     text(instruction, x+w/2-textWidth(instruction)/2-10,y);
+        //     y+=(size+10);
+        // });
+        // let iW = textWidth(largestInstruction)+20;
+        // let iH = y-iY-size+10;
+        // stroke(0);
+        // noFill();
+        // rect(iX+w/2-iW/2,iY,iW,iH,10);
 
-        if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
-            let submitPrompt = "Press ENTER to submit.";
-            y += size + 10;
-            fill(0)
-            noStroke();
-            text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
-        }
+        // if (reminders.length > 0) {
+        //     y+=size+10;
+        //     fill(0);
+        //     noStroke();
+        //     strokeWeight(1);
+        //     iY = y-30;
+        //     reminders.forEach(reminder => {
+        //         text(reminder, x+w/2-textWidth(reminder)/2-10,y);
+        //         y+=(size+10);
+        //     });
+        //     iW = textWidth(largestReminder)+20;
+        //     iH = y-iY-size+10;
+        //     stroke(0);
+        //     noFill();
+        //     rect(iX+w/2-iW/2,iY,iW,iH,10);
+        // }
+
+        // if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
+        //     let submitPrompt = "Press ENTER to submit.";
+        //     y += size + 10;
+        //     fill(0)
+        //     noStroke();
+        //     text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
+        // }
     }
 }
 
@@ -398,10 +414,8 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
         strokeWeight(1);
         let widthRatio, heightRatio, x, y;
         if (this.model.hoverTarget === "OVERLAY") {
-            let ow = this.model.videos[0].width;
-            let oh = this.model.videos[0].height;
-            let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-            let oy = scrollY;
+            let ow, oh, ox, oy;
+            ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
             widthRatio = (mouseX - ox) / ow;
             heightRatio = (mouseY - oy) / oh;
             x = vx + vw * widthRatio;
@@ -478,7 +492,7 @@ View.prototype.drawMarkerButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.MARKER || this.model.markerButtonHighlighted
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 60;
     const length = 50;
     const centerX = x + length / 2;
@@ -495,7 +509,7 @@ View.prototype.drawRectButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.RECT || this.model.rectButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 120;
     const length = 50;
     const centerX = x + length / 2;
@@ -511,7 +525,7 @@ View.prototype.drawCircleButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.CIRCLE || this.model.circleButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 180;
     const length = 50;
     const centerX = x + length / 2;
@@ -527,7 +541,7 @@ View.prototype.drawLineButton = function () {
     let highlighted = this.model.shadowMarkType === MARKS.LINE || this.model.lineButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 240;
     const length = 50;
     const centerLength = 30;
@@ -541,7 +555,7 @@ View.prototype.drawFreeformButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.FREEFORM || this.model.freeformButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 300;
     const length = 50;
     const centerLength = 30;
@@ -562,7 +576,7 @@ View.prototype.drawCursorButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.CURSOR || this.model.cursorButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY() - 360;
     const length = 50;
     const centerLength = 30;
@@ -584,7 +598,7 @@ View.prototype.drawCursorButton = function () {
 View.prototype.drawColourButton = function () {
     stroke(0, 0, 0, this.model.colourButtonHighlighted ? 255 : 100)
     fill(101, 101, 101, this.model.colourButtonHighlighted ? 255 : 100);
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25;
+    const x = this.model.getMarkButtonX();
     const y = this.model.getScrollbarY();
     const length = 50;
     square(x, y, length, 10);
@@ -599,7 +613,7 @@ View.prototype.drawColourMenu = function () {
     fill(101);
     const width = 30 * 4 + 20;
     const height = 30 * 2 + 20;
-    const x = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 25 + 50 - width;
+    const x = this.model.getMarkButtonX() + 50 - width;
     const y = this.model.getScrollbarY() + 50 - height;
     rect(x, y, width, height, 10);
     noStroke();

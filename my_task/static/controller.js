@@ -85,10 +85,8 @@ Controller.prototype.handleMouseDragged = function (event) {
             if (this.model.freeforming() && hit && hit === this.model.freeformTarget && !(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-hit.x)/hit.width,(mouseY-hit.y)/hit.height))) {
                 this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
             } else if (this.model.freeforming() && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
-                let ow = this.model.videos[0].width;
-                let oh = this.model.videos[0].height;
-                let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-                let oy = scrollY;
+                let ow, oh, ox, oy;
+                ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
                 hit = "OVERLAY";
                 if (!(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-ox)/ow,(mouseY-oy)/oh))) {
                     this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
@@ -163,10 +161,8 @@ Controller.prototype.handleMousePressed = function (event) {
                 }
             } else if (this.model.checkOverlayHit()) { 
                 if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-                    let ow = this.model.videos[0].width;
-                    let oh = this.model.videos[0].height;
-                    let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-                    let oy = scrollY;
+                    let ow, oh, ox, oy;
+                    ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
                     if (this.model.freeforming()) {
                         this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
                         this.model.setFreeformTarget("OVERLAY");
@@ -215,10 +211,8 @@ Controller.prototype.handleMouseReleased = function (event) {
                 this.model.addStreamData(EVENTS.ADDED_MARK);
             } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.checkOverlayHit()) {
-                    let ow = this.model.videos[0].width;
-                    let oh = this.model.videos[0].height;
-                    let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
-                    let oy = scrollY;
+                    let ow, oh, ox, oy;
+                    ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
                     this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 } else {
