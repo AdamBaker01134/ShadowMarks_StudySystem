@@ -155,9 +155,7 @@ View.prototype.drawInstructions = function () {
         ({ ow: w, oh: h, ox: x, oy: y } = this.model.getOverlayDimensions());
         y += h + 120;
 
-        let iX = x-10;
-        let iY = y-30;
-        let instructions = "";
+        let instructions = [];
         let reminders = [];
         switch (this.model.task) {
             case 0:
@@ -198,25 +196,52 @@ View.prototype.drawInstructions = function () {
                 reminders.push(`with the arrow keys.`);
                 break;
             case 4:
-                instructions = `Select the scatterplot with the farthest outlier in the top half of the plot, by Control-clicking the image.`;
+                instructions.push(`* Task`);
+                instructions.push(`Select the scatterplot with the outlier that is the highest up in the top half of the plot, by Control-clicking the image.`);
+                instructions.push(`* Steps`)
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        instructions.push(`You may use the Overlay feature if you want to compare multiple scatterplots at once.`);
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        instructions.push(`First, select the cursor tool and hover over any outliers you see in the first plot. Then go through each of the other scatterplots and do the following:`);
+                        instructions.push(`1. Look for any outliers above the cursor line.`);
+                        instructions.push(`2. If there are, hover over that outlier instead and continue.`);
+                        instructions.push(`Once you have gone through all the scatterplots, select the plot that you are hovering over.`);
+                        break;
+                    default:
+                        break;
+                }
+                break;
         }
 
-        instructions = instructions.split(" ");
         let txt = "";
         fill(0);
         noStroke();
         strokeWeight(1);
         textSize(24);
-        instructions.forEach(word => {
-            if (textWidth(txt + word + " " ) > w) {
-                text(txt, x+w/2-textWidth(txt)/2-10,y);
-                y+=34;
-                txt = "";
-            }
-            txt+=word+" ";
+        instructions.forEach(instruction => {
+            instruction.split(" ").forEach(word => {
+                if (word === "*") {
+                    textStyle(BOLD);
+                } else {
+                    if (textWidth(txt + word + " " ) > w) {
+                        text(txt, x+w/2-textWidth(txt)/2-10,y);
+                        y+=34;
+                        txt = "";
+                    }
+                    txt+=word+" ";
+                }
+            });
+            text(txt, x+w/2-textWidth(txt)/2-10,y);
+            y+=54;
+            txt = "";
+            textStyle(NORMAL);
         });
-        text(txt, x+w/2-textWidth(txt)/2-10,y);
-        y+=34;
 
         // let largestInstruction = instructions.reduce((prev,curr) => {
         //     if (textWidth(curr) > textWidth(prev)) return curr;
