@@ -31,7 +31,7 @@ function Model() {
     this.subscribers = [];
     this.percentLoaded = 0;
     this.start = false;
-    this.videosPerTrial = 6;
+    this.videosPerTrial = 9;
     this.correctVideos = 0;
     this.videos = [];
 
@@ -224,31 +224,17 @@ Model.prototype.updateCorrectVideos = function () {
 Model.prototype.updateVideoDimensions = function () {
     this.verifyVideoDimensions();
     if (this.videos.length > 0) {
-        const maxWidth = 3*width/4 - 20;
         const maxHeight = this.task > 0 ? this.getScrollbarY() - 30 : this.getScrollbarY() - 100;
-        let vWidth, vHeight;
-        if (this.videos[0].aspectRatio > 1.0) {
-            vWidth = maxWidth/2;
-            vHeight = vWidth / this.videos[0].aspectRatio;
-            while (vWidth*2 > maxWidth) {
-                vWidth -= 5;
-                vHeight -= (5/this.videos[0].aspectRatio);
-            }
-            while (vHeight*3 > maxHeight) {
-                vWidth -= 5;
-                vHeight -= (5/this.videos[0].aspectRatio);
-            }
-        } else {
-            vHeight = maxHeight/2;
-            vWidth = vHeight * this.videos[0].aspectRatio;
-            while (vWidth*3 > maxWidth) {
-                vWidth -= 5;
-                vHeight -= (5/this.videos[0].aspectRatio);
-            }
-            while (vHeight*2 > maxHeight) {
-                vWidth -= 5;
-                vHeight -= (5/this.videos[0].aspectRatio);
-            }
+        const maxWidth = maxHeight;
+        let vHeight = maxHeight/3;
+        let vWidth = vHeight * this.videos[0].aspectRatio;
+        while (vWidth*3 > maxWidth) {
+            vWidth -= 5;
+            vHeight -= (5/this.videos[0].aspectRatio);
+        }
+        while (vHeight*3 > maxHeight) {
+            vWidth -= 5;
+            vHeight -= (5/this.videos[0].aspectRatio);
         }
         for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
             let video = this.videos[i];
@@ -281,7 +267,7 @@ Model.prototype.updateVideoLocations = function () {
         video.setX(x);
         video.setY(y);
         x += video.width;
-        const maxWidth = 3*width/4 - 20;
+        const maxWidth = Math.min(video.width * 3, this.task > 0 ? this.getScrollbarY() - 30 : this.getScrollbarY() - 100);
         if (x + video.width > maxWidth) {
             x = 0;
             y += video.height;
