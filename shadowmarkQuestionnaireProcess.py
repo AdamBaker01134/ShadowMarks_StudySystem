@@ -64,6 +64,9 @@ def getTLXPreferences(row):
                 restOfThing += "_" + key[i]
             interaction = key[0].split("/")[1]
             task = interaction[-1]
+            interaction = interaction[:-1]
+            if interaction == "shadowMarkers":
+                interaction = "shadowmarkers"
             question = ""
             if key[2] == "1":
                 question = "MentalDemand"

@@ -858,27 +858,27 @@ Model.prototype.logData = function () {
     submitForm.setAttribute("method", "post");
     submitForm.style.display = "none";
     document.body.append(submitForm);
-  
-    if (this.task !== 0) {
-        // Convert JSONs to formatted strings.
-        let dataToSend = this.cleanLogData();
+    
+    // Convert JSONs to formatted strings.
+    let dataToSend = this.cleanLogData();
+    let submitResponses = document.createElement("input");
+    
+    // writing to streamLog column
+    let streamResponses = document.createElement("input");
+    streamResponses = document.createElement("input");
+    streamResponses.setAttribute("type", "text");
+    streamResponses.setAttribute("value", JSON.stringify(dataToSend.streamLog));
+    streamResponses.setAttribute("name", "streamLog");
+    streamResponses.style.display = "none";
+    submitForm.append(streamResponses);
 
-        // writing to trialLog column
-        let submitResponses = document.createElement("input");
-        submitResponses.setAttribute("type", "text");
-        submitResponses.setAttribute("value", JSON.stringify(dataToSend.trialLog));
-        submitResponses.setAttribute("name", "trialLog");
-        submitResponses.style.display = "none";
-        submitForm.append(submitResponses);
-
-        // writing to streamLog column
-        submitResponses = document.createElement("input");
-        submitResponses.setAttribute("type", "text");
-        submitResponses.setAttribute("value", JSON.stringify(dataToSend.streamLog));
-        submitResponses.setAttribute("name", "streamLog");
-        submitResponses.style.display = "none";
-        submitForm.append(submitResponses);
-    }
+    // writing to trialLog column
+    let trialResponses = document.createElement("input");
+    trialResponses.setAttribute("type", "text");
+    trialResponses.setAttribute("value", JSON.stringify(dataToSend.trialLog));
+    trialResponses.setAttribute("name", "trialLog");
+    trialResponses.style.display = "none";
+    submitForm.append(trialResponses);
   
     // Submitting the result. This will redirect to the next page
     let submitBut = document.createElement("input");
@@ -1012,6 +1012,7 @@ Model.prototype.addTrialData = function () {
         videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
         loadTime: this.trialLoadTime[0],
         elapsedTime: elapsedTime,
+        totalCorrect: this.selectedVideos.length - falsePositives,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
     };
@@ -1031,9 +1032,10 @@ Model.prototype.addStreamData = function (event) {
         timestamp: new Date().getTime(),
         mx: mouseX,
         my: mouseY,
+        hoverTarget: this.hoverTarget === "OVERLAY" ? this.hoverTarget : this.hoverTarget === null ? "NONE" : this.hoverTarget.name,
         index: this.getIndex(),
         overlaidVideos: this.overlay.length,
-        selectedVideos: this.selectedVideos.length,
+        selectedVideos: this.selectedVideos.reduce((prev,curr) => prev+curr.name+";",""),
         shadowMarks: this.shadowMarks.length,
         shadowMarkMode: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkType : "NONE",
         shadowMarkColour: this.interaction === INTERACTIONS.SHADOW_MARKER ? `(r:${this.shadowMarkColour.r};g:${this.shadowMarkColour.g};b:${this.shadowMarkColour.b})` : "NONE",

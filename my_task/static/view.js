@@ -329,6 +329,14 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
     //     strokeWeight(1);
     //     text(`${(1 - mark.heightRatio).toFixed(4)}px`, vx + vw * mark.widthRatio, vy + vh * mark.heightRatio);
     // }
+    // For pixel width
+    // if (this.model.shadowMarks.length === 1) {
+    //     let mark = this.model.shadowMarks[0];
+    //     stroke(0);
+    //     fill(0);
+    //     strokeWeight(1);
+    //     text(`${(1 - mark.widthRatio).toFixed(4)}px`, vx + vw * mark.widthRatio, vy + vh * mark.heightRatio);
+    // }
     // For location marking
     // if (this.model.shadowMarks.length === 1) {
     //     let mark = this.model.shadowMarks[0];

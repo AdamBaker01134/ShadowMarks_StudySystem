@@ -67,11 +67,11 @@ if __name__ == "__main__":
             cleanedParticipantLog = ""
             cleanedParticipantMode = ""
 
-            if ("trialLog" in dict(participant) and len(dict(participant)["trialLog"]) > 0):
+            if ("trialLog" in dict(participant) and len(dict(participant)["trialLog"]) > 2):
                 cleanedParticipantLog = cleanTrialRow(dict(participant))
                 trialRows.append(cleanedParticipantLog)
 
-            if ("streamLog" in dict(participant) and len(dict(participant)["streamLog"]) > 0):
+            if ("streamLog" in dict(participant) and len(dict(participant)["streamLog"]) > 2):
                 cleanedParticipantStream = cleanStreamRow(dict(participant))
                 streamRows.append(cleanedParticipantStream)
 

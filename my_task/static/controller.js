@@ -12,6 +12,27 @@ const STATE = {
     NO_INTERACTION: "no_interaction",
 }
 
+const EVENTS = {
+    MOUSE_MOVED: "mouse_moved",
+    SHADOW_CURSOR_MOVED: "shadow_cursor_moved",
+    SCROLLBAR_SCRUB: "scrollbar_scrub",
+    TOGGLED_AUTOPLAYBACK: "toggled_autoplayback",
+    NAVIGATED_FRAME_BACK: "navigated_frame_back",
+    NAVIGATED_FRAME_FORWARD: "navigated_frame_forward",
+    TOGGLED_MARK_BUTTON: "toggled_mark_button",
+    OPENED_COLOUR_MENU: "opened_colour_menu",
+    SELECTED_COLOUR: "selected_colour",
+    OPENED_HELP_MENU: "opened_help_menu",
+    CLOSED_HELP_MENU: "closed_help_menu",
+    SELECTED_VIDEO: "selected_video",
+    ADDED_TO_OVERLAY: "added_to_overlay",
+    ADDED_MARK: "added_mark",
+    DELETED_SHADOW_MARK: "deleted_shadow_mark",
+    ZOOMED_IN: "zoomed_in",
+    ZOOMED_OUT: "zoomed_out",
+    SUBMIT: "submit",
+}
+
 function Controller(model) {
     this.model = model;
     this.currentState = STATE.READY;
@@ -20,9 +41,9 @@ function Controller(model) {
 }
 
 Controller.prototype.handleMouseMoved = function (event) {
-    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100 || !this.model.start) return true;
     mouseMovementLoop++;
-    if (mouseMovementLoop % 50 === 0) this.model.addStreamData("mouse_moved");
+    if (mouseMovementLoop % 50 === 0) this.model.addStreamData(EVENTS.MOUSE_MOVED);
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -37,7 +58,7 @@ Controller.prototype.handleMouseMoved = function (event) {
                 this.model.highlightMarker(this.model.checkShadowMarkerHit());
                 if (this.model.shadowMarkType === MARKS.CURSOR) {
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
-                    this.model.addStreamData("shadow_cursor_moved");
+                    this.model.addStreamData(EVENTS.SHADOW_CURSOR_MOVED);
                 }
             }
             // if (this.model.gridActive) {
@@ -51,13 +72,13 @@ Controller.prototype.handleMouseMoved = function (event) {
 }
 
 Controller.prototype.handleMouseDragged = function (event) {
-    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100 || !this.model.start) return true;
     mouseMovementLoop++;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
             this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
-            if (mouseMovementLoop % 50 === 0) this.model.addStreamData("scrollbar_scrub");
+            if (mouseMovementLoop % 50 === 0) this.model.addStreamData(EVENTS.SCROLLBAR_SCRUB);
             break;
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
@@ -99,21 +120,21 @@ Controller.prototype.handleMousePressed = function (event) {
         case STATE.PLAYING:
             if (this.model.checkScrollbarHit()) {
                 this.model.setIndex(this.model.getIndexFromMouse(this.model.getScrollbarX(), mouseX, this.model.getScrollbarSegments(), this.model.getScrollbarWidth()));
-                this.model.addStreamData("scrollbar_scrub");
+                this.model.addStreamData(EVENTS.SCROLLBAR_SCRUB);
                 this.savedState = this.currentState;
                 this.currentState = STATE.NAVIGATING;
             } else if (this.model.checkHelpButtonHit()) {
                 this.model.setHelpMenuOpen(true);
-                this.model.addStreamData("opened_help_menu");
+                this.model.addStreamData(EVENTS.OPENED_HELP_MENU);
                 this.savedState = this.currentState;
                 this.currentState = STATE.HELP;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && (mark = this.model.checkMarkButtonHit())) {
                 this.model.setType(mark);
-                this.model.addStreamData("toggled_" + mark + "_button");
+                this.model.addStreamData(EVENTS.TOGGLED_MARK_BUTTON);
                 return false;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {
                 this.model.setColourMenuOpen(true);
-                this.model.addStreamData("opened_colour_menu");
+                this.model.addStreamData(EVENTS.OPENED_COLOUR_MENU);
                 this.savedState = this.currentState;
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
@@ -125,11 +146,11 @@ Controller.prototype.handleMousePressed = function (event) {
                         return true;
                     }
                     this.model.selectVideo(hit);
-                    this.model.addStreamData("selected_video");
+                    this.model.addStreamData(EVENTS.SELECTED_VIDEO);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
-                    this.model.addStreamData("added_to_overlay");
+                    this.model.addStreamData(EVENTS.ADDED_TO_OVERLAY);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.freeforming()) {
@@ -162,12 +183,12 @@ Controller.prototype.handleMousePressed = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             }
             this.model.setColourMenuOpen(false);
-            this.model.addStreamData("selected_colour");
+            this.model.addStreamData(EVENTS.SELECTED_COLOUR);
             this.currentState = this.savedState;
             break;
         case STATE.HELP:
             this.model.setHelpMenuOpen(false);
-            this.model.addStreamData("closed_help_menu");
+            this.model.addStreamData(EVENTS.CLOSED_HELP_MENU);
             this.currentState = this.savedState;
             break;
         default:
@@ -177,7 +198,7 @@ Controller.prototype.handleMousePressed = function (event) {
 }
 
 Controller.prototype.handleMouseReleased = function (event) {
-    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100 || !this.model.start) return true;
     let hit = null;
     switch (this.currentState) {
         case STATE.NAVIGATING:
@@ -191,7 +212,7 @@ Controller.prototype.handleMouseReleased = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
-                this.model.addStreamData("added_mark");
+                this.model.addStreamData(EVENTS.ADDED_MARK);
             } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.checkOverlayHit()) {
                     let ow = this.model.videos[0].width;
@@ -199,11 +220,11 @@ Controller.prototype.handleMouseReleased = function (event) {
                     let ox = this.model.getScrollbarX() + this.model.getScrollbarWidth() + 75 - ow;
                     let oy = scrollY;
                     this.model.addShadowMark((mouseX-ox) / ow, (mouseY-oy) / oh, "OVERLAY");
-                    this.model.addStreamData("added_mark");
+                    this.model.addStreamData(EVENTS.ADDED_MARK);
                 } else {
                     this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
-                    this.model.addStreamData("added_mark");
+                    this.model.addStreamData(EVENTS.ADDED_MARK);
                 }
             }
             this.currentState = this.savedState;
@@ -214,7 +235,7 @@ Controller.prototype.handleMouseReleased = function (event) {
 }
 
 Controller.prototype.handleKeyPressed = function (event) {
-    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100 || !this.model.start) return true;
     switch (this.currentState) {
         case STATE.READY:
         case STATE.PLAYING:
@@ -224,13 +245,13 @@ Controller.prototype.handleKeyPressed = function (event) {
                 if (hit) {
                     this.model.deleteShadowMarker(hit);
                     if (this.model.task === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                    this.model.addStreamData("deleted_shadow_mark");
+                    this.model.addStreamData(EVENTS.DELETED_SHADOW_MARK);
                 }
             }
             if (event.ctrlKey && [61,187].includes(keyCode)) {
                 // Handle ctrl + "+" pressed
                 this.model.zoomIn();
-                this.model.addStreamData("zoomed_in");
+                this.model.addStreamData(EVENTS.ZOOMED_IN);
                 this.model.updateVideoLocations();
                 if (keyCode === 187) {
                     // Firefox does not like this behaviour
@@ -246,7 +267,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (event.ctrlKey && [173,189].includes(keyCode)) {
                 // Handle ctrl + "-" pressed
                 this.model.zoomOut();
-                this.model.addStreamData("zoomed_out");
+                this.model.addStreamData(EVENTS.ZOOMED_OUT);
                 this.model.updateVideoLocations();
                 if (keyCode === 189) {
                     // Firefox does not like this behaviour
@@ -261,7 +282,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === 32) {
                 // Handle spacebar pressed
-                this.model.addStreamData("toggled_autoplayback");
+                this.model.addStreamData(EVENTS.TOGGLED_AUTOPLAYBACK);
                 if (this.currentState === STATE.PLAYING) {
                     clearInterval(this.timer);
                     this.currentState = STATE.READY;
@@ -304,14 +325,14 @@ Controller.prototype.handleKeyPressed = function (event) {
             if (keyCode === 37) {
                 // Handle left arrow pressed
                 if (this.model.getIndex() > 0) {
-                    this.model.addStreamData("navigated_frame_back");
+                    this.model.addStreamData(EVENTS.NAVIGATED_FRAME_BACK);
                     this.model.setIndex(this.model.getIndex() - 1);
                     return false;
                 }
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
-                this.model.addStreamData("navigated_frame_forward");
+                this.model.addStreamData(EVENTS.NAVIGATED_FRAME_FORWARD);
                 if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
                     this.model.setIndex(this.model.getIndex() + 1);
                     return false;
@@ -319,8 +340,10 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === ENTER) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
+                    this.model.addStreamData(EVENTS.SUBMIT);
                     this.model.logData();
                 } else if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
+                    this.model.addStreamData(EVENTS.SUBMIT);
                     if (this.model.trial < 2) {
                         let results = this.model.addTrialData();
                         if (results.falsePositives === 0 && results.falseNegatives === 0) {
@@ -360,7 +383,7 @@ Controller.prototype.handleKeyPressed = function (event) {
 }
 
 Controller.prototype.handleKeyReleased = function(event) {
-    if (this.model.percentLoaded !== 100) return true;
+    if (this.model.percentLoaded !== 100 || !this.model.start) return true;
     switch (this.currentState) {
         case STATE.ZOOMING:
             if ([187,189].includes(keyCode)) {
