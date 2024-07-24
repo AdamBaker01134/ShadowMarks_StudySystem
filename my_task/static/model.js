@@ -116,6 +116,8 @@ Model.prototype.nextTrial = function () {
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
     this.index = 0;
     this.clearShadowMarks();
+    this.shadowMarkType = MARKS.MARKER;
+    this.shadowMarkColour = COLOURS.RED;
     this.updateVideoDimensions();
     this.updateVideoLocations();
     this.updateCorrectVideos();
