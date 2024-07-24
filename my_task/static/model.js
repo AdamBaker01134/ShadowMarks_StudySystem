@@ -85,6 +85,8 @@ function Model() {
     this.currentChecklistPrompt = 0;
 
     this.overlay = [];
+
+    this.instructionImage = null;
 }
 
 Model.prototype.nextPrompt = function () {
@@ -188,6 +190,11 @@ Model.prototype.setTask = function (task) {
 
 Model.prototype.setPercentLoaded = function (percent) {
     this.percentLoaded = percent;
+    this.notifySubscribers();
+}
+
+Model.prototype.setInstructionImage = function (image) {
+    this.instructionImage = image;
     this.notifySubscribers();
 }
 
@@ -789,8 +796,8 @@ Model.prototype.checkHelpButtonHit = function () {
 }
 
 Model.prototype.checkStartButtonHit = function () {
-    const x = width/2;
-    const y = (windowHeight+scrollY)/2;
+    const x = windowWidth/2;
+    const y = windowHeight-120;
     const l = 100;
     const r = l/2;
     return Math.sqrt(Math.pow(mouseX-x,2)+Math.pow(mouseY-y,2)) <= r;

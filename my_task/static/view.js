@@ -121,31 +121,165 @@ View.prototype.draw = function () {
             fill(0);
             text(prompt, promptX, promptY);
         }
-    } else if (this.model.percentLoaded === 100 && !this.model.start) {
-        let txt = "Click on the circle below to begin.";
-        let x = width/2;
-        let y = (windowHeight+scrollY)/2;
-        let l = 100;
+    } else {
+        this.drawInstructionPage();
+    }
+}
+
+View.prototype.drawInstructionPage = function () {
+    let title = "";
+    let description = [];
+    let steps = [];
+    let reminder = [];
+    let begin = "Click on the circle below to begin. Please complete the task as quickly and as accurately as possible.";
+    let txt = "";
+    let size = 24;
+    let x = width/2;
+    let w = width/3;
+    let y = 100;
+    if (this.model.trial === 1) {
+        switch (this.model.task) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                title += "Task 4 - Identifying Outliers with";
+                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot.");
+                reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        title += " Small Multiples";
+                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.");
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        title += " Overlays";
+                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.");
+                        reminder.push("You may use the Overlay feature if you want to compare multiple scatterplots at once.");
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        title += " Shadow Marks";
+                        steps.push(`First, select the cursor tool and hover over any outliers you see in the first plot. Then go through each of the other scatterplots and do the following:`);
+                        steps.push(`1. Look for any outliers above the cursor line.`);
+                        steps.push(`2. If there are, hover over that outlier instead and continue.`);
+                        steps.push(`Once you have gone through all the scatterplots, select the plot that you are hovering over.`);
+                        break;
+                }
+                break;
+            case 0:
+            default:
+                break;
+        }
+        
+        // Draw title
+        size = 48;
+        textSize(size);
         noStroke();
         fill(0);
-        textSize(36);
-        text(txt,x-textWidth(txt)/2,y-l);
-        txt = "Please complete the task as quickly and as accurately as possible.";
-        text(txt,x-textWidth(txt)/2,y+l);
-        stroke(0);
-        fill(255);
-        circle(x,y,l);
-    } else {
-        let txt = this.model.percentLoaded + "%";
+        strokeWeight(1);
+        text(title, x-textWidth(title)/2, y);
+        y+= (size+20);
+
+        // Draw image
+        if (this.model.instructionImage !== null) {
+            let aspectRatio = this.model.instructionImage.width / this.model.instructionImage.height;
+            image(this.model.instructionImage, x-500/2, y, 500, 500/aspectRatio);
+            y+= (500/aspectRatio+50);
+        }
+
+        x = width/3;
+
+        // Draw description
+        fill(0);
+        noStroke();
+        strokeWeight(1);
+        size = 20
+        textSize(size);
+        description.forEach(desc => {
+            desc.split(" ").forEach(word => {
+                if (textWidth(txt + word + " " ) > w) {
+                    text(txt,x,y);
+                    y+=(size+10);
+                    txt = "";
+                }
+                txt+=word+" ";
+            });
+            text(txt,x,y);
+            y+=(size+50);
+            txt = "";
+        });
+
+        // Draw steps
+        txt = "";
+        fill(0);
+        noStroke();
+        strokeWeight(1);
+        size = 20
+        textSize(size);
+        steps.forEach(step => {
+            step.split(" ").forEach(word => {
+                if (textWidth(txt + word + " " ) > w) {
+                    text(txt,x,y);
+                    y+=(size+10);
+                    txt = "";
+                }
+                txt+=word+" ";
+            });
+            text(txt, x,y);
+            y+=(size+50);
+            txt = "";
+        });
+
+        // Draw reminder
+        txt = "";
+        fill(0);
+        noStroke();
+        strokeWeight(1);
+        size = 20
+        textSize(size);
+        reminder.forEach(remind => {
+            remind.split(" ").forEach(word => {
+                if (textWidth(txt + word + " " ) > w) {
+                    text(txt,x,y);
+                    y+=(size+10);
+                    txt = "";
+                }
+                txt+=word+" ";
+            });
+            text(txt, x,y);
+            y+=(size+50);
+            txt = "";
+        });
+    }
+    // Draw loading or begin text
+    if (this.model.percentLoaded !== 100) {
+        txt = this.model.percentLoaded + "%";
         fill(0);
         stroke(0);
-        textSize(24);
-        text(txt, width / 2 - textWidth(txt) / 2, windowHeight / 2 + scrollY + 12);
+        size = 20;
+        textSize(size);
+        text(txt, width/2-textWidth(txt)/2, y-38);
         noFill();
-        rect(width / 2 - 100, windowHeight / 2 + scrollY + 50, 200, 25);
+        rect(width/2-100, y, 200, 25);
         fill(50, 205, 50);
         noStroke();
-        rect(width / 2 - 100, windowHeight / 2 + scrollY + 50, 200 * this.model.percentLoaded / 100, 25)
+        rect(width/2-100, y, 200*this.model.percentLoaded/100, 25)
+    } else {
+        size = 20;
+        x = width/3;
+        y = windowHeight-200;
+        textSize(size);
+        noStroke();
+        strokeWeight(1);
+        text(begin,x,y);
+        noFill();
+        stroke(0);
+        circle(windowWidth/2,windowHeight-120,100);
+        fill(0);
+        noStroke();
+        text("Begin", windowWidth/2-textWidth("Begin")/2,windowHeight-120+5);
     }
 }
 
@@ -287,13 +421,13 @@ View.prototype.drawInstructions = function () {
         //     rect(iX+w/2-iW/2,iY,iW,iH,10);
         // }
 
-        // if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
-        //     let submitPrompt = "Press ENTER to submit.";
-        //     y += size + 10;
-        //     fill(0)
-        //     noStroke();
-        //     text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
-        // }
+        if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
+            let submitPrompt = "Press ENTER to submit.";
+            y += 34;
+            fill(0)
+            noStroke();
+            text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
+        }
     }
 }
 

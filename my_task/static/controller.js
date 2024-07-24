@@ -565,6 +565,17 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
 
 Controller.prototype.handleLoadScatterplots = async function () {
     console.log("Loading 6 scatterplots...");
+    let instructionsName = "placeholder.webp";
+    switch(this.model.interaction) {
+        case INTERACTIONS.SMALL_MULTIPLES:
+        case INTERACTIONS.OVERLAYS:
+            instructionsName = "smallmultiples_task4_img1.webp";
+            break;
+        case INTERACTIONS.SHADOW_MARKER:
+            instructionsName = "shadowmarkers_task4_img1.webp";
+            break;
+    }
+    this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     let category = assets.scatterplots.categories[0];
     let videos = [];
     while (videos.length < this.model.videosPerTrial) {
