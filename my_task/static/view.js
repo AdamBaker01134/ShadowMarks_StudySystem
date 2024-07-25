@@ -354,10 +354,11 @@ View.prototype.drawInstructions = function () {
         }
 
         let txt = "";
+        let size = 16;
         fill(0);
         noStroke();
         strokeWeight(1);
-        textSize(24);
+        textSize(size);
         instructions.forEach(instruction => {
             instruction.split(" ").forEach(word => {
                 if (word === "*") {
@@ -365,14 +366,14 @@ View.prototype.drawInstructions = function () {
                 } else {
                     if (textWidth(txt + word + " " ) > w) {
                         text(txt, x+w/2-textWidth(txt)/2-10,y);
-                        y+=34;
+                        y+=(size+5);
                         txt = "";
                     }
                     txt+=word+" ";
                 }
             });
             text(txt, x+w/2-textWidth(txt)/2-10,y);
-            y+=54;
+            y+=(size+25);
             txt = "";
             textStyle(NORMAL);
         });
@@ -423,7 +424,7 @@ View.prototype.drawInstructions = function () {
 
         if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
             let submitPrompt = "Press ENTER to submit.";
-            y += 34;
+            y += (size+5);
             fill(0)
             noStroke();
             text(submitPrompt,x+w/2-textWidth(submitPrompt)/2,y)
