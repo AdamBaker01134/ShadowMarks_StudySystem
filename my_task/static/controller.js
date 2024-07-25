@@ -344,13 +344,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.model.addCategoriesToCookies();
                             this.model.nextTrial();
                         } else {
-                            const moveOn = this.model.checkMoveOn();
-                            if (moveOn) {
-                                this.model.addCategoriesToCookies();
-                                this.model.nextTrial();
-                            } else {
-                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
-                            }
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
                         }
                     } else {
                         let results = this.model.addTrialData();
@@ -358,13 +352,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             this.model.addCategoriesToCookies();
                             this.model.logData();
                         } else {
-                            const moveOn = this.model.checkMoveOn();
-                            if (moveOn) {
-                                this.model.addCategoriesToCookies();
-                                this.model.logData();
-                            } else {
-                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
-                            }
+                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
                         }
                     }
                 }
