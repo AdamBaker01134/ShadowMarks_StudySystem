@@ -566,9 +566,21 @@ Controller.prototype.handleLoadScatterplots = async function () {
     this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     let category = assets.scatterplots.categories[0];
     let videos = [];
-    while (videos.length < this.model.videosPerTrial) {
-        let video = getRandomInt(0, category.videos.length);
-        if (!videos.includes(video)) videos.push(video);
+    let found = false;
+    while (!found) {
+        found = true;
+        videos = [];
+        // Retrieve the videos
+        while (videos.length < this.model.videosPerTrial) {
+            let video = getRandomInt(0, category.videos.length);
+            if (!videos.includes(video)) videos.push(video);
+        }
+        let farthest = 0;
+        for (let i = 0; i < videos.length; i++) {
+            // Check that there are no similar outliers
+            if (Math.abs(category.videos[videos[i]].outlier - farthest) < 5) found = false;
+            if (category.videos[videos[i]].outlier > farthest) farthest = category.videos[videos[i]].outlier;
+        }
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
