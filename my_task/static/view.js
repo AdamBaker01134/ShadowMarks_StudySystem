@@ -133,10 +133,10 @@ View.prototype.drawInstructionPage = function () {
     let reminder = [];
     let begin = "Click on the circle below to begin. Please complete the task as quickly and as accurately as possible.";
     let txt = "";
-    let size = 24;
+    let size = 16;
     let x = width/2;
     let w = width/3;
-    let y = 100;
+    let y = 50;
     if (this.model.trial === 1) {
         switch (this.model.task) {
             case 1:
@@ -174,19 +174,19 @@ View.prototype.drawInstructionPage = function () {
         }
         
         // Draw title
-        size = 48;
+        size = 32;
         textSize(size);
         noStroke();
         fill(0);
         strokeWeight(1);
         text(title, x-textWidth(title)/2, y);
-        y+= (size+20);
+        y+= (size+10);
 
         // Draw image
         if (this.model.instructionImage !== null) {
             let aspectRatio = this.model.instructionImage.width / this.model.instructionImage.height;
-            image(this.model.instructionImage, x-500/2, y, 500, 500/aspectRatio);
-            y+= (500/aspectRatio+50);
+            image(this.model.instructionImage, x-(windowHeight/4)/2, y, (windowHeight/4)*aspectRatio, (windowHeight/4));
+            y+= ((windowHeight/4)+25);
         }
 
         x = width/3;
@@ -195,19 +195,19 @@ View.prototype.drawInstructionPage = function () {
         fill(0);
         noStroke();
         strokeWeight(1);
-        size = 20
+        size = 16
         textSize(size);
         description.forEach(desc => {
             desc.split(" ").forEach(word => {
                 if (textWidth(txt + word + " " ) > w) {
                     text(txt,x,y);
-                    y+=(size+10);
+                    y+=(size+5);
                     txt = "";
                 }
                 txt+=word+" ";
             });
             text(txt,x,y);
-            y+=(size+50);
+            y+=(size+25);
             txt = "";
         });
 
@@ -216,19 +216,19 @@ View.prototype.drawInstructionPage = function () {
         fill(0);
         noStroke();
         strokeWeight(1);
-        size = 20
+        size = 16
         textSize(size);
         steps.forEach(step => {
             step.split(" ").forEach(word => {
                 if (textWidth(txt + word + " " ) > w) {
                     text(txt,x,y);
-                    y+=(size+10);
+                    y+=(size+5);
                     txt = "";
                 }
                 txt+=word+" ";
             });
             text(txt, x,y);
-            y+=(size+50);
+            y+=(size+25);
             txt = "";
         });
 
@@ -237,19 +237,19 @@ View.prototype.drawInstructionPage = function () {
         fill(0);
         noStroke();
         strokeWeight(1);
-        size = 20
+        size = 16
         textSize(size);
         reminder.forEach(remind => {
             remind.split(" ").forEach(word => {
                 if (textWidth(txt + word + " " ) > w) {
                     text(txt,x,y);
-                    y+=(size+10);
+                    y+=(size+5);
                     txt = "";
                 }
                 txt+=word+" ";
             });
             text(txt, x,y);
-            y+=(size+50);
+            y+=(size+25);
             txt = "";
         });
     }
@@ -258,7 +258,7 @@ View.prototype.drawInstructionPage = function () {
         txt = this.model.percentLoaded + "%";
         fill(0);
         stroke(0);
-        size = 20;
+        size = 16;
         textSize(size);
         text(txt, width/2-textWidth(txt)/2, y-38);
         noFill();
@@ -267,7 +267,7 @@ View.prototype.drawInstructionPage = function () {
         noStroke();
         rect(width/2-100, y, 200*this.model.percentLoaded/100, 25)
     } else {
-        size = 20;
+        size = 16;
         x = width/3;
         y = windowHeight-200;
         textSize(size);
