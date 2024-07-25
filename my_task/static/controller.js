@@ -471,13 +471,43 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     console.log("Loading 6 random lemnatec videos...");
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
+    let instructionsName = "placeholder.webp";
+    switch(this.model.interaction) {
+        case INTERACTIONS.SMALL_MULTIPLES:
+            instructionsName = "smallmultiples_task1_img1.webp";
+            break;
+        case INTERACTIONS.OVERLAYS:
+            instructionsName = "overlays_task1_img1.webp";
+            break;
+        case INTERACTIONS.SHADOW_MARKER:
+            instructionsName = "shadowmarkers_task1_img1.webp";
+            break;
+    }
+    this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     let videos = [];
-    while (videos.length < this.model.videosPerTrial) {
-        let video = getRandomInt(0, category.videos.length);
-        if (!videos.includes(video)) videos.push(video);
+    let found = false;
+    while (!found) {
+        found = true;
+        videos = [];
+        // Retrieve the videos
+        let seen = [];
+        while (videos.length < this.model.videosPerTrial) {
+            let video = getRandomInt(0, category.videos.length);
+            let name = category.videos[video].name.split("-")[0];
+            if (!videos.includes(video) && !seen.includes(name)) {
+                videos.push(video);
+            }
+            seen.push(name);
+        }
+        let tallest = 0;
+        for (let i = 0; i < videos.length; i++) {
+            // Check that there are no similarly tall plants
+            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.01) found = false;
+            if (category.videos[videos[i]].peak > tallest) tallest = category.videos[videos[i]].peak;
+        }
     }
     // const n = category.videos.length;
-    // videos = videos.map(video => category.videos[video]);
+    // videos = category.videos;
     // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
     // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
     // debugger;

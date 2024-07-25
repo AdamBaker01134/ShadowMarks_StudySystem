@@ -42,7 +42,7 @@ function setup() {
                 model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
-                controller.handleLoadLemnatec(model.category[0].name).then(category => {
+                controller.handleLoadLemnatec().then(category => {
                     model.setCategory(category);
                     model.setTrialLoadTime(new Date().getTime()-nowTime);
                 });

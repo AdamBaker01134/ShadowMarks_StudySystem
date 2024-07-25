@@ -140,6 +140,32 @@ View.prototype.drawInstructionPage = function () {
     if (this.model.trial === 1) {
         switch (this.model.task) {
             case 1:
+                title += "Task 1 - Tallest Plant with";
+                description.push("This task has 2 comparison trials. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
+                reminder.push("Select a video by holding CONTROL and clicking on it.");
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        title += " Small Multiples";
+                        steps.push("Play through all the videos and look for the highest point that each plant reaches. Select the plant whose highest point is closest to the top of the video window.");
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        title += " Overlays";
+                        steps.push("Start by adding the first video to the overlay (click on it). Then go through each of the other videos and do the following:");
+                        steps.push("1. Add the video to the overlay (eye will open with 2 as its number).");
+                        steps.push("2. Play through the overlaid plant videos to see which grows the tallest.");
+                        steps.push("3. Remove the shorter plant from the overlay by clicking on it on the left (eye will close).");
+                        steps.push("4. Continue on to the next video.");
+                        steps.push("Once you have gone through all the videos, select the video that is still in the overlay (only video with its eye open).");
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        title += " Shadow Marks";
+                        steps.push("Start by playing through each video and guessing which plant reachest the highest point. Make a mark at this point (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:");
+                        steps.push("1. Play through the plant video and check if the plant grows higher than your mark.");
+                        steps.push("2. If it does, remove the last mark and add a new one to the highest point of the new video.");
+                        steps.push("3. Continue on to the next video.");
+                        steps.push("Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).");
+                        break;
+                }
                 break;
             case 2:
                 break;
@@ -147,7 +173,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 4:
                 title += "Task 4 - Identifying Outliers with";
-                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot.");
+                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare, like in the image on the left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot.");
                 reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -185,8 +211,7 @@ View.prototype.drawInstructionPage = function () {
         // Draw image
         if (this.model.instructionImage !== null) {
             let aspectRatio = this.model.instructionImage.width / this.model.instructionImage.height;
-            image(this.model.instructionImage, x-(windowHeight/4)/2, y, (windowHeight/4)*aspectRatio, (windowHeight/4));
-            y+= ((windowHeight/4)+25);
+            image(this.model.instructionImage, 10, 10, (w-50)*aspectRatio, w-50);
         }
 
         x = width/3;
@@ -300,9 +325,27 @@ View.prototype.drawInstructions = function () {
                 reminders.push(`above the scrollbar.`)
                 break;
             case 1:
-                instructions.push(`Select the ${this.model.category[0].name} plant that`);
-                instructions.push(`grows the tallest (at its highest extent),`);
-                instructions.push(`by Control-clicking the video.`)
+                instructions.push(`* Task`);
+                instructions.push(`Select the sunflower plant that grows the tallest (at its highest extent), by Control-clicking the video.`);
+                instructions.push(`* Steps`)
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        instructions.push(`You may use the Overlay feature if you want to compare multiple scatterplots at once.`);
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Make a mark at this point (we recommend a line mark, but you can use any of the mark types available). Then, go through each of the other videos and do the following:`);
+                        instructions.push(`1. Play through the plant video and check if the plant grows higher than your mark at any point.`);
+                        instructions.push(`2. If it does, remove the last mark and add a new one to the highest point of the new video.`);
+                        instructions.push(`3. Continue on to the next video.`);
+                        instructions.push(`Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).`);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 2:
                 instructions.push(`Select ${this.model.correctVideos} Arctic sea ice`);
@@ -366,14 +409,14 @@ View.prototype.drawInstructions = function () {
                     textStyle(BOLD);
                 } else {
                     if (textWidth(txt + word + " " ) > w) {
-                        text(txt, x+w/2-textWidth(txt)/2-10,y);
+                        text(txt, x,y);
                         y+=(size+5);
                         txt = "";
                     }
                     txt+=word+" ";
                 }
             });
-            text(txt, x+w/2-textWidth(txt)/2-10,y);
+            text(txt, x,y);
             y+=(size+25);
             txt = "";
             textStyle(NORMAL);
