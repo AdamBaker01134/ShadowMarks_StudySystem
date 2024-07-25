@@ -260,7 +260,8 @@ View.prototype.drawInstructionPage = function () {
         stroke(0);
         size = 16;
         textSize(size);
-        text(txt, width/2-textWidth(txt)/2, y-38);
+        text(txt, width/2-textWidth(txt)/2, y);
+        y+=(size+25);
         noFill();
         rect(width/2-100, y, 200, 25);
         fill(50, 205, 50);
