@@ -502,7 +502,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         let tallest = 0;
         for (let i = 0; i < videos.length; i++) {
             // Check that there are no similarly tall plants
-            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.01) found = false;
+            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.005) found = false;
             if (category.videos[videos[i]].peak > tallest) tallest = category.videos[videos[i]].peak;
         }
     }
