@@ -4,6 +4,18 @@
     "code": "",
     "questions": [
         {
+            "questiontype": "textview",
+            "text": "<p>Small Multiples</p><p><img src='/my_task/assets/instructions/smallmultiples_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
+            "questiontype": "textview",
+            "text": "<p>Overlays</p><p><img src='/my_task/assets/instructions/overlays_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
+            "questiontype": "textview",
+            "text": "<p>Shadow Marks</p><p><img src='/my_task/assets/instructions/shadowmarkers_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
             "questiontype": "radiolist",
             "instructions": "Which technique did you feel helped you to complete the tasks the fastest?",
             "id": "speed_1",
@@ -13,6 +25,12 @@
                 "Overlays",
                 "Shadow Marks"
             ]
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "speed_reason_1",
+            "required": true,
+            "instructions": "Why did you feel this technique helped you to complete the tasks the fastest?"
         },
         {
             "questiontype": "radiolist",
@@ -26,6 +44,12 @@
             ]
         },
         {
+            "questiontype": "multi_field",
+            "id": "accuracy_reason_1",
+            "required": true,
+            "instructions": "Why did you feel this technique helped you to complete the tasks most accurately?"
+        },
+        {
             "questiontype": "radiolist",
             "instructions": "Which technique did you prefer the most overall while performing the tasks?",
             "id": "preference_1",
@@ -35,6 +59,12 @@
                 "Overlays",
                 "Shadow Marks"
             ]
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "preference_reason_1",
+            "required": true,
+            "instructions": "Why did you prefer this technique the most?"
         }
     ]
   }
