@@ -947,7 +947,8 @@ Model.prototype.getCorrectVideos = function () {
                 else if (correctVideos[0].peak < video.peak) correctVideos = [ video ];
                 break;
             case 2:
-                if (video.extends) correctVideos.push(video);
+                if (correctVideos.length === 0) correctVideos = [ video ];
+                else if (correctVideos[0].extension < video.extension) correctVideos = [ video ];
                 break;
             case 3:
                 if (index > 0) {

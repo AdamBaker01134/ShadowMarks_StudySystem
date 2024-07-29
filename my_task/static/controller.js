@@ -137,8 +137,8 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.currentState = STATE.COLOUR_PICKER;
             } else if (hit = this.model.checkVideoHit()) {
                 if (event.ctrlKey) {
-                    if (this.model.task === 1 || this.model.task === 4) {
-                        // Task 1 && Task 4 do not allow multi-select.
+                    if (this.model.task !== 3) {
+                        // Task 1, 2, and Task 4 do not allow multi-select.
                         this.model.selectedVideos.forEach(video => this.model.selectVideo(video));
                     } else if (this.model.task === 3 && this.model.videos[0] === hit) {
                         return true;
@@ -348,11 +348,19 @@ Controller.prototype.handleKeyPressed = function (event) {
                 //         resultTxt += `{ name: "${video.name}", peak: ${(1-mark.heightRatio).toFixed(4)} }, `;
                 //     }
                 //     console.log(resultTxt);
+                //     // Easy height calculator
+                //     let resultTxt = "";
+                //     for (let i = 0; i < this.model.shadowMarks.length; i++) {
+                //         let video = this.model.videos[i];
+                //         let mark = this.model.shadowMarks[i];
+                //         resultTxt += `{ name: "${video.name}", extension: ${(mark.widthRatio).toFixed(4)} }, `;
+                //     }
+                //     console.log(resultTxt);
                 // }
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     this.model.logData();
-                } else if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
+                } else if (this.model.task > 0 && (this.model.task === 3 || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     if (this.model.trial < 2) {
                         let results = this.model.addTrialData();
@@ -555,25 +563,28 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
     let videos = [];
-    let extendings = 0;
+    let found = false;
+    while (!found) {
+        found = true;
+        videos = [];
+        // Retrieve the 2 extending videos
+        while (videos.length < 2) {
+            let video = getRandomInt(0, category.videos.length);
+            if (!videos.includes(video) && category.videos[video].extension > 0.66) {
+                videos.push(video);
+            }
+        }
+        if (Math.abs(category.videos[videos[0]].extension - category.videos[videos[1]].extension) < 0.01) found = false;
+    }
+    // Retrieve all other videos
     while (videos.length < this.model.videosPerTrial) {
         let video = getRandomInt(0, category.videos.length);
         if (!videos.includes(video)) {
-            if (extendings > 0) {
-                if (category.videos[video].extends) {
-                    extendings++;
-                    if (extendings <= 3) videos.push(video);
-                } else {
-                    videos.push(video);
-                }
-            } else {
-                if (category.videos[video].extends) {
-                    extendings++;
-                    videos.push(video);
-                }
-            }
+            videos.push(video);
         }
     }
+    // Shuffle array
+    shuffleArray(videos);
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
