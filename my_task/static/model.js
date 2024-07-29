@@ -91,6 +91,13 @@ function Model() {
 
 Model.prototype.nextPrompt = function () {
     this.currentChecklistPrompt++;
+    if (this.currentChecklistPrompt > this.sandboxChecklist.length) this.currentChecklistPrompt = this.sandboxChecklist.length;
+    this.notifySubscribers();
+}
+
+Model.prototype.lastPrompt = function () {
+    this.currentChecklistPrompt--;
+    if (this.currentChecklistPrompt < 0) this.currentChecklistPrompt = 0;
     this.notifySubscribers();
 }
 

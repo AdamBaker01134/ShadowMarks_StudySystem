@@ -318,7 +318,10 @@ Controller.prototype.handleKeyPressed = function (event) {
             // }
             if (keyCode === 37) {
                 // Handle left arrow pressed
-                if (this.model.getIndex() > 0) {
+                if (this.model.task === 0 && event.ctrlKey) {
+                    this.model.lastPrompt();
+                    return false;
+                } else if (this.model.getIndex() > 0) {
                     this.model.addStreamData(EVENTS.NAVIGATED_FRAME_BACK);
                     this.model.setIndex(this.model.getIndex() - 1);
                     return false;
@@ -326,8 +329,11 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
-                this.model.addStreamData(EVENTS.NAVIGATED_FRAME_FORWARD);
-                if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
+                if (this.model.task === 0 && event.ctrlKey) {
+                    this.model.nextPrompt();
+                    return false;
+                } else if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
+                    this.model.addStreamData(EVENTS.NAVIGATED_FRAME_FORWARD);
                     this.model.setIndex(this.model.getIndex() + 1);
                     return false;
                 }
@@ -388,7 +394,7 @@ Controller.prototype.handleScroll = function() {
 Controller.prototype.handleLoadSandbox = async function () {
     console.log("Loading 6 sandbox videos...");
     let category = assets.sandbox.categories[0];
-    let videos = [0,1,2,3,4,5];
+    let videos = [0,1,2,3,4,5,6,7,8];
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];

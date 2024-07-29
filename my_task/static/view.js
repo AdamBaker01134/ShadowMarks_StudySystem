@@ -139,6 +139,13 @@ View.prototype.drawInstructionPage = function () {
     let y = 50;
     if (this.model.trial === 1) {
         switch (this.model.task) {
+            case 0:
+                title += "Shadow Marks Sandbox Tutorial"
+                description.push("You will now run through a short tutorial of the shadow marks technique.");
+                description.push("Follow the instruction prompts at the bottom of the page.");
+                reminder.push("If you get stuck or want to go back to a previous prompt, simply hold Control and press the left/right arrow key to go back/advance.");
+                begin = "Click on the circle below to begin the sandbox tutorial."
+                break;
             case 1:
                 title += "Task 1 - Tallest Plant with";
                 description.push("This task has 2 comparison trials. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
@@ -299,7 +306,7 @@ View.prototype.drawInstructionPage = function () {
         textSize(size);
         noStroke();
         strokeWeight(1);
-        text(begin,x,y);
+        text(begin,windowWidth/2-textWidth(begin)/2,y);
         noFill();
         stroke(0);
         circle(windowWidth/2,windowHeight-120,100);
@@ -319,10 +326,9 @@ View.prototype.drawInstructions = function () {
         let reminders = [];
         switch (this.model.task) {
             case 0:
-                instructions.push(`Shadow Marks Sandbox Tutorial`);
-                reminders.push(`Follow the instructions at`);
-                reminders.push(`the bottom of the page`);
-                reminders.push(`above the scrollbar.`)
+                instructions.push(`* Shadow Marks Sandbox Tutorial`);
+                instructions.push(`Follow the instruction prompts at the bottom of the page above the scrollbar.`);
+                instructions.push(`If you get stuck or want to go back to a previous prompt, hold Control and press the left/right arrow key to go back/advance.`);
                 break;
             case 1:
                 instructions.push(`* Task`);
