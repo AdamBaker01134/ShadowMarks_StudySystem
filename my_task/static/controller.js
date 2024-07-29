@@ -339,6 +339,16 @@ Controller.prototype.handleKeyPressed = function (event) {
                 }
             }
             if (keyCode === ENTER) {
+                // if (this.model.shadowMarks.length === this.model.videosPerTrial) {
+                //     // Easy height calculator
+                //     let resultTxt = "";
+                //     for (let i = 0; i < this.model.shadowMarks.length; i++) {
+                //         let video = this.model.videos[i];
+                //         let mark = this.model.shadowMarks[i];
+                //         resultTxt += `{ name: "${video.name}", peak: ${(1-mark.heightRatio).toFixed(4)} }, `;
+                //     }
+                //     console.log(resultTxt);
+                // }
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     this.model.logData();
@@ -508,7 +518,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         let tallest = 0;
         for (let i = 0; i < videos.length; i++) {
             // Check that there are no similarly tall plants
-            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.005) found = false;
+            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.01) found = false;
             if (category.videos[videos[i]].peak > tallest) tallest = category.videos[videos[i]].peak;
         }
     }
