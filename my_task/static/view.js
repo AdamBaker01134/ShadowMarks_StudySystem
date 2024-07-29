@@ -175,6 +175,32 @@ View.prototype.drawInstructionPage = function () {
                 }
                 break;
             case 2:
+                title += "Task 2 - Sea Ice Extent with";
+                description.push("This task has 2 comparison trials. For each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
+                reminder.push("Select a video by holding CONTROL and clicking on it.");
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        title += " Small Multiples";
+                        steps.push("Play through all the videos and look the video where ice (light blue and white) extends furthest east (right) between the two islands.");
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        title += " Overlays";
+                        steps.push("Start by adding the first video to the overlay. Then go through each of the other videos and do the following:");
+                        steps.push("1. Add the video to the overlay.");
+                        steps.push("2. Play through the overlaid sea ice videos to see which extends furthest east (right) between the islands.");
+                        steps.push("3. Remove the video that extends the least from the overlay by clicking on it on its eye.");
+                        steps.push("4. Continue on to the next video.");
+                        steps.push("Once you have gone through all the videos, select the video that is still in the overlay.");
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        title += " Shadow Marks";
+                        steps.push("First, play through the videos and guess which video extends the furthest. Make a mark at the rightmost point of the ice between the two islands (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:");
+                        steps.push("1. Play through the sea ice video and check if the ice extends further east (right) than your mark.");
+                        steps.push("2. If it does, remove the last mark and add a new one to the rightmost of the ice.");
+                        steps.push("3. Continue on to the next video.");
+                        steps.push("Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).");
+                        break;
+                }
                 break;
             case 3:
                 break;
@@ -336,11 +362,15 @@ View.prototype.drawInstructions = function () {
                 instructions.push(`* Steps`)
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
-                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        instructions.push(`Play through all the videos and look for the highest point that each plant reaches. Select the plant whose highest point is closest to the top of the video window.`)
                         break;
                     case INTERACTIONS.OVERLAYS:
-                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
-                        instructions.push(`You may use the Overlay feature if you want to compare multiple scatterplots at once.`);
+                        instructions.push(`Start by adding the first video to the overlay. Then go through each of the other videos and do the following:`)
+                        instructions.push(`1. Add the video to the overlay.`);
+                        instructions.push(`2. Play through the overlaid plant videos to see which grows the tallest.`);
+                        instructions.push(`3. Remove the shorter plant from the overlay by clicking on it on the left.`);
+                        instructions.push(`4. Continue on to the next video.`);
+                        instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Make a mark at this point (we recommend a line mark, but you can use any of the mark types available). Then, go through each of the other videos and do the following:`);
@@ -354,16 +384,31 @@ View.prototype.drawInstructions = function () {
                 }
                 break;
             case 2:
-                instructions.push(`Select ${this.model.correctVideos} Arctic sea ice`);
-                instructions.push(`video${this.model.correctVideos > 1 ? "s" : ""} where the ice`);
-                instructions.push(`extends past the imaginary`);
-                instructions.push(`line drawn between the middle`);
-                instructions.push(`of the two islands of interest, by`)
-                instructions.push(`Control-clicking the video.`);
-                reminders.push(`Reminder:`);
-                reminders.push(`The islands of interest are the`);
-                reminders.push(`two closest to the right of the`);
-                reminders.push(`large island in the middle.`);
+                instructions.push(`* Task`);
+                instructions.push(`Select the video where the ice extends farthest east (right) between the two islands to the right of Greenland (large island in the middle).`);
+                instructions.push(`* Steps`)
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        instructions.push(`Play through all the videos and look the video where ice (light blue and white) extends furthest east (right) between the two islands.`)
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        instructions.push(`Start by adding the first video to the overlay. Then go through each of the other videos and do the following:`)
+                        instructions.push(`1. Add the video to the overlay.`);
+                        instructions.push(`2. Play through the overlaid sea ice videos to see which extends furthest east (right) between the islands.`);
+                        instructions.push(`3. Remove the video that extends the least from the overlay by clicking on it on its eye.`);
+                        instructions.push(`4. Continue on to the next video.`);
+                        instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        instructions.push(`First, play through the videos and guess which video extends the furthest. Make a mark at the rightmost point of the ice between the two islands (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:`);
+                        instructions.push(`1. Play through the sea ice video and check if the ice extends further east (right) than your mark.`);
+                        instructions.push(`2. If it does, remove the last mark and add a new one to the rightmost of the ice.`);
+                        instructions.push(`3. Continue on to the next video.`);
+                        instructions.push(`Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).`);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 3:
                 instructions.push(`Select ${this.model.correctVideos} video${this.model.correctVideos > 1 ? "s" : ""} where the`);
