@@ -493,21 +493,23 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
 
 Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     console.log("Loading 6 random lemnatec videos...");
+    if (this.model.instructionImage === null) {
+        let instructionsName = "placeholder.webp";
+        switch(this.model.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+                instructionsName = "smallmultiples_task1_img1.webp";
+                break;
+            case INTERACTIONS.OVERLAYS:
+                instructionsName = "overlays_task1_img1.webp";
+                break;
+            case INTERACTIONS.SHADOW_MARKER:
+                instructionsName = "shadowmarkers_task1_img1.webp";
+                break;
+        }
+        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+    }
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
-    let instructionsName = "placeholder.webp";
-    switch(this.model.interaction) {
-        case INTERACTIONS.SMALL_MULTIPLES:
-            instructionsName = "smallmultiples_task1_img1.webp";
-            break;
-        case INTERACTIONS.OVERLAYS:
-            instructionsName = "overlays_task1_img1.webp";
-            break;
-        case INTERACTIONS.SHADOW_MARKER:
-            instructionsName = "shadowmarkers_task1_img1.webp";
-            break;
-    }
-    this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     let videos = [];
     let found = false;
     while (!found) {
@@ -560,6 +562,17 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
 
 Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     console.log("Loading 6 random sea ice videos...");
+    if (this.model.instructionImage === null) {
+        let instructionsName = "placeholder.webp";
+        switch(this.model.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+            case INTERACTIONS.OVERLAYS:
+            case INTERACTIONS.SHADOW_MARKER:
+                instructionsName = "smallmultiples_task2_img1.webp";
+                break;
+        }
+        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+    }
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
     let farthest = 0;
@@ -631,17 +644,19 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
 
 Controller.prototype.handleLoadScatterplots = async function () {
     console.log("Loading 6 scatterplots...");
-    let instructionsName = "placeholder.webp";
-    switch(this.model.interaction) {
-        case INTERACTIONS.SMALL_MULTIPLES:
-        case INTERACTIONS.OVERLAYS:
-            instructionsName = "smallmultiples_task4_img1.webp";
-            break;
-        case INTERACTIONS.SHADOW_MARKER:
-            instructionsName = "shadowmarkers_task4_img1.webp";
-            break;
+    if (this.model.instructionImage === null) {
+        let instructionsName = "placeholder.webp";
+        switch(this.model.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+            case INTERACTIONS.OVERLAYS:
+                instructionsName = "smallmultiples_task4_img1.webp";
+                break;
+            case INTERACTIONS.SHADOW_MARKER:
+                instructionsName = "shadowmarkers_task4_img1.webp";
+                break;
+        }
+        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     }
-    this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
     let category = assets.scatterplots.categories[0];
     let videos = [];
     let found = false;
