@@ -562,29 +562,50 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     console.log("Loading 6 random sea ice videos...");
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
-    let videos = [];
+    let farthest = 0;
     let found = false;
+    let videos = [];
+    let extensionVals = [];
     while (!found) {
         found = true;
         videos = [];
-        // Retrieve the 2 extending videos
-        while (videos.length < 2) {
+        extensionVals = []
+        // Retrieve 5 super extending videos
+        while (videos.length < 5) {
             let video = getRandomInt(0, category.videos.length);
-            if (!videos.includes(video) && category.videos[video].extension > 0.66) {
+            let extension = category.videos[video].extension;
+            if (!videos.includes(video) && !extensionVals.includes(extension) && extension > 0.66) {
                 videos.push(video);
+                extensionVals.push(extension);
             }
         }
-        if (Math.abs(category.videos[videos[0]].extension - category.videos[videos[1]].extension) < 0.01) found = false;
-    }
-    // Retrieve all other videos
-    while (videos.length < this.model.videosPerTrial) {
-        let video = getRandomInt(0, category.videos.length);
-        if (!videos.includes(video)) {
-            videos.push(video);
+        // Ensure 3 are close, but none are TOO close to the farthest
+        farthest = Math.max(...extensionVals);
+        let closeVideos = 0;
+        for (let i = 0; i < extensionVals.length; i++) {
+            let extensionVal = extensionVals[i];
+            if (extensionVal !== farthest) {
+                let difference = Math.abs(extensionVal-farthest);
+                if (difference < 0.005) found = false;
+                else if (difference < 0.01) closeVideos++;
+            }
+        }
+        if (closeVideos < 2) found = false;
+        // Retrieve all other videos if found
+        while (found && videos.length < this.model.videosPerTrial) {
+            let video = getRandomInt(0, category.videos.length);
+            let extension = category.videos[video].extension;
+            if (!videos.includes(video) && !extensionVals.includes(extension) && extension < 0.66) {
+                videos.push(video);
+                extensionVals.push(extension);
+            }
         }
     }
+
     // Shuffle array
     shuffleArray(videos);
+    // Place correct video in the second or third row
+    videos = moveToRow(videos, videos.findIndex(video => category.videos[video].extension === farthest), getRandomInt(1,3));
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];

@@ -128,6 +128,22 @@ function shuffleArray(arr) {
 }
 
 /**
+ * Move a value at an array index to a row specified by the caller.
+ * Placement in row is random.
+ * If the value is already in that row, return immediately.
+ * Works for 3x3 matrices only.
+ */
+function moveToRow(arr, index, row) {
+    if (Math.floor(index/3) === row) return arr;
+    let rowIndex = getRandomInt(0,3);
+    let moveIndex = (row*3)+rowIndex;
+    let temp = arr[moveIndex];
+    arr[moveIndex] = arr[index];
+    arr[index] = temp;
+    return arr;
+}
+
+/**
  * Returns a random integer between min and max.
  * min inclusive, max exclusive 
  */
