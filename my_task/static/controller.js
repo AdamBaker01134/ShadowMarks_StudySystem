@@ -209,7 +209,7 @@ Controller.prototype.handleMouseReleased = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
                 this.model.addStreamData(EVENTS.ADDED_MARK);
-            } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
+            } else if (this.model.shadowMarkType !== MARKS.CURSOR && ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit())) {
                 if (this.model.checkOverlayHit()) {
                     let ow, oh, ox, oy;
                     ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
@@ -510,6 +510,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     }
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
+    let tallest = 0;
     let videos = [];
     let found = false;
     while (!found) {
@@ -525,7 +526,7 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
             }
             seen.push(name);
         }
-        let tallest = 0;
+        tallest = 0;
         for (let i = 0; i < videos.length; i++) {
             // Check that there are no similarly tall plants
             if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.01) found = false;
@@ -537,6 +538,8 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
     // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
     // debugger;
+    // Place correct video in the second or third row
+    videos = moveToRow(videos, videos.findIndex(video => category.videos[video].peak === tallest), getRandomInt(1,3));
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
