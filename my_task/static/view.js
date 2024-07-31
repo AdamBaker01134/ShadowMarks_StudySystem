@@ -240,14 +240,13 @@ View.prototype.drawInstructionPage = function () {
         strokeWeight(1);
         text(title, x-textWidth(title)/2, y);
         y+= (size+10);
+        x = width/3;
 
         // Draw image
         if (this.model.instructionImage !== null) {
             let aspectRatio = this.model.instructionImage.width / this.model.instructionImage.height;
-            image(this.model.instructionImage, 10, 10, (w-50)*aspectRatio, w-50);
+            image(this.model.instructionImage, 10, 10, (x-50), (x-50)/aspectRatio);
         }
-
-        x = width/3;
 
         // Draw description
         fill(0);
