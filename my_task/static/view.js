@@ -166,11 +166,11 @@ View.prototype.drawInstructionPage = function () {
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         title += " Shadow Marks";
-                        steps.push("Start by playing through each video and guessing which plant reachest the highest point. Make a mark at this point (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:");
-                        steps.push("1. Play through the plant video and check if the plant grows higher than your mark.");
-                        steps.push("2. If it does, remove the last mark and add a new one to the highest point of the new video.");
+                        steps.push("Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:");
+                        steps.push("1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.");
+                        steps.push("2. If it does, move your cursor to the highest point of the new video.");
                         steps.push("3. Continue on to the next video.");
-                        steps.push("Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).");
+                        steps.push("Once you have gone through all the videos, select the video you are hovering over.");
                         break;
                 }
                 break;
@@ -372,11 +372,11 @@ View.prototype.drawInstructions = function () {
                         instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
-                        instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Make a mark at this point (we recommend a line mark, but you can use any of the mark types available). Then, go through each of the other videos and do the following:`);
-                        instructions.push(`1. Play through the plant video and check if the plant grows higher than your mark at any point.`);
-                        instructions.push(`2. If it does, remove the last mark and add a new one to the highest point of the new video.`);
+                        instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:`);
+                        instructions.push(`1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.`);
+                        instructions.push(`2. If it does, move your cursor to the highest point of the new video.`);
                         instructions.push(`3. Continue on to the next video.`);
-                        instructions.push(`Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).`);
+                        instructions.push(`Once you have gone through all the videos, select the video you are hovering over.`);
                         break;
                     default:
                         break;
