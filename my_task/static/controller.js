@@ -491,7 +491,7 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     return category;
 }
 
-Controller.prototype.handleLoadLemnatec = async function (undesired="") {
+Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1, undesired="") {
     console.log("Loading 6 random lemnatec videos...");
     if (this.model.instructionImage === null) {
         let instructionsName = "placeholder.webp";
@@ -510,34 +510,68 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
     }
     let category;
     while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
-    let tallest = 0;
-    let videos = [];
-    let found = false;
-    while (!found) {
-        found = true;
-        videos = [];
-        // Retrieve the videos
-        let seen = [];
-        while (videos.length < this.model.videosPerTrial) {
-            let video = getRandomInt(0, category.videos.length);
-            let name = category.videos[video].name.split("-")[0];
-            if (!videos.includes(video) && !seen.includes(name)) {
-                videos.push(video);
-            }
-            seen.push(name);
-        }
-        tallest = 0;
-        for (let i = 0; i < videos.length; i++) {
-            // Check that there are no similarly tall plants
-            if (Math.abs(category.videos[videos[i]].peak - tallest) < 0.01) found = false;
-            if (category.videos[videos[i]].peak > tallest) tallest = category.videos[videos[i]].peak;
-        }
-    }
     // const n = category.videos.length;
     // videos = category.videos;
     // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
     // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
     // debugger;
+    let videos = [];
+    let peakVals = [];
+    let selectionCond;
+    if (selectionCondition === -1) selectionCond = getRandomInt(0,2);
+    else selectionCond = Math.abs(selectionCondition-1);
+    switch (selectionCond) {
+        case 0:
+            // High peak condition
+            while (videos.length < 3) {
+                let video = getRandomInt(0,category.videos.length);
+                let peak = category.videos[video].peak;
+                if (!videos.includes(video) && peak > 0.50) {
+                    videos.push(video);
+                    peakVals.push(peak);
+                }
+            }
+            while (videos.length < 9) {
+                let video = getRandomInt(0,category.videos.length);
+                let peak = category.videos[video].peak;
+                if (!videos.includes(video) && peak > 0.49 && peak < 0.50) {
+                    videos.push(video);
+                    peakVals.push(peak);
+                }
+            }
+            break;
+        case 1:
+        default:
+            // Low peak condition
+            while (videos.length < 3) {
+                let video = getRandomInt(0,category.videos.length);
+                let peak = category.videos[video].peak;
+                if (!videos.includes(video) && peak > 0.48 && peak < 0.49) {
+                    videos.push(video);
+                    peakVals.push(peak);
+                }
+            }
+            while (videos.length < 5) {
+                let video = getRandomInt(0,category.videos.length);
+                let peak = category.videos[video].peak;
+                if (!videos.includes(video) && peak > 0.47 && peak < 0.48) {
+                    videos.push(video);
+                    peakVals.push(peak);
+                }
+            }
+            while (videos.length < 9) {
+                let video = getRandomInt(0,category.videos.length);
+                let peak = category.videos[video].peak;
+                if (!videos.includes(video) && peak < 0.47) {
+                    videos.push(video);
+                    peakVals.push(peak);
+                }
+            }
+            break;
+    }
+    let tallest = Math.max(...peakVals);
+    // Shuffle array
+    shuffleArray(videos);
     // Place correct video in the second or third row
     videos = moveToRow(videos, videos.findIndex(video => category.videos[video].peak === tallest), getRandomInt(1,3));
     for (let video = 0; video < videos.length; video++) {
@@ -560,10 +594,10 @@ Controller.prototype.handleLoadLemnatec = async function (undesired="") {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
-    return category;
+    return { category: category, selectionCondition: selectionCond };
 }
 
-Controller.prototype.handleLoadSeaIce = async function (undesired="") {
+Controller.prototype.handleLoadSeaIce = async function (selectionCondition=-1, undesired="") {
     console.log("Loading 6 random sea ice videos...");
     if (this.model.instructionImage === null) {
         let instructionsName = "placeholder.webp";
@@ -578,46 +612,61 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
     }
     let category;
     while ((category = assets.seaice.categories[getRandomInt(0, assets.seaice.categories.length)]).name === undesired);
-    let farthest = 0;
-    let found = false;
     let videos = [];
     let extensionVals = [];
-    while (!found) {
-        found = true;
-        videos = [];
-        extensionVals = []
-        // Retrieve 5 super extending videos
-        while (videos.length < 5) {
-            let video = getRandomInt(0, category.videos.length);
-            let extension = category.videos[video].extension;
-            if (!videos.includes(video) && !extensionVals.includes(extension) && extension > 0.66) {
-                videos.push(video);
-                extensionVals.push(extension);
+    let selectionCond;
+    if (selectionCondition === -1) selectionCond = getRandomInt(0,2);
+    else selectionCond = Math.abs(selectionCondition-1);
+    switch (selectionCond) {
+        case 0:
+            // High extension condition
+            while (videos.length < 2) {
+                let video = getRandomInt(0,category.videos.length);
+                let extension = category.videos[video].extension;
+                if (!videos.includes(video) && extension > 0.68) {
+                    videos.push(video);
+                    extensionVals.push(extension);
+                }
             }
-        }
-        // Ensure 3 are close, but none are TOO close to the farthest
-        farthest = Math.max(...extensionVals);
-        let closeVideos = 0;
-        for (let i = 0; i < extensionVals.length; i++) {
-            let extensionVal = extensionVals[i];
-            if (extensionVal !== farthest) {
-                let difference = Math.abs(extensionVal-farthest);
-                if (difference < 0.005) found = false;
-                else if (difference < 0.01) closeVideos++;
+            while (videos.length < 5) {
+                let video = getRandomInt(0,category.videos.length);
+                let extension = category.videos[video].extension;
+                if (!videos.includes(video) && extension > 0.67 && extension < 0.68) {
+                    videos.push(video);
+                    extensionVals.push(extension);
+                }
             }
-        }
-        if (closeVideos < 2) found = false;
-        // Retrieve all other videos if found
-        while (found && videos.length < this.model.videosPerTrial) {
-            let video = getRandomInt(0, category.videos.length);
-            let extension = category.videos[video].extension;
-            if (!videos.includes(video) && !extensionVals.includes(extension) && extension < 0.66) {
-                videos.push(video);
-                extensionVals.push(extension);
+            while (videos.length < 9) {
+                let video = getRandomInt(0,category.videos.length);
+                let extension = category.videos[video].extension;
+                if (!videos.includes(video) && extension > 0.66 && extension < 0.67) {
+                    videos.push(video);
+                    extensionVals.push(extension);
+                }
             }
-        }
+            break;
+        case 1:
+        default:
+            // Low extension condition
+            while (videos.length < 6) {
+                let video = getRandomInt(0,category.videos.length);
+                let extension = category.videos[video].extension;
+                if (!videos.includes(video) && extension > 0.64 && extension < 0.65) {
+                    videos.push(video);
+                    extensionVals.push(extension);
+                }
+            }
+            while (videos.length < 9) {
+                let video = getRandomInt(0,category.videos.length);
+                let extension = category.videos[video].extension;
+                if (!videos.includes(video) && extension > 0.63 && extension < 0.64) {
+                    videos.push(video);
+                    extensionVals.push(extension);
+                }
+            }
+            break;
     }
-
+    let farthest = Math.max(...extensionVals);
     // Shuffle array
     shuffleArray(videos);
     // Place correct video in the second or third row
@@ -642,7 +691,7 @@ Controller.prototype.handleLoadSeaIce = async function (undesired="") {
         });
         this.model.addVideo(frames, labels, category.videos[videos[video]].name);
     }
-    return category;
+    return { category: category, selectionCondition: selectionCond };
 }
 
 Controller.prototype.handleLoadScatterplots = async function () {

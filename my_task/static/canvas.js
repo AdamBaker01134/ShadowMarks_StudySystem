@@ -35,29 +35,29 @@ function setup() {
             });
             break;
         case 1:
-            controller.handleLoadLemnatec().then(category => { 
-                model.setCategory(category);
+            controller.handleLoadLemnatec().then(results1 => { 
+                model.setCategory(results1.category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
-                controller.handleLoadLemnatec().then(category => {
-                    model.setCategory(category);
+                controller.handleLoadLemnatec(results1.selectionCondition).then(results2 => {
+                    model.setCategory(results2.category);
                     model.setTrialLoadTime(new Date().getTime()-nowTime);
                 });
             });
             break;
         case 2:
-            controller.handleLoadSeaIce().then(category => { 
-                model.setCategory(category);
+            controller.handleLoadSeaIce().then(results1 => { 
+                model.setCategory(results1.category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
                 model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
-                controller.handleLoadSeaIce().then(category => {
-                    model.setCategory(category);
+                controller.handleLoadSeaIce(results1.selectionCondition).then(results2 => {
+                    model.setCategory(results2.category);
                     model.setTrialLoadTime(new Date().getTime()-nowTime);
                 });
             });
