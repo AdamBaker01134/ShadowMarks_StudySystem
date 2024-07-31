@@ -520,15 +520,18 @@ Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1,
     let selectionCond;
     if (selectionCondition === -1) selectionCond = getRandomInt(0,2);
     else selectionCond = Math.abs(selectionCondition-1);
+    let seen = [];
     switch (selectionCond) {
         case 0:
             // High peak condition
             while (videos.length < 3) {
                 let video = getRandomInt(0,category.videos.length);
                 let peak = category.videos[video].peak;
-                if (!videos.includes(video) && peak > 0.50) {
+                let name = category.videos[video].name.split("-")[0];
+                if (!videos.includes(video) && !seen.includes(name) && peak > 0.50) {
                     videos.push(video);
                     peakVals.push(peak);
+                    seen.push(name);
                 }
             }
             while (videos.length < 9) {
@@ -546,9 +549,11 @@ Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1,
             while (videos.length < 3) {
                 let video = getRandomInt(0,category.videos.length);
                 let peak = category.videos[video].peak;
-                if (!videos.includes(video) && peak > 0.48 && peak < 0.49) {
+                let name = category.videos[video].name.split("-")[0];
+                if (!videos.includes(video) && !seen.includes(name) && peak > 0.48 && peak < 0.49) {
                     videos.push(video);
                     peakVals.push(peak);
+                    seen.push(name);
                 }
             }
             while (videos.length < 5) {
