@@ -6,4 +6,5 @@ cached_results.json
 
 my_task/static/assets/
 
-data
+data/*
+!data/examples-2024.R
