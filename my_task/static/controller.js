@@ -360,7 +360,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     this.model.logData();
-                } else if (this.model.task > 0 && (this.model.task === 3 || this.model.selectedVideos.length > 0) && confirm("Confirm selection.")) {
+                } else if (this.model.task > 0 && this.model.selectedVideos.length > 0 && confirm("Confirm selection.")) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     if (this.model.trial < 2) {
                         let results = this.model.addTrialData();
@@ -442,32 +442,46 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
     if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
     let category;
     while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < this.model.videosPerTrial) || category.name === undesired);
-    let videos = [];
-    let found = 0;
-    while (found === 0 || found > 3) {
-        found = 0;
-        videos = [];
-        // Retrieve first video (must be visible on release)
-        while (videos.length < 1) {
-            let video = getRandomInt(0, category.videos.length);
-            if (category.videos[video].visible) videos.push(video);
+    let releases = category.videos.map(video => video.release);
+    let registered = [];
+    for (let i = 0; i < releases.length; i++) {
+        let totalRegistered = [];
+        for (let j = 0; j < releases.length; j++) {
+            if (i !== j) {
+                let x1 = releases[i][0];
+                let y1 = releases[i][1];
+                let x2 = releases[j][0];
+                let y2 = releases[j][1];
+                if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.02) totalRegistered.push(category.videos[j]);
+            }
         }
-        while (videos.length < this.model.videosPerTrial) {
-            // Retrieve the remaining videos
-            let video = getRandomInt(0, category.videos.length);
-            if (!videos.includes(video)) videos.push(video);
-        }
-        for (let i = 1; i < videos.length; i++) {
-            // Ensure at least 1 video is registered
-            let firstVideo = category.videos[videos[0]];
-            let x1 = firstVideo.release[0];
-            let y1 = firstVideo.release[1];
-            let x2 = category.videos[videos[i]].release[0];
-            let y2 = category.videos[videos[i]].release[1];
-            let distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-            if (distance >= 30) found++;
-        }
+        registered.push(totalRegistered);
     }
+
+    let firstRow = [];
+    let otherRows = [];
+    while (firstRow.length < 1) {
+        // Retrieve reference video
+        let video = getRandomInt(0, registered.length);
+        if (registered[video].length >= 2) firstRow.push(video);
+    }
+    while (firstRow.length < 3) {
+        // Retrieve 2 unregistered videos for first row
+        let video = getRandomInt(0, category.videos.length);
+        if (!firstRow.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) firstRow.push(video);
+    }
+    while (otherRows.length < 2) {
+        // Retreive 2 registered videos for other rows
+        let video = getRandomInt(0, category.videos.length);
+        if (!firstRow.includes(video) && !otherRows.includes(video) && registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
+    }
+    while (otherRows.length < 6) {
+        // Retrieve 4 unregistered videos for other rows
+        let video = getRandomInt(0, category.videos.length);
+        if (!firstRow.includes(video) && !otherRows.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
+    }
+    shuffleArray(otherRows);
+    let videos = [...firstRow, ...otherRows];
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
