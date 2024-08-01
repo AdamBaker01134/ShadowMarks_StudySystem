@@ -539,7 +539,7 @@ View.prototype.drawInstructions = function () {
         //     rect(iX+w/2-iW/2,iY,iW,iH,10);
         // }
 
-        if (this.model.task > 0 && ((this.model.task > 1 && this.model.task < 4) || this.model.selectedVideos.length > 0)) {
+        if (this.model.task > 0 && this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
             let submitPrompt = "Press ENTER to submit.";
             y += (size+5);
             fill(0)

@@ -360,24 +360,35 @@ Controller.prototype.handleKeyPressed = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
                     this.model.addStreamData(EVENTS.SUBMIT);
                     this.model.logData();
-                } else if (this.model.task > 0 && this.model.selectedVideos.length > 0 && confirm("Confirm selection.")) {
-                    this.model.addStreamData(EVENTS.SUBMIT);
-                    if (this.model.trial < 2) {
-                        let results = this.model.addTrialData();
-                        if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                            this.model.addCategoriesToCookies();
-                            this.model.nextTrial();
+                } else if (this.model.task === 0) {
+                    alert("Please go through all tutorial prompts before advancing (prompts are at the bottom of the page above the scrollbar).");
+                } else if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
+                    if (confirm("Confirm selection.")) {
+                        this.model.addStreamData(EVENTS.SUBMIT);
+                        if (this.model.trial < 2) {
+                            let results = this.model.addTrialData();
+                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.nextTrial();
+                            } else {
+                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
+                            }
                         } else {
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
+                            let results = this.model.addTrialData();
+                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.logData();
+                            } else {
+                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
+                            }
                         }
+                    }
+                } else {
+                    let required = this.model.task === 3 ? 2 : 1;
+                    if (this.model.selectedVideos.length > required) {
+                        alert("Warning: Too many videos selected.");
                     } else {
-                        let results = this.model.addTrialData();
-                        if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                            this.model.addCategoriesToCookies();
-                            this.model.logData();
-                        } else {
-                            this.model.tryAgain(results.falsePositives, results.falseNegatives);
-                        }
+                        alert("Warning: Not enough videos selected.");
                     }
                 }
             }
