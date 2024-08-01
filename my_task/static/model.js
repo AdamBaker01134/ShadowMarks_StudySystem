@@ -32,7 +32,6 @@ function Model() {
     this.percentLoaded = 0;
     this.start = false;
     this.videosPerTrial = 9;
-    this.correctVideos = 0;
     this.videos = [];
 
     this.shadowMarks = [];
@@ -127,7 +126,6 @@ Model.prototype.nextTrial = function () {
     this.shadowMarkColour = COLOURS.RED;
     this.updateVideoDimensions();
     this.updateVideoLocations();
-    this.updateCorrectVideos();
     this.notifySubscribers();
 }
 
@@ -215,11 +213,6 @@ Model.prototype.addVideo = function (video, labels, name) {
         // }
     });
     this.videos.push(new Video(video, labels, name, x, y));
-    this.notifySubscribers();
-}
-
-Model.prototype.updateCorrectVideos = function () {
-    this.correctVideos = this.getCorrectVideos()[0].length;
     this.notifySubscribers();
 }
 
@@ -931,7 +924,6 @@ Model.prototype.cleanLogData = function () {
 
 Model.prototype.getCorrectVideos = function () {
     let correctVideos = [];
-    let possibleVideos = [];
     let trialVideos = [];
     let category = this.category[0];
     for (let i = 0; i < this.videosPerTrial && i < this.videos.length; i++) {
@@ -958,8 +950,7 @@ Model.prototype.getCorrectVideos = function () {
                     let x2 = video.release[0];
                     let y2 = video.release[1];
                     let distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-                    if (distance >= 30) correctVideos.push(video);
-                    else if (distance >= 25) possibleVideos.push(video);
+                    if (distance < 0.02) correctVideos.push(video);
                 }
                 break;
             case 4:
@@ -970,7 +961,7 @@ Model.prototype.getCorrectVideos = function () {
                 break;
         }
     });
-    return [ correctVideos, possibleVideos ];
+    return correctVideos;
 }
 
 Model.prototype.addTrialData = function () {
@@ -980,13 +971,11 @@ Model.prototype.addTrialData = function () {
     // // Errors
     let falseNegatives = 0;
     let falsePositives = 0;
-    let correctVideos, possibleVideos;
-    [ correctVideos, possibleVideos ] = this.getCorrectVideos();
+    let correctVideos = this.getCorrectVideos();
     
     // Parse false positives
     this.selectedVideos.forEach(selectedVideo => {
-        if (correctVideos.findIndex(correctVideo => correctVideo.name === selectedVideo.name) === -1 &&
-            possibleVideos.findIndex(possibleVideo => possibleVideo.name === selectedVideo.name) === -1) falsePositives++;
+        if (correctVideos.findIndex(correctVideo => correctVideo.name === selectedVideo.name) === -1) falsePositives++;
     });
     // Parse false negatives
     correctVideos.forEach(correctVideo => {

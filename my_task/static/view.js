@@ -410,7 +410,7 @@ View.prototype.drawInstructions = function () {
                 }
                 break;
             case 3:
-                instructions.push(`Select ${this.model.correctVideos} video${this.model.correctVideos > 1 ? "s" : ""} where the`);
+                instructions.push(`Select 2 videos where the`);
                 instructions.push(`pitcher's release point is`);
                 instructions.push(`close to the release point`);
                 instructions.push(`of the pitcher in the top`);

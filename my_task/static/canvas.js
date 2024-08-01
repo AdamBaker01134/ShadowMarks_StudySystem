@@ -39,7 +39,6 @@ function setup() {
                 model.setCategory(results1.category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
-                model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
                 controller.handleLoadLemnatec(results1.selectionCondition).then(results2 => {
@@ -53,7 +52,6 @@ function setup() {
                 model.setCategory(results1.category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
-                model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
                 controller.handleLoadSeaIce(results1.selectionCondition).then(results2 => {
@@ -67,7 +65,6 @@ function setup() {
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
-                model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
                 controller.handleLoadBaseball(model.category[0].name).then(category => {
@@ -81,7 +78,6 @@ function setup() {
                 model.setCategory(category);
                 model.updateVideoDimensions();
                 model.updateVideoLocations();
-                model.updateCorrectVideos();
                 let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
                 controller.handleLoadScatterplots().then(category => {
