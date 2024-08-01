@@ -365,9 +365,13 @@ Controller.prototype.handleKeyPressed = function (event) {
                 } else if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
                     if (confirm("Confirm selection.")) {
                         this.model.addStreamData(EVENTS.SUBMIT);
+                        let elapsedTime = new Date().getTime() - this.model.trialStartTime;
                         if (this.model.trial < 2) {
                             let results = this.model.addTrialData();
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.nextTrial();
+                            } else if (this.model.task === 3 && elapsedTime > 120000) {
                                 this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             } else {
@@ -376,6 +380,9 @@ Controller.prototype.handleKeyPressed = function (event) {
                         } else {
                             let results = this.model.addTrialData();
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.logData();
+                            } else if (this.model.task === 3 && elapsedTime > 120000) {
                                 this.model.addCategoriesToCookies();
                                 this.model.logData();
                             } else {
