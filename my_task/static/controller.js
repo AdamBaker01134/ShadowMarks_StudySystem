@@ -478,7 +478,7 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
                 let y1 = releases[i][1];
                 let x2 = releases[j][0];
                 let y2 = releases[j][1];
-                if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.02) totalRegistered.push(category.videos[j]);
+                if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) totalRegistered.push(category.videos[j]);
             }
         }
         registered.push(totalRegistered);

@@ -950,7 +950,7 @@ Model.prototype.getCorrectVideos = function () {
                     let x2 = video.release[0];
                     let y2 = video.release[1];
                     let distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-                    if (distance < 0.02) correctVideos.push(video);
+                    if (distance < 0.025) correctVideos.push(video);
                 }
                 break;
             case 4:
