@@ -158,18 +158,16 @@ View.prototype.drawInstructionPage = function () {
                     case INTERACTIONS.OVERLAYS:
                         title += " Overlays";
                         steps.push("Start by adding the first video to the overlay (click on it). Then go through each of the other videos and do the following:");
-                        steps.push("1. Add the video to the overlay (eye will open with 2 as its number).");
+                        steps.push("1. Add the video to the overlay by clicking on its eye.");
                         steps.push("2. Play through the overlaid plant videos to see which grows the tallest.");
-                        steps.push("3. Remove the shorter plant from the overlay by clicking on it on the left (eye will close).");
-                        steps.push("4. Continue on to the next video.");
+                        steps.push("3. Remove the shorter plant from the overlay by clicking on its eye again, and continue.");
                         steps.push("Once you have gone through all the videos, select the video that is still in the overlay (only video with its eye open).");
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         title += " Shadow Marks";
                         steps.push("Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:");
                         steps.push("1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.");
-                        steps.push("2. If it does, move your cursor to the highest point of the new video.");
-                        steps.push("3. Continue on to the next video.");
+                        steps.push("2. If it does, move your cursor to the highest point of the new video. Continue on to the next video.");
                         steps.push("Once you have gone through all the videos, select the video you are hovering over.");
                         break;
                 }
@@ -186,23 +184,43 @@ View.prototype.drawInstructionPage = function () {
                     case INTERACTIONS.OVERLAYS:
                         title += " Overlays";
                         steps.push("Start by adding the first video to the overlay. Then go through each of the other videos and do the following:");
-                        steps.push("1. Add the video to the overlay.");
+                        steps.push("1. Add the video to the overlay by clicking on its eye.");
                         steps.push("2. Play through the overlaid sea ice videos to see which extends furthest east (right) between the islands.");
-                        steps.push("3. Remove the video that extends the least from the overlay by clicking on it on its eye.");
-                        steps.push("4. Continue on to the next video.");
+                        steps.push("3. Remove the video that extends the least from the overlay by clicking on its eye again, and continue.");
                         steps.push("Once you have gone through all the videos, select the video that is still in the overlay.");
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         title += " Shadow Marks";
                         steps.push("First, play through the videos and guess which video extends the furthest. Make a mark at the rightmost point of the ice between the two islands (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:");
                         steps.push("1. Play through the sea ice video and check if the ice extends further east (right) than your mark.");
-                        steps.push("2. If it does, remove the last mark and add a new one to the rightmost of the ice.");
-                        steps.push("3. Continue on to the next video.");
+                        steps.push("2. If it does, remove the last mark and add a new one to the rightmost of the ice. Continue on to the next video.");
                         steps.push("Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).");
                         break;
                 }
                 break;
             case 3:
+                title += "Task 4 - Baseball Registration with";
+                description.push("This task has 2 comparison trials. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
+                reminder.push('"close" means within the length of a ball.');
+                reminder.push("Select a video by holding CONTROL and clicking on it.");
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        title += " Small Multiples";
+                        steps.push("Play through all the videos and locate the position where the pitcher releases the ball. If this position is close to the release point of the pitcher in the top left-hand corner, select the video.");
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        title += " Overlays";
+                        steps.push("First, add the top left video to the overlay by clicking on its eye. Then, for each other video:");
+                        steps.push("1. Add the video to the overlay by clicking on its eye.");
+                        steps.push("2. Play through the overlaid pitch videos and observe if their release points are close.");
+                        steps.push("3. If they are, select the video.");
+                        steps.push("4. Remove the top video from the overlay by clicking on its eye again, and continue.");
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        title += " Shadow Marks";
+                        steps.push("Play through the top left video and add a mark at the pitcher's release point. You can use any mark you like, but we recommend using the marker (like in the image on the left). Then, play through the other videos and select the 2 videos whose release points are close to your mark.")
+                        break;
+                }
                 break;
             case 4:
                 title += "Task 4 - Identifying Outliers with";
@@ -348,7 +366,6 @@ View.prototype.drawInstructions = function () {
         y += h + 120;
 
         let instructions = [];
-        let reminders = [];
         switch (this.model.task) {
             case 0:
                 instructions.push(`* Shadow Marks Sandbox Tutorial`);
@@ -367,15 +384,13 @@ View.prototype.drawInstructions = function () {
                         instructions.push(`Start by adding the first video to the overlay. Then go through each of the other videos and do the following:`)
                         instructions.push(`1. Add the video to the overlay.`);
                         instructions.push(`2. Play through the overlaid plant videos to see which grows the tallest.`);
-                        instructions.push(`3. Remove the shorter plant from the overlay by clicking on it on the left.`);
-                        instructions.push(`4. Continue on to the next video.`);
+                        instructions.push(`3. Remove the shorter plant from the overlay by clicking on it on the left, and continue.`);
                         instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:`);
                         instructions.push(`1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.`);
-                        instructions.push(`2. If it does, move your cursor to the highest point of the new video.`);
-                        instructions.push(`3. Continue on to the next video.`);
+                        instructions.push(`2. If it does, move your cursor to the highest point of the new video. Continue on to the next video.`);
                         instructions.push(`Once you have gone through all the videos, select the video you are hovering over.`);
                         break;
                     default:
@@ -384,7 +399,7 @@ View.prototype.drawInstructions = function () {
                 break;
             case 2:
                 instructions.push(`* Task`);
-                instructions.push(`Select the video where the ice extends farthest east (right) between the two islands to the right of Greenland (large island in the middle).`);
+                instructions.push(`Select the video where the ice extends farthest east (right) between the two islands to the right of Greenland (large island in the middle), by Control-clicking the image.`);
                 instructions.push(`* Steps`)
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -394,15 +409,13 @@ View.prototype.drawInstructions = function () {
                         instructions.push(`Start by adding the first video to the overlay. Then go through each of the other videos and do the following:`)
                         instructions.push(`1. Add the video to the overlay.`);
                         instructions.push(`2. Play through the overlaid sea ice videos to see which extends furthest east (right) between the islands.`);
-                        instructions.push(`3. Remove the video that extends the least from the overlay by clicking on it on its eye.`);
-                        instructions.push(`4. Continue on to the next video.`);
+                        instructions.push(`3. Remove the video that extends the least from the overlay by clicking on it on its eye, and continue.`);
                         instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         instructions.push(`First, play through the videos and guess which video extends the furthest. Make a mark at the rightmost point of the ice between the two islands (we recommend a line mark, but you can use any of the mark types available). Then go through each of the other videos and do the following:`);
                         instructions.push(`1. Play through the sea ice video and check if the ice extends further east (right) than your mark.`);
-                        instructions.push(`2. If it does, remove the last mark and add a new one to the rightmost of the ice.`);
-                        instructions.push(`3. Continue on to the next video.`);
+                        instructions.push(`2. If it does, remove the last mark and add a new one to the rightmost of the ice. Continue on to the next video.`);
                         instructions.push(`Once you have gone through all the videos, select the video that the remaining mark belongs to (hovering over the mark will highlight the video it belongs to).`);
                         break;
                     default:
@@ -410,18 +423,28 @@ View.prototype.drawInstructions = function () {
                 }
                 break;
             case 3:
-                instructions.push(`Select 2 videos where the`);
-                instructions.push(`pitcher's release point is`);
-                instructions.push(`close to the release point`);
-                instructions.push(`of the pitcher in the top`);
-                instructions.push(`left-hand corner, by`);
-                instructions.push(`Control-clicking the video.`);
-                reminders.push(`Reminders:`);
-                reminders.push(`The release point is the`);
-                reminders.push(`location of the ball in the`);
-                reminders.push(`first frame it is in flight.`);
-                reminders.push(`Nagivate frame-by-frame`);
-                reminders.push(`with the arrow keys.`);
+                instructions.push(`* Task`);
+                instructions.push(`Select 2 videos where the pitcher's release point (location of the ball in the first frame it is in flight) is close to the release point of the pitcher in the top left-hand corner, by Control-clicking the video.`);
+                instructions.push(`* Steps`)
+                switch (this.model.interaction) {
+                    case INTERACTIONS.SMALL_MULTIPLES:
+                        instructions.push(`Play through all the videos and locate the position where the pitcher releases the ball. If this position is close to the release point of the pitcher in the top left-hand corner, select the video.`);
+                        break;
+                    case INTERACTIONS.OVERLAYS:
+                        instructions.push(`First, add the top left video to the overlay by clicking on its eye. Then, for each other video:`);
+                        instructions.push(`1. Add the video to the overlay by clicking on its eye.`);
+                        instructions.push(`2. Play through the overlaid pitch videos and observe if their release points are close.`);
+                        instructions.push(`3. If they are, select the video.`);
+                        instructions.push(`4. Remove the top video from the overlay by clicking on its eye again, and continue.`);
+                        break;
+                    case INTERACTIONS.SHADOW_MARKER:
+                        instructions.push(`Play through the top left video and add a mark at the pitcher's release point. You can use any mark you like, but we recommend using the marker. Then, play through the other videos and select the 2 videos whose release points are close to your mark.`);
+                        break;
+                    default:
+                        break;
+                }
+                instructions.push(`* Reminder`);
+                instructions.push(`"close" means within the length of a ball.`);
                 break;
             case 4:
                 instructions.push(`* Task`);

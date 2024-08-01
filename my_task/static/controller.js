@@ -438,6 +438,21 @@ Controller.prototype.handleLoadSandbox = async function () {
 
 Controller.prototype.handleLoadBaseball = async function (undesired="") {
     console.log("Loading 6 random baseball videos...");
+    if (this.model.instructionImage === null) {
+        let instructionsName = "placeholder.webp";
+        switch(this.model.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+                instructionsName = "smallmultiples_task3_img1.webp";
+                break;
+            case INTERACTIONS.OVERLAYS:
+                instructionsName = "overlays_task3_img1.webp";
+                break;
+            case INTERACTIONS.SHADOW_MARKER:
+                instructionsName = "shadowmarkers_task3_img1.webp";
+                break;
+        }
+        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+    }
     let previousCategories = this.model.getCookieCategories();
     if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
     let category;
