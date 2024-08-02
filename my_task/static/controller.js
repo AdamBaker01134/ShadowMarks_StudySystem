@@ -375,7 +375,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                                 this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             } else {
-                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
+                                this.model.tryAgain(results);
                             }
                         } else {
                             let results = this.model.addTrialData();
@@ -386,7 +386,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                                 this.model.addCategoriesToCookies();
                                 this.model.logData();
                             } else {
-                                this.model.tryAgain(results.falsePositives, results.falseNegatives);
+                                this.model.tryAgain(results);
                             }
                         }
                     }

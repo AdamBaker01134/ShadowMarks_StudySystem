@@ -18,7 +18,9 @@ View.prototype.draw = function () {
             let video = this.model.videos[i];
             const x = video.x;
             const y = video.y;
+            if (this.model.correctlySelectedVideos.includes(video)) tint(0,255,0);
             image(video.images[this.model.getIndex()], x, y, video.width, video.height);
+            noTint();
             if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.drawShadowMarkers(video.x, video.y, video.width, video.height);
             }
@@ -200,7 +202,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 3:
                 title += "Task 4 - Baseball Registration with";
-                description.push("This task has 2 comparison trials. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
+                description.push("This task has 2 comparison trials. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
                 reminder.push('"close" means within the length of a ball.');
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
@@ -424,7 +426,7 @@ View.prototype.drawInstructions = function () {
                 break;
             case 3:
                 instructions.push(`* Task`);
-                instructions.push(`Select 2 videos where the pitcher's release point (location of the ball in the first frame it is in flight) is close to the release point of the pitcher in the top left-hand corner, by Control-clicking the video.`);
+                instructions.push(`Select 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner, by Control-clicking the video.`);
                 instructions.push(`* Steps`)
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:

@@ -61,6 +61,7 @@ function Model() {
 
     this.highlightedMarker = null;
     this.selectedVideos = [];
+    this.correctlySelectedVideos = [];
     this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.task = 1;
     this.category = [];
@@ -119,6 +120,7 @@ Model.prototype.nextTrial = function () {
     this.trialLoadTime.splice(0,1);
     this.overlay = [];
     this.selectedVideos = [];
+    this.correctlySelectedVideos = [];
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
     this.index = 0;
     this.clearShadowMarks();
@@ -137,9 +139,13 @@ Model.prototype.startTrial = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.tryAgain = function (falsePositives, falseNegatives) {
+Model.prototype.tryAgain = function (results) {
     this.attempt++;
-    alert("Incorrect. Try again.");
+    if (this.task === 3 && results.totalCorrect === 1) {
+        alert("1/2 correct. Correct video will be highlighted in green. Try again.");
+    } else {
+        alert("Incorrect. Try again.");
+    }
     this.notifySubscribers();
 }
 
@@ -337,6 +343,13 @@ Model.prototype.selectVideo = function (video) {
         this.notifySubscribers();
     } else {
         this.selectedVideos.push(video);
+        this.notifySubscribers();
+    }
+}
+
+Model.prototype.setCorrectlySelected = function (video) {
+    if (!this.correctlySelectedVideos.includes(video)) {
+        this.correctlySelectedVideos.push(video);
         this.notifySubscribers();
     }
 }
@@ -973,9 +986,11 @@ Model.prototype.addTrialData = function () {
     let falsePositives = 0;
     let correctVideos = this.getCorrectVideos();
     
+    this.correctlySelectedVideos = [];
     // Parse false positives
     this.selectedVideos.forEach(selectedVideo => {
         if (correctVideos.findIndex(correctVideo => correctVideo.name === selectedVideo.name) === -1) falsePositives++;
+        else this.setCorrectlySelected(selectedVideo);
     });
     // Parse false negatives
     correctVideos.forEach(correctVideo => {
@@ -995,7 +1010,7 @@ Model.prototype.addTrialData = function () {
         videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
         loadTime: this.trialLoadTime[0],
         elapsedTime: elapsedTime,
-        totalCorrect: this.selectedVideos.length - falsePositives,
+        totalCorrect: this.correctlySelectedVideos.length,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
         incompleteTrial: elapsedTime > 120000 && (falseNegatives+falsePositives) > 0,
