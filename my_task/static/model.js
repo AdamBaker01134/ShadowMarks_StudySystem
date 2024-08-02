@@ -1013,7 +1013,7 @@ Model.prototype.addTrialData = function () {
         totalCorrect: this.correctlySelectedVideos.length,
         falseNegatives: falseNegatives,
         falsePositives: falsePositives,
-        incompleteTrial: elapsedTime > 120000 && (falseNegatives+falsePositives) > 0,
+        incompleteTrial: elapsedTime > 180000 && (falseNegatives+falsePositives) > 0,
     };
     this.trialLog.push(results);
     return results;

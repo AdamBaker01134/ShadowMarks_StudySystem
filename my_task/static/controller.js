@@ -371,7 +371,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
                                 this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
-                            } else if (this.model.task === 3 && elapsedTime > 120000) {
+                            } else if (elapsedTime > 180000) {
                                 this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             } else {
@@ -382,7 +382,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
                                 this.model.addCategoriesToCookies();
                                 this.model.logData();
-                            } else if (this.model.task === 3 && elapsedTime > 120000) {
+                            } else if (elapsedTime > 180000) {
                                 this.model.addCategoriesToCookies();
                                 this.model.logData();
                             } else {
