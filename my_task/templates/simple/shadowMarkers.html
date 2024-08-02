@@ -8,7 +8,7 @@
     const interaction = "{{ interaction }}";
     const task = "{{ task }}";
     const condition = "{{ condition }}";
-    const instructionsPath = "{{url_for('my_task.static', filename = 'assets/instructions')}}";
+    const instructionsPath = "{{url_for('my_task.static', filename = 'assets/instructions')}}" + "/task" + task;
 
     const assets = {
         baseball: {

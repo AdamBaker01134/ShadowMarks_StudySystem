@@ -96,7 +96,6 @@ View.prototype.draw = function () {
         this.drawInstructions();
 
         strokeWeight(1);
-        if (this.model.videos.length > 0 && this.model.videos[0].images.length > 1) this.drawScrollbar();
         this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
@@ -114,15 +113,18 @@ View.prototype.draw = function () {
             stroke(0);
             strokeWeight(1);
             fill(0);
-            textSize(24);
+            textSize(16);
             let prompt = this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length ? `You have now completed the Shadow Marks tutorial. Press ENTER to begin tasks.` : this.model.sandboxChecklist[this.model.currentChecklistPrompt];
             let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
             let promptY = this.model.getScrollbarY() - 50;
             fill(255);
             rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
             fill(0);
+            noStroke();
             text(prompt, promptX, promptY);
         }
+        strokeWeight(1);
+        if (this.model.videos.length > 0 && this.model.videos[0].images.length > 1) this.drawScrollbar();
     } else {
         this.drawInstructionPage();
     }
