@@ -5,7 +5,7 @@
   "questions": [
     {
       "questiontype": "slider",
-      "instructions": "How mentally demanding was the task?",
+      "instructions": "How mentally demanding was these tasks?",
       "id": "slider_1",
       "left": "Very Low",
       "right": "Very High",
@@ -14,7 +14,7 @@
     },
     {
       "questiontype": "slider",
-      "instructions": "How physically demanding was the task?",
+      "instructions": "How physically demanding was these tasks?",
       "id": "slider_2",
       "left": "Very Low",
       "right": "Very High",
@@ -23,7 +23,7 @@
     },
     {
       "questiontype": "slider",
-      "instructions": "How hurried or rushed was the pace of the task?",
+      "instructions": "How hurried or rushed was the pace of these tasks?",
       "id": "slider_3",
       "left": "Very Low",
       "right": "Very High",
@@ -50,7 +50,7 @@
     },
     {
       "questiontype": "slider",
-      "instructions": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+      "instructions": "How annoyed, irritated, stressed, or discouraged were you?",
       "id": "slider_6",
       "left": "Very Low",
       "right": "Very High",

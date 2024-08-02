@@ -147,7 +147,7 @@ View.prototype.drawInstructionPage = function () {
                 title += "Shadow Marks Sandbox Tutorial"
                 description.push("You will now run through a short tutorial of the shadow marks technique.");
                 description.push("Follow the instruction prompts at the bottom of the page.");
-                reminder.push("If you get stuck or want to go back to a previous prompt, simply hold Control and press the left/right arrow key to go back/advance.");
+                reminder.push("If you get stuck or want to go back to a previous instruction in the tutorial, hold Control and press the left/right arrow key to go back/advance.");
                 begin = "Click on the circle below to begin the sandbox tutorial."
                 break;
             case 1:
@@ -228,16 +228,16 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 4:
                 title += "Task 4 - Identifying Outliers with";
-                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare, like in the image on the left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot.");
+                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
                 reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
                         title += " Small Multiples";
-                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.");
+                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest. Select the scatterplot that contains this outlier. If you answer incorrectly, you will be asked to try again.");
                         break;
                     case INTERACTIONS.OVERLAYS:
                         title += " Overlays";
-                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.");
+                        steps.push("Identify outliers in the top half of each plot, then compare which outlier is the highest. Select the scatterplot that contains this outlier. If you answer incorrectly, you will be asked to try again.");
                         reminder.push("You may use the Overlay feature if you want to compare multiple scatterplots at once.");
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
@@ -245,7 +245,7 @@ View.prototype.drawInstructionPage = function () {
                         steps.push(`First, select the cursor tool and hover over any outliers you see in the first plot. Then go through each of the other scatterplots and do the following:`);
                         steps.push(`1. Look for any outliers above the cursor line.`);
                         steps.push(`2. If there are, hover over that outlier instead and continue.`);
-                        steps.push(`Once you have gone through all the scatterplots, select the plot that you are hovering over.`);
+                        steps.push(`Once you have gone through all the scatterplots, select the plot that you are hovering over. If you answer incorrectly, you will be asked to try again.`);
                         break;
                 }
                 break;
@@ -374,7 +374,7 @@ View.prototype.drawInstructions = function () {
             case 0:
                 instructions.push(`* Shadow Marks Sandbox Tutorial`);
                 instructions.push(`Follow the instruction prompts at the bottom of the page above the scrollbar.`);
-                instructions.push(`If you get stuck or want to go back to a previous prompt, hold Control and press the left/right arrow key to go back/advance.`);
+                instructions.push(`If you get stuck or want to go back to a previous instruction in the tutorial, hold Control and press the left/right arrow key to go back/advance.`);
                 break;
             case 1:
                 instructions.push(`* Task`);
@@ -452,14 +452,14 @@ View.prototype.drawInstructions = function () {
                 break;
             case 4:
                 instructions.push(`* Task`);
-                instructions.push(`Select the scatterplot with the outlier that is the highest up in the top half of the plot, by Control-clicking the image.`);
+                instructions.push(`Select the scatterplot with the outlier that is the highest in the top half of the plot, by Control-clicking the image.`);
                 instructions.push(`* Steps`)
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
-                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest. Select the scatterplot that contains this outlier.`)
                         break;
                     case INTERACTIONS.OVERLAYS:
-                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest up. Select the scatterplot that contains this outlier.`)
+                        instructions.push(`Identify outliers in the top half of each plot, then compare which outlier is the highest. Select the scatterplot that contains this outlier.`)
                         instructions.push(`You may use the Overlay feature if you want to compare multiple scatterplots at once.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:

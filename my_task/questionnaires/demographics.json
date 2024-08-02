@@ -36,7 +36,7 @@
         },
         {
             "questiontype": "num_field",
-            "instructions": "In an average week, how many hours do you spend playing video games?",
+            "instructions": "In an average week, how many hours do you spend playing computer games?",
             "id": "games_experience_1",
             "required": true,
             "datatype": "integer",
@@ -81,7 +81,7 @@
         },
         {
             "questiontype": "checklist",
-            "instructions": "If any, select the data visualizations that you are familiar with.",
+            "instructions": "Check the box for any data visualizations that you are familiar with.",
             "id": "data_visualizations_1",
             "required": false,
             "questions": [

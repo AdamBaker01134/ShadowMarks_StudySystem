@@ -1,6 +1,6 @@
 {
     "title": "Summary Questionnaire",
-    "instructions": "You have now ran through the task with each technique. Please rate your experiences with all three techniques.",
+    "instructions": "You have now completed the task with all of the techniques. Please rate your experiences with all three techniques.",
     "code": "",
     "questions": [
         {
@@ -17,7 +17,7 @@
         },
         {
             "questiontype": "radiolist",
-            "instructions": "Which technique did you feel helped you to complete the task the fastest?",
+            "instructions": "Which technique allowed you to complete the task the fastest?",
             "id": "speed_1",
             "required": true,
             "labels": [
@@ -30,11 +30,11 @@
             "questiontype": "multi_field",
             "id": "speed_reason_1",
             "required": true,
-            "instructions": "Why did you feel this technique helped you to complete the task the fastest?"
+            "instructions": "Why did this technique allow you to complete the task the fastest?"
         },
         {
             "questiontype": "radiolist",
-            "instructions": "Which technique did you feel helped you to complete the task most accurately?",
+            "instructions": "Which technique allowed you to complete the task most accurately?",
             "id": "accuracy_1",
             "required": true,
             "labels": [
@@ -47,11 +47,11 @@
             "questiontype": "multi_field",
             "id": "accuracy_reason_1",
             "required": true,
-            "instructions": "Why did you feel this technique helped you to complete the task most accurately?"
+            "instructions": "Why did this technique allow you to complete the task most accurately?"
         },
         {
             "questiontype": "radiolist",
-            "instructions": "Which technique did you prefer the most overall while performing the task?",
+            "instructions": "Which technique did you prefer the most overall?",
             "id": "preference_1",
             "required": true,
             "labels": [
