@@ -209,7 +209,7 @@ Controller.prototype.handleMouseReleased = function (event) {
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
                 if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
                 this.model.addStreamData(EVENTS.ADDED_MARK);
-            } else if (this.model.shadowMarkType !== MARKS.CURSOR && ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit())) {
+            } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.checkOverlayHit()) {
                     let ow, oh, ox, oy;
                     ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());

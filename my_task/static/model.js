@@ -615,18 +615,15 @@ Model.prototype.checkShadowMarkerHit = function () {
         let shadowMarker = this.shadowMarks[i];
         let padding = 5;
         switch (shadowMarker.type) {
-            case MARKS.MARKER:
+            case MARKS.MARKER: {
                 let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
                 let sy = hoverTargetY + hoverTargetH * shadowMarker.heightRatio;
                 let maxLength = 16;
-                let markLength = Math.min(hoverTargetW, hoverTargetH) / 20;
-                if (shadowMarker.type === MARKS.MARKER) {
-                    maxLength = 16;
-                    markLength = Math.min(hoverTargetW, hoverTargetH) / 16;
-                }
+                let markLength = Math.min(hoverTargetW, hoverTargetH) / 16;
                 if (markLength > maxLength) markLength = maxLength;
                 if (mouseX > sx - markLength/2 && mouseX < sx + markLength/2 && mouseY > sy - markLength/2 && mouseY < sy + markLength/2) return shadowMarker;
                 break;
+            }
             case MARKS.RECT:
                 if (shadowMarker.path.length === 2) {
                     let p1 = shadowMarker.path[0];
@@ -695,13 +692,20 @@ Model.prototype.checkShadowMarkerHit = function () {
                 break;
             }
             case MARKS.FREEFORM:
-            default:
                 for (let j = 0; j < shadowMarker.path.length; j++) {
                     let point = shadowMarker.path[j];
                     let px = hoverTargetX + hoverTargetW * point.widthRatio;
                     let py = hoverTargetY + hoverTargetH * point.heightRatio;
                     if (mouseX > px - padding && mouseX < px + padding && mouseY > py - padding && mouseY < py + padding) return shadowMarker;
                 }
+                break;
+            case MARKS.CURSOR: {
+                let sx = hoverTargetX + hoverTargetW * shadowMarker.widthRatio;
+                let sy = hoverTargetY + hoverTargetH * shadowMarker.heightRatio;
+                if ((mouseX > sx-padding && mouseX < sx+padding) || (mouseY > sy-padding && mouseY < sy+padding)) return shadowMarker;
+                break;
+            }
+            default:
                 break;
         }
     }
