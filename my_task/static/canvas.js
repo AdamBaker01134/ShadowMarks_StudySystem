@@ -12,6 +12,8 @@ let model, view, controller;
 
 let mouseMovementLoop = 0;
 
+let attentionTimer;
+
 async function preload() {
     model = new Model();
     view = new View(model);
@@ -111,6 +113,27 @@ function keyReleased(event) { return controller.handleKeyReleased(event) }
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
     document.getElementById("defaultCanvas0")?.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("visibilitychange", sendHiddenPage);
+    document.addEventListener("mouseleave", e => { attentionTimer = setTimeout(sendLeftPage, 5000)});
+    document.addEventListener("mouseenter", e => clearTimeout(attentionTimer));
+    document.addEventListener("click", sendFullscreenPage);
+}
+
+function sendHiddenPage() {
+    if (document.hidden) {
+        window.location.href = `/redirect_to_page/oops/1/${model.task}/${model.interaction}`;
+    }
+}
+
+function sendLeftPage() {
+    document.removeEventListener("visibilitychange", sendHiddenPage);
+    window.location.href = `/redirect_to_page/oops/2/${model.task}/${model.interaction}`;
+}
+
+function sendFullscreenPage() {
+    if (!(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+        window.location.href = `/redirect_to_page/oops/3/${model.task}/${model.interaction}`;
+    }
 }
 
 function shuffleArray(arr) {

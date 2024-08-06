@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 from BOFS.util import *
 from BOFS.globals import db
 from BOFS.admin.util import verify_admin
-from BOFS.default.views import route_instructions
+from BOFS.default.views import route_instructions,route_redirect_to_page
 
 # The name of this variable must match the folder's name.
 my_task = Blueprint('my_task', __name__,
@@ -35,6 +35,20 @@ def shadowMarkers(task):
 @verify_session_valid
 def fullscreenVerification(pageNum):
     return route_instructions("fullscreen")
+
+@my_task.route("/oops/<errCode>/<task>/<interaction>", methods=['GET', 'POST'])
+@verify_correct_page
+@verify_session_valid
+def oops(errCode, task, interaction):
+    if request.method == 'POST':
+        return route_redirect_to_page("shadowMarkers/" + task + "/" + interaction)
+    else:
+        if errCode == "1":
+            return route_instructions("hiddenpage")
+        elif errCode == "2":
+            return route_instructions("leftpage")
+        else:
+            return route_instructions("fullscreen")
 
 @my_task.route("/shadowMarkers", methods=['POST', 'GET'])
 @verify_correct_page
