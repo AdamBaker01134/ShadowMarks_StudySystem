@@ -57,9 +57,10 @@ Controller.prototype.handleMouseMoved = function (event) {
             if (hit && this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                 this.model.highlightMarker(this.model.checkShadowMarkerHit());
                 if (this.model.shadowMarkType === MARKS.CURSOR) {
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 6) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.SHADOW_CURSOR_MOVED);
                 }
+                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[7] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
             }
             // if (this.model.gridActive) {
             //     this.model.setGridHighlight(hit);
@@ -128,6 +129,7 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.currentState = STATE.HELP;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && (mark = this.model.checkMarkButtonHit())) {
                 this.model.setType(mark);
+                if (this.model.trial === 0 && this.model.task === 4 && this.model.shadowMarkType === MARKS.CURSOR && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                 this.model.addStreamData(EVENTS.TOGGLED_MARK_BUTTON);
                 return false;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {
@@ -148,6 +150,9 @@ Controller.prototype.handleMousePressed = function (event) {
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
+                    if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[2] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_TO_OVERLAY);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
@@ -176,7 +181,6 @@ Controller.prototype.handleMousePressed = function (event) {
             let colour = null;
             if (colour = this.model.checkColourMenuHit()) {
                 this.model.setColour(colour);
-                if (this.model.task === 0 && this.model.currentChecklistPrompt === 7) this.model.nextPrompt();
             }
             this.model.setColourMenuOpen(false);
             this.model.addStreamData(EVENTS.SELECTED_COLOUR);
@@ -204,10 +208,6 @@ Controller.prototype.handleMouseReleased = function (event) {
             if (this.model.freeforming()) {
                 this.model.addFreeformPathToShadowMarks(this.model.freeformTarget);
                 this.model.setFreeformTarget(null);
-                if (this.model.task === 0 && this.model.currentChecklistPrompt === 2 && this.model.shadowMarkType === MARKS.RECT) this.model.nextPrompt();
-                if (this.model.task === 0 && this.model.currentChecklistPrompt === 3 && this.model.shadowMarkType === MARKS.CIRCLE) this.model.nextPrompt();
-                if (this.model.task === 0 && this.model.currentChecklistPrompt === 4 && this.model.shadowMarkType === MARKS.LINE) this.model.nextPrompt();
-                if (this.model.task === 0 && this.model.currentChecklistPrompt === 5 && this.model.shadowMarkType === MARKS.FREEFORM) this.model.nextPrompt();
                 this.model.addStreamData(EVENTS.ADDED_MARK);
             } else if ((hit = this.model.checkVideoHit()) || this.model.checkOverlayHit()) {
                 if (this.model.checkOverlayHit()) {
@@ -217,7 +217,6 @@ Controller.prototype.handleMouseReleased = function (event) {
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 } else {
                     this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 }
             }
@@ -238,7 +237,6 @@ Controller.prototype.handleKeyPressed = function (event) {
                 let hit = this.model.checkShadowMarkerHit();
                 if (hit) {
                     this.model.deleteShadowMarker(hit);
-                    if (this.model.task === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.DELETED_SHADOW_MARK);
                 }
             }
@@ -318,7 +316,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             // }
             if (keyCode === 37) {
                 // Handle left arrow pressed
-                if (this.model.task === 0 && event.ctrlKey) {
+                if (this.model.trial === 0 && event.ctrlKey) {
                     this.model.lastPrompt();
                     return false;
                 } else if (this.model.getIndex() > 0) {
@@ -329,7 +327,7 @@ Controller.prototype.handleKeyPressed = function (event) {
             }
             if (keyCode === 39) {
                 // Handle right arrow pressed
-                if (this.model.task === 0 && event.ctrlKey) {
+                if (this.model.trial === 0 && event.ctrlKey) {
                     this.model.nextPrompt();
                     return false;
                 } else if (this.model.getIndex() < this.model.getScrollbarSegments() - 1) {
@@ -357,36 +355,65 @@ Controller.prototype.handleKeyPressed = function (event) {
                 //     }
                 //     console.log(resultTxt);
                 // }
-                if (this.model.task === 0 && this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length) {
-                    this.model.addStreamData(EVENTS.SUBMIT);
-                    this.model.logData();
-                } else if (this.model.task === 0) {
-                    alert("Please go through all tutorial prompts before advancing (prompts are at the bottom of the page above the scrollbar).");
-                } else if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
+                if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
                     if (confirm("Confirm selection.")) {
-                        this.model.addStreamData(EVENTS.SUBMIT);
-                        let elapsedTime = new Date().getTime() - this.model.trialStartTime;
-                        if (this.model.trial < 2) {
-                            let results = this.model.addTrialData();
-                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                this.model.addCategoriesToCookies();
-                                this.model.nextTrial();
-                            } else if (elapsedTime > 180000) {
-                                this.model.addCategoriesToCookies();
-                                this.model.nextTrial();
-                            } else {
-                                this.model.tryAgain(results);
+                        if (this.model.trial === 0) {
+                            switch (this.model.task) {
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
+                                    switch (this.model.interaction) {
+                                        case INTERACTIONS.SMALL_MULTIPLES:
+                                            if (index === 4) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                        case INTERACTIONS.OVERLAYS:
+                                            if (index === 2) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                        case INTERACTIONS.SHADOW_MARKER:
+                                            if (index === 7) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                    }
+                                    break;
                             }
                         } else {
-                            let results = this.model.addTrialData();
-                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                this.model.addCategoriesToCookies();
-                                this.model.logData();
-                            } else if (elapsedTime > 180000) {
-                                this.model.addCategoriesToCookies();
-                                this.model.logData();
+                            this.model.addStreamData(EVENTS.SUBMIT);
+                            let elapsedTime = new Date().getTime() - this.model.trialStartTime;
+                            if (this.model.trial < 2) {
+                                let results = this.model.addTrialData();
+                                if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                    this.model.addCategoriesToCookies();
+                                    this.model.nextTrial();
+                                } else if (elapsedTime > 180000) {
+                                    this.model.addCategoriesToCookies();
+                                    this.model.nextTrial();
+                                } else {
+                                    this.model.tryAgain(results);
+                                }
                             } else {
-                                this.model.tryAgain(results);
+                                let results = this.model.addTrialData();
+                                if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                    this.model.addCategoriesToCookies();
+                                    this.model.logData();
+                                } else if (elapsedTime > 180000) {
+                                    this.model.addCategoriesToCookies();
+                                    this.model.logData();
+                                } else {
+                                    this.model.tryAgain(results);
+                                }
                             }
                         }
                     }
@@ -455,7 +482,7 @@ Controller.prototype.handleLoadSandbox = async function () {
 }
 
 Controller.prototype.handleLoadBaseball = async function (undesired="") {
-    console.log("Loading 6 random baseball videos...");
+    console.log("Loading 9 random baseball videos...");
     if (this.model.instructionImage === null) {
         let instructionsName = "placeholder.webp";
         switch(this.model.interaction) {
@@ -539,7 +566,7 @@ Controller.prototype.handleLoadBaseball = async function (undesired="") {
 }
 
 Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1, undesired="") {
-    console.log("Loading 6 random lemnatec videos...");
+    console.log("Loading 9 random lemnatec videos...");
     if (this.model.instructionImage === null) {
         let instructionsName = "placeholder.webp";
         switch(this.model.interaction) {
@@ -650,7 +677,7 @@ Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1,
 }
 
 Controller.prototype.handleLoadSeaIce = async function (selectionCondition=-1, undesired="") {
-    console.log("Loading 6 random sea ice videos...");
+    console.log("Loading 9 random sea ice videos...");
     if (this.model.instructionImage === null) {
         let instructionsName = "placeholder.webp";
         switch(this.model.interaction) {
@@ -746,42 +773,57 @@ Controller.prototype.handleLoadSeaIce = async function (selectionCondition=-1, u
     return { category: category, selectionCondition: selectionCond };
 }
 
-Controller.prototype.handleLoadScatterplots = async function () {
-    console.log("Loading 6 scatterplots...");
-    if (this.model.instructionImage === null) {
-        let instructionsName = "placeholder.webp";
-        switch(this.model.interaction) {
-            case INTERACTIONS.SMALL_MULTIPLES:
-            case INTERACTIONS.OVERLAYS:
-                instructionsName = "smallmultiples_task4_img1.webp";
-                break;
-            case INTERACTIONS.SHADOW_MARKER:
-                instructionsName = "shadowmarkers_task4_img1.webp";
-                break;
-        }
-        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
-    }
+Controller.prototype.handleLoadScatterplots = async function (trialNum) {
+    console.log("Loading 9 random scatterplots...");
     let category = assets.scatterplots.categories[0];
     let videos = [];
-    let found = false;
-    let farthest = 0;
-    while (!found) {
-        videos = [];
-        found = true;
-        farthest = 0;
-        // Retrieve the videos
-        while (videos.length < this.model.videosPerTrial) {
-            let video = getRandomInt(0, category.videos.length);
-            if (!videos.includes(video)) videos.push(video);
+    if (trialNum === 0) {
+        if (this.model.instructionImage === null) {
+            let instructionsName = "placeholder.webp";
+            switch(this.model.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES:
+                case INTERACTIONS.OVERLAYS:
+                    instructionsName = "smallmultiples_task4_img1.webp";
+                    break;
+                case INTERACTIONS.SHADOW_MARKER:
+                    instructionsName = "shadowmarkers_task4_img1.webp";
+                    break;
+            }
+            this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
         }
-        for (let i = 0; i < videos.length; i++) {
-            // Check that there are no similar outliers
-            if (Math.abs(category.videos[videos[i]].outlier - farthest) < 5) found = false;
-            if (category.videos[videos[i]].outlier > farthest) farthest = category.videos[videos[i]].outlier;
+        switch (this.model.interaction) {
+            case INTERACTIONS.SMALL_MULTIPLES:
+                videos = [0,1,2,4,5,6,7,8,9];
+                break;
+            case INTERACTIONS.OVERLAYS:
+                videos = [0,1,5,2,4,6,7,8,9];
+                break;
+            case INTERACTIONS.SHADOW_MARKER:
+                videos = [0,1,2,4,6,7,8,5,9];
+                break;
         }
+        // shuffleArray(videos);
+    } else {
+        let found = false;
+        let farthest = 0;
+        while (!found) {
+            videos = [];
+            found = true;
+            farthest = 0;
+            // Retrieve the videos
+            while (videos.length < this.model.videosPerTrial) {
+                let video = getRandomInt(0, category.videos.length);
+                if (!videos.includes(video)) videos.push(video);
+            }
+            for (let i = 0; i < videos.length; i++) {
+                // Check that there are no similar outliers
+                if (Math.abs(category.videos[videos[i]].outlier - farthest) < 5) found = false;
+                if (category.videos[videos[i]].outlier > farthest) farthest = category.videos[videos[i]].outlier;
+            }
+        }
+        // Ensure scatterplot is not in the top left corner
+        while (videos.findIndex(video => category.videos[video].outlier === farthest) === 0) shuffleArray(videos);
     }
-    // Ensure scatterplot is not in the top left corner
-    while (videos.findIndex(video => category.videos[video].outlier === farthest) === 0) shuffleArray(videos);
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];

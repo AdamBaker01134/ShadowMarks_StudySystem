@@ -65,23 +65,12 @@ function Model() {
     this.interaction = INTERACTIONS.SHADOW_MARKER;
     this.task = 1;
     this.category = [];
-    this.trial = 1;
+    this.trial = 0;
     this.trialLoadTime = [];
     this.attempt = 1;
     this.trialLog = [];
     this.streamLog = [];
     this.trialStartTime = 0;
-
-    this.sandboxChecklist = [
-        "The Marker tool has been selected from the toolbar at right. Now, place the Marker by clicking on one of the videos.",
-        "Delete the Marker by hovering over it and pressing the d key.",
-        "Select the Rectangle tool and draw a rectangle around the area of a sunflower.",
-        "Select the Circle tool and draw a circle around the area of a different sunflower. (Note: the circle tool starts at the center of the circle)",
-        "Select the Line tool and draw a line from the left side to the right side of a different sunflower.",
-        "Select the Freeform tool and draw around the perimeter of a different sunflower.",
-        "Select the Cursor tool and move the cursor around within any of the videos.",
-        "Select a new colour for your marks from the colour palette.",
-    ];
     this.currentChecklistPrompt = 0;
 
     this.overlay = [];
@@ -89,9 +78,38 @@ function Model() {
     this.instructionImage = null;
 }
 
+Model.prototype.getTutorialChecklist = function () {
+    switch (this.task) {
+        case 1:
+            switch (this.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES: return smallMultiples1;
+                case INTERACTIONS.OVERLAYS: return overlays1; 
+                case INTERACTIONS.SHADOW_MARKER: return shadowMarkers1;
+            }
+        case 2:
+            switch (this.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES: return smallMultiples2;
+                case INTERACTIONS.OVERLAYS: return overlays2;
+                case INTERACTIONS.SHADOW_MARKER: return shadowMarkers2;
+            }
+        case 3:
+            switch (this.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES: return smallMultiples3;
+                case INTERACTIONS.OVERLAYS: return overlays3;
+                case INTERACTIONS.SHADOW_MARKER: return shadowMarkers3;
+            }
+        case 4:
+            switch (this.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES: return smallMultiples4;
+                case INTERACTIONS.OVERLAYS: return overlays4;
+                case INTERACTIONS.SHADOW_MARKER: return shadowMarkers4;
+            }
+    }
+}
+
 Model.prototype.nextPrompt = function () {
     this.currentChecklistPrompt++;
-    if (this.currentChecklistPrompt > this.sandboxChecklist.length) this.currentChecklistPrompt = this.sandboxChecklist.length;
+    if (this.currentChecklistPrompt >= this.getTutorialChecklist().length) this.currentChecklistPrompt = this.getTutorialChecklist().length-1;
     this.notifySubscribers();
 }
 
@@ -194,7 +212,7 @@ Model.prototype.setInstructionImage = function (image) {
 }
 
 Model.prototype.getWorkspaceWidth = function () {
-    return (this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY) + 300;
+    return (this.trial > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY) + 300;
 }
 
 Model.prototype.addVideo = function (video, labels, name) {
@@ -225,7 +243,7 @@ Model.prototype.addVideo = function (video, labels, name) {
 Model.prototype.updateVideoDimensions = function () {
     this.verifyVideoDimensions();
     if (this.videos.length > 0) {
-        const maxHeight = this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY;
+        const maxHeight = this.trial > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY;
         const maxWidth = maxHeight;
         let vHeight = maxHeight/3;
         let vWidth = vHeight * this.videos[0].aspectRatio;
@@ -268,7 +286,7 @@ Model.prototype.updateVideoLocations = function () {
         video.setX(x);
         video.setY(y);
         x += video.width;
-        const maxWidth = Math.min(video.width * 3, this.task > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY);
+        const maxWidth = Math.min(video.width * 3, this.trial > 0 ? this.getScrollbarY() - 30 - scrollY : this.getScrollbarY() - 100 - scrollY);
         if (x + video.width > maxWidth) {
             x = 0;
             y += video.height;

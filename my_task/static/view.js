@@ -109,13 +109,13 @@ View.prototype.draw = function () {
             if (this.model.colourMenuOpen) this.drawColourMenu();
         }
 
-        if (this.model.task === 0) {
+        if (this.model.trial === 0) {
             stroke(0);
             strokeWeight(1);
             fill(0);
             textSize(16);
-            let prompt = this.model.currentChecklistPrompt >= this.model.sandboxChecklist.length ? `You have now completed the Shadow Marks tutorial. Press ENTER to begin tasks.` : this.model.sandboxChecklist[this.model.currentChecklistPrompt];
-            let promptX = this.model.getScrollbarX() + this.model.getScrollbarWidth() / 2 - textWidth(prompt) / 2;
+            let prompt = this.model.getTutorialChecklist()[this.model.currentChecklistPrompt];
+            let promptX = this.model.getScrollbarX() - 55;
             let promptY = this.model.getScrollbarY() - 50;
             fill(255);
             rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
@@ -141,15 +141,8 @@ View.prototype.drawInstructionPage = function () {
     let x = width/2;
     let w = width/3;
     let y = 50;
-    if (this.model.trial === 1) {
+    if (this.model.trial === 0) {
         switch (this.model.task) {
-            case 0:
-                title += "Shadow Marks Sandbox Tutorial"
-                description.push("You will now run through a short tutorial of the shadow marks technique.");
-                description.push("Follow the instruction prompts at the bottom of the page.");
-                reminder.push("If you get stuck or want to go back to a previous instruction in the tutorial, hold Control and press the left/right arrow key to go back/advance.");
-                begin = "Click on the circle below to begin the sandbox tutorial."
-                break;
             case 1:
                 title += "Tallest Plant with";
                 description.push("This task has 2 comparison trials. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
@@ -228,7 +221,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 4:
                 title += "Identifying Outliers with";
-                description.push("This task has 2 comparison trials. For each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
                 reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -249,7 +242,6 @@ View.prototype.drawInstructionPage = function () {
                         break;
                 }
                 break;
-            case 0:
             default:
                 break;
         }
@@ -265,7 +257,7 @@ View.prototype.drawInstructionPage = function () {
         x = width/3;
 
         // Draw image
-        if (this.model.instructionImage !== null) {
+        if (this.model.trial === 0 && this.model.instructionImage !== null) {
             let aspectRatio = this.model.instructionImage.width / this.model.instructionImage.height;
             image(this.model.instructionImage, 10, 10, (x-50), (x-50)/aspectRatio);
         }
@@ -371,11 +363,6 @@ View.prototype.drawInstructions = function () {
 
         let instructions = [];
         switch (this.model.task) {
-            case 0:
-                instructions.push(`* Shadow Marks Sandbox Tutorial`);
-                instructions.push(`Follow the instruction prompts at the bottom of the page above the scrollbar.`);
-                instructions.push(`If you get stuck or want to go back to a previous instruction in the tutorial, hold Control and press the left/right arrow key to go back/advance.`);
-                break;
             case 1:
                 instructions.push(`* Task`);
                 instructions.push(`Select the sunflower plant that grows the tallest (at its highest extent), by Control-clicking the video.`);
@@ -473,6 +460,7 @@ View.prototype.drawInstructions = function () {
                 }
                 break;
         }
+        if (this.model.trial === 0) instructions.push(`Help prompts are displayed at the bottom left corner for this first trial. Follow them if you wish.`);
 
         let txt = "";
         let size = 16;
@@ -543,7 +531,7 @@ View.prototype.drawInstructions = function () {
         //     rect(iX+w/2-iW/2,iY,iW,iH,10);
         // }
 
-        if (this.model.task > 0 && this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
+        if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
             let submitPrompt = "Press ENTER to submit.";
             y += (size+5);
             fill(0)
@@ -960,7 +948,7 @@ View.prototype.drawHelpMenu = function () {
         generalPoints.push("- Click on a video to add it to the overlay on the right.");
         generalPoints.push("- Click on the video again to remove it from the overlay.");
     }
-    if (this.model.task === 0) {
+    if (this.model.trial === 0) {
         taskPoints.push("- Follow the instructions displayed above the scrollbar.");
     } else {
         taskPoints.push("- Follow the instructions displayed on the right.")

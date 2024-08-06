@@ -29,64 +29,54 @@ function setup() {
     let startTime = new Date().getTime();
 
     switch (model.task) {
-        case 0:
-            controller.handleLoadSandbox().then(category => {
-                model.setCategory(category);
-                model.updateVideoDimensions();
-                model.updateVideoLocations();
-            });
-            break;
         case 1:
             controller.handleLoadLemnatec().then(results1 => { 
                 model.setCategory(results1.category);
-                model.updateVideoDimensions();
-                model.updateVideoLocations();
-                let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
+                startTime = new Date().getTime();
                 controller.handleLoadLemnatec(results1.selectionCondition).then(results2 => {
                     model.setCategory(results2.category);
-                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                    model.setTrialLoadTime(new Date().getTime()-startTime);
                 });
             });
             break;
         case 2:
             controller.handleLoadSeaIce().then(results1 => { 
                 model.setCategory(results1.category);
-                model.updateVideoDimensions();
-                model.updateVideoLocations();
-                let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
+                startTime = new Date().getTime();
                 controller.handleLoadSeaIce(results1.selectionCondition).then(results2 => {
                     model.setCategory(results2.category);
-                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                    model.setTrialLoadTime(new Date().getTime()-startTime);
                 });
             });
             break;
         case 3:
             controller.handleLoadBaseball().then(category => { 
                 model.setCategory(category);
-                model.updateVideoDimensions();
-                model.updateVideoLocations();
-                let nowTime = new Date().getTime();
                 model.setTrialLoadTime(nowTime-startTime);
+                startTime = new Date().getTime();
                 controller.handleLoadBaseball(model.category[0].name).then(category => {
                     model.setCategory(category);
-                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                    model.setTrialLoadTime(new Date().getTime()-startTime);
                 });
             });
             break;
         case 4:
-            controller.handleLoadScatterplots().then(category => {
+            controller.handleLoadScatterplots(0).then(category => {
                 model.setCategory(category);
-                model.updateVideoDimensions();
-                model.updateVideoLocations();
-                let nowTime = new Date().getTime();
-                model.setTrialLoadTime(nowTime-startTime);
-                controller.handleLoadScatterplots().then(category => {
+                model.setTrialLoadTime(new Date().getTime()-startTime);
+                startTime = new Date().getTime();
+                controller.handleLoadScatterplots(1).then(category => {
                     model.setCategory(category);
-                    model.setTrialLoadTime(new Date().getTime()-nowTime);
+                    model.setTrialLoadTime(new Date().getTime()-startTime);
+                    startTime = new Date().getTime();
+                    controller.handleLoadScatterplots(2).then(category => {
+                        model.setCategory(category);
+                        model.setTrialLoadTime(new Date().getTime()-startTime);
+                    });
                 });
-            });
+            })
             break;
     }
 
