@@ -197,7 +197,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 3:
                 title += "Baseball Registration with";
-                description.push("This task has 2 comparison trials. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
                 reminder.push('"close" means within the length of a ball.');
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {

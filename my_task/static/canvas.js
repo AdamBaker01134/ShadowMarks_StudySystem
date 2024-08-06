@@ -52,13 +52,21 @@ function setup() {
             });
             break;
         case 3:
-            controller.handleLoadBaseball().then(category => { 
+            let loadedCategories = ["oakland_coliseum"];
+            controller.handleLoadBaseball(0).then(category => {
                 model.setCategory(category);
-                model.setTrialLoadTime(nowTime-startTime);
+                loadedCategories.push(category);
+                model.setTrialLoadTime(new Date().getTime()-startTime);
                 startTime = new Date().getTime();
-                controller.handleLoadBaseball(model.category[0].name).then(category => {
+                controller.handleLoadBaseball(1,loadedCategories).then(category => {
                     model.setCategory(category);
+                    loadedCategories.push(category);
                     model.setTrialLoadTime(new Date().getTime()-startTime);
+                    startTime = new Date().getTime();
+                    controller.handleLoadBaseball(2,loadedCategories).then(category => {
+                        model.setCategory(category);
+                        model.setTrialLoadTime(new Date().getTime()-startTime);
+                    });
                 });
             });
             break;
@@ -76,7 +84,7 @@ function setup() {
                         model.setTrialLoadTime(new Date().getTime()-startTime);
                     });
                 });
-            })
+            });
             break;
     }
 

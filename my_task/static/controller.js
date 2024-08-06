@@ -146,11 +146,16 @@ Controller.prototype.handleMousePressed = function (event) {
                         return true;
                     }
                     this.model.selectVideo(hit);
+                    if (this.model.trial === 0 && this.model.task === 3 && this.model.selectedVideos.length === 1 && this.model.selectedVideos[0] === this.model.videos[1] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.SELECTED_VIDEO);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
-                    if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                     else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[2] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_TO_OVERLAY);
@@ -217,6 +222,7 @@ Controller.prototype.handleMouseReleased = function (event) {
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 } else {
                     this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
+                    if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 }
             }
@@ -354,6 +360,15 @@ Controller.prototype.handleKeyPressed = function (event) {
                 //         resultTxt += `{ name: "${video.name}", extension: ${(mark.widthRatio).toFixed(4)} }, `;
                 //     }
                 //     console.log(resultTxt);
+                //     // Easy location marking
+                //         // For location marking
+                //         let resultTxt = "";
+                //         for (let i = 0; i < this.model.shadowMarks.length; i++) {
+                //             let video = this.model.videos[i];
+                //             let mark = this.model.shadowMarks[i];
+                //             resultTxt += `{ name: "${video.name}", release: [${(mark.widthRatio).toFixed(4)},${(1-mark.heightRatio).toFixed(4)}], }, `;
+                //         }
+                //         console.log(resultTxt);
                 // }
                 if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
                     if (confirm("Confirm selection.")) {
@@ -362,6 +377,31 @@ Controller.prototype.handleKeyPressed = function (event) {
                                 case 1:
                                 case 2:
                                 case 3:
+                                    let indices = [this.model.videos.findIndex(video => video === this.model.selectedVideos[0]), this.model.videos.findIndex(video => video === this.model.selectedVideos[1])]
+                                    switch (this.model.interaction) {
+                                        case INTERACTIONS.SMALL_MULTIPLES:
+                                            if (indices.includes(6) && indices.includes(8)) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                        case INTERACTIONS.OVERLAYS:
+                                            if (indices.includes(1) && indices.includes(4)) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                        case INTERACTIONS.SHADOW_MARKER:
+                                            if (indices.includes(2) && indices.includes(6)) {
+                                                this.model.nextTrial();
+                                            } else {
+                                                this.model.tryAgain({});
+                                            }
+                                            break;
+                                    }
+                                    break;
                                 case 4:
                                     let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
                                     switch (this.model.interaction) {
@@ -481,67 +521,91 @@ Controller.prototype.handleLoadSandbox = async function () {
     return category;
 }
 
-Controller.prototype.handleLoadBaseball = async function (undesired="") {
+Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]) {
     console.log("Loading 9 random baseball videos...");
-    if (this.model.instructionImage === null) {
-        let instructionsName = "placeholder.webp";
-        switch(this.model.interaction) {
+    let videos = [];
+    let category;
+    if (trialNum === 0) {
+        if (this.model.instructionImage === null) {
+            let instructionsName = "placeholder.webp";
+            switch(this.model.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES:
+                    instructionsName = "smallmultiples_task3_img1.webp";
+                    break;
+                case INTERACTIONS.OVERLAYS:
+                    instructionsName = "overlays_task3_img1.webp";
+                    break;
+                case INTERACTIONS.SHADOW_MARKER:
+                    instructionsName = "shadowmarkers_task3_img1.webp";
+                    break;
+            }
+            this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+        }
+        category = assets.baseball.categories[6];
+        while (videos.length < this.model.videosPerTrial) {
+            let video = getRandomInt(0, category.videos.length);
+            if (![0,1,7,...videos].includes(video)) videos.push(video);
+        }
+        videos[0] = 7;
+        switch (this.model.interaction) {
             case INTERACTIONS.SMALL_MULTIPLES:
-                instructionsName = "smallmultiples_task3_img1.webp";
+                videos[6] = 0;
+                videos[8] = 1;
                 break;
             case INTERACTIONS.OVERLAYS:
-                instructionsName = "overlays_task3_img1.webp";
+                videos[4] = 0;
+                videos[1] = 1;
                 break;
             case INTERACTIONS.SHADOW_MARKER:
-                instructionsName = "shadowmarkers_task3_img1.webp";
+                videos[2] = 0;
+                videos[6] = 1;
                 break;
         }
-        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
-    }
-    let previousCategories = this.model.getCookieCategories();
-    if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
-    let category;
-    while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < this.model.videosPerTrial) || category.name === undesired);
-    let releases = category.videos.map(video => video.release);
-    let registered = [];
-    for (let i = 0; i < releases.length; i++) {
-        let totalRegistered = [];
-        for (let j = 0; j < releases.length; j++) {
-            if (i !== j) {
-                let x1 = releases[i][0];
-                let y1 = releases[i][1];
-                let x2 = releases[j][0];
-                let y2 = releases[j][1];
-                if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) totalRegistered.push(category.videos[j]);
+    } else {
+        let previousCategories = this.model.getCookieCategories();
+        if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
+        while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < this.model.videosPerTrial) || undesired.includes(category.name));
+        let releases = category.videos.map(video => video.release);
+        let registered = [];
+        for (let i = 0; i < releases.length; i++) {
+            let totalRegistered = [];
+            for (let j = 0; j < releases.length; j++) {
+                if (i !== j) {
+                    let x1 = releases[i][0];
+                    let y1 = releases[i][1];
+                    let x2 = releases[j][0];
+                    let y2 = releases[j][1];
+                    if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) totalRegistered.push(category.videos[j]);
+                }
             }
+            registered.push(totalRegistered);
         }
-        registered.push(totalRegistered);
+    
+        let firstRow = [];
+        let otherRows = [];
+        while (firstRow.length < 1) {
+            // Retrieve reference video
+            let video = getRandomInt(0, registered.length);
+            if (registered[video].length >= 2) firstRow.push(video);
+        }
+        while (firstRow.length < 3) {
+            // Retrieve 2 unregistered videos for first row
+            let video = getRandomInt(0, category.videos.length);
+            if (!firstRow.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) firstRow.push(video);
+        }
+        while (otherRows.length < 2) {
+            // Retreive 2 registered videos for other rows
+            let video = getRandomInt(0, category.videos.length);
+            if (!firstRow.includes(video) && !otherRows.includes(video) && registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
+        }
+        while (otherRows.length < 6) {
+            // Retrieve 4 unregistered videos for other rows
+            let video = getRandomInt(0, category.videos.length);
+            if (!firstRow.includes(video) && !otherRows.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
+        }
+        shuffleArray(otherRows);
+        videos = [...firstRow, ...otherRows];
     }
-
-    let firstRow = [];
-    let otherRows = [];
-    while (firstRow.length < 1) {
-        // Retrieve reference video
-        let video = getRandomInt(0, registered.length);
-        if (registered[video].length >= 2) firstRow.push(video);
-    }
-    while (firstRow.length < 3) {
-        // Retrieve 2 unregistered videos for first row
-        let video = getRandomInt(0, category.videos.length);
-        if (!firstRow.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) firstRow.push(video);
-    }
-    while (otherRows.length < 2) {
-        // Retreive 2 registered videos for other rows
-        let video = getRandomInt(0, category.videos.length);
-        if (!firstRow.includes(video) && !otherRows.includes(video) && registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
-    }
-    while (otherRows.length < 6) {
-        // Retrieve 4 unregistered videos for other rows
-        let video = getRandomInt(0, category.videos.length);
-        if (!firstRow.includes(video) && !otherRows.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
-    }
-    shuffleArray(otherRows);
-    let videos = [...firstRow, ...otherRows];
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
