@@ -7,6 +7,10 @@
     "streamLog": {
       "type": "string",
       "default": ""
+    },
+    "errorLog": {
+      "type": "string",
+      "default": ""
     }
   }
 }

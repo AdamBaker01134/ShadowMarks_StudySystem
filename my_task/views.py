@@ -43,6 +43,15 @@ def oops(errCode, task, interaction):
     if request.method == 'POST':
         return route_redirect_to_page("shadowMarkers/" + task + "/" + interaction)
     else:
+        log = db.comparisonStudy()  # This database table was defined in /tables/comparisonStudy.json
+        # writing columns from our javascript to the log
+        pID = session["participantID"]
+        log.participantID = pID
+        log.errorLog = "pID,errCode|" + str(pID) + "," + str(errCode) + "|"
+
+        # adding the participant log to the database
+        db.session.add(log)
+        db.session.commit()
         if errCode == "1":
             return route_instructions("hiddenpage")
         elif errCode == "2":
