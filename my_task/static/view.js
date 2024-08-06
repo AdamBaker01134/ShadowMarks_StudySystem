@@ -100,10 +100,10 @@ View.prototype.draw = function () {
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
             this.drawMarkerButton();
-            this.drawRectButton();
-            this.drawCircleButton();
-            this.drawLineButton();
-            this.drawFreeformButton();
+            // this.drawRectButton();
+            // this.drawCircleButton();
+            // this.drawLineButton();
+            // this.drawFreeformButton();
             this.drawCursorButton();
             this.drawColourButton();
             if (this.model.colourMenuOpen) this.drawColourMenu();
@@ -792,79 +792,80 @@ View.prototype.drawMarkerButton = function () {
     line(centerX + centerLength / 2, centerY, centerX - centerLength / 2, centerY);
 }
 
-View.prototype.drawRectButton = function () {
-    const highlighted = this.model.shadowMarkType === MARKS.RECT || this.model.rectButtonHighlighted;
-    stroke(0, 0, 0, highlighted ? 255 : 100);
-    fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getMarkButtonX();
-    const y = this.model.getScrollbarY() - 120;
-    const length = 50;
-    const centerX = x + length / 2;
-    const centerY = y + length / 2;
-    const centerLength = 30;
-    square(x, y, length, 10);
-    noFill();
-    stroke(255);
-    square(centerX - centerLength / 2, centerY - centerLength / 2, centerLength);
-}
+// View.prototype.drawRectButton = function () {
+//     const highlighted = this.model.shadowMarkType === MARKS.RECT || this.model.rectButtonHighlighted;
+//     stroke(0, 0, 0, highlighted ? 255 : 100);
+//     fill(101, 101, 101, highlighted ? 255 : 100);
+//     const x = this.model.getMarkButtonX();
+//     const y = this.model.getScrollbarY() - 120;
+//     const length = 50;
+//     const centerX = x + length / 2;
+//     const centerY = y + length / 2;
+//     const centerLength = 30;
+//     square(x, y, length, 10);
+//     noFill();
+//     stroke(255);
+//     square(centerX - centerLength / 2, centerY - centerLength / 2, centerLength);
+// }
 
-View.prototype.drawCircleButton = function () {
-    const highlighted = this.model.shadowMarkType === MARKS.CIRCLE || this.model.circleButtonHighlighted;
-    stroke(0, 0, 0, highlighted ? 255 : 100);
-    fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getMarkButtonX();
-    const y = this.model.getScrollbarY() - 180;
-    const length = 50;
-    const centerX = x + length / 2;
-    const centerY = y + length / 2;
-    const centerLength = 30;
-    square(x, y, length, 10);
-    noFill();
-    stroke(255);
-    circle(centerX, centerY, centerLength);
-}
+// View.prototype.drawCircleButton = function () {
+//     const highlighted = this.model.shadowMarkType === MARKS.CIRCLE || this.model.circleButtonHighlighted;
+//     stroke(0, 0, 0, highlighted ? 255 : 100);
+//     fill(101, 101, 101, highlighted ? 255 : 100);
+//     const x = this.model.getMarkButtonX();
+//     const y = this.model.getScrollbarY() - 180;
+//     const length = 50;
+//     const centerX = x + length / 2;
+//     const centerY = y + length / 2;
+//     const centerLength = 30;
+//     square(x, y, length, 10);
+//     noFill();
+//     stroke(255);
+//     circle(centerX, centerY, centerLength);
+// }
 
-View.prototype.drawLineButton = function () {
-    let highlighted = this.model.shadowMarkType === MARKS.LINE || this.model.lineButtonHighlighted;
-    stroke(0, 0, 0, highlighted ? 255 : 100);
-    fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getMarkButtonX();
-    const y = this.model.getScrollbarY() - 240;
-    const length = 50;
-    const centerLength = 30;
-    square(x, y, length, 10);
-    noFill();
-    stroke(255);
-    line(x+10, y+10, x+10+centerLength, y+10+centerLength);
-}
+// View.prototype.drawLineButton = function () {
+//     let highlighted = this.model.shadowMarkType === MARKS.LINE || this.model.lineButtonHighlighted;
+//     stroke(0, 0, 0, highlighted ? 255 : 100);
+//     fill(101, 101, 101, highlighted ? 255 : 100);
+//     const x = this.model.getMarkButtonX();
+//     const y = this.model.getScrollbarY() - 240;
+//     const length = 50;
+//     const centerLength = 30;
+//     square(x, y, length, 10);
+//     noFill();
+//     stroke(255);
+//     line(x+10, y+10, x+10+centerLength, y+10+centerLength);
+// }
 
-View.prototype.drawFreeformButton = function () {
-    const highlighted = this.model.shadowMarkType === MARKS.FREEFORM || this.model.freeformButtonHighlighted;
-    stroke(0, 0, 0, highlighted ? 255 : 100);
-    fill(101, 101, 101, highlighted ? 255 : 100);
-    const x = this.model.getMarkButtonX();
-    const y = this.model.getScrollbarY() - 300;
-    const length = 50;
-    const centerLength = 30;
-    square(x, y, length, 10);
-    noFill();
-    stroke(255);
-    beginShape();
-    curveVertex(x + 10, y + 10);
-    curveVertex(x + 15, y + 15);
-    curveVertex(x + 10 + centerLength / 2 + 5, y + 10 + centerLength / 2 - 5);
-    curveVertex(x + 10 + centerLength / 2 - 5, y + 10 + centerLength / 2 + 5);
-    curveVertex(x + 10 + centerLength - 5, y + 10 + centerLength - 5);
-    curveVertex(x + 10 + centerLength, y + 10 + centerLength);
-    endShape();
-}
+// View.prototype.drawFreeformButton = function () {
+//     const highlighted = this.model.shadowMarkType === MARKS.FREEFORM || this.model.freeformButtonHighlighted;
+//     stroke(0, 0, 0, highlighted ? 255 : 100);
+//     fill(101, 101, 101, highlighted ? 255 : 100);
+//     const x = this.model.getMarkButtonX();
+//     const y = this.model.getScrollbarY() - 300;
+//     const length = 50;
+//     const centerLength = 30;
+//     square(x, y, length, 10);
+//     noFill();
+//     stroke(255);
+//     beginShape();
+//     curveVertex(x + 10, y + 10);
+//     curveVertex(x + 15, y + 15);
+//     curveVertex(x + 10 + centerLength / 2 + 5, y + 10 + centerLength / 2 - 5);
+//     curveVertex(x + 10 + centerLength / 2 - 5, y + 10 + centerLength / 2 + 5);
+//     curveVertex(x + 10 + centerLength - 5, y + 10 + centerLength - 5);
+//     curveVertex(x + 10 + centerLength, y + 10 + centerLength);
+//     endShape();
+// }
 
 View.prototype.drawCursorButton = function () {
     const highlighted = this.model.shadowMarkType === MARKS.CURSOR || this.model.cursorButtonHighlighted;
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
     const x = this.model.getMarkButtonX();
-    const y = this.model.getScrollbarY() - 360;
+    // const y = this.model.getScrollbarY() - 360;
+    const y = this.model.getScrollbarY() - 120;
     const length = 50;
     const centerLength = 30;
     square(x, y, length, 10);
