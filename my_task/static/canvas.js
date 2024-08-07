@@ -21,6 +21,8 @@ async function preload() {
 
     model.setInteraction(interaction);
     model.setTask(parseInt(task));
+
+    if (model.task !== 3) model.setType(MARKS.CURSOR);
 }
 
 function setup() {

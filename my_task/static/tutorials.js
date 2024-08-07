@@ -32,8 +32,7 @@ const overlays4 = [
     "Do this for all the other videos. Once you've gone through them all, you should have the third video in the overlay. Select it by control-clicking and submit by pressing enter."
 ];
 const shadowMarkers4 = [
-    "Select the cursor button (top button) on the bottom right.",
-    "In the top left scatterplot, hover over the highest outlier you can see.",
+    "The cursor tool has already been selected. In the top left scatterplot, hover over the highest outlier you can see.",
     "Look at all the other videos. You should notice that the 8th video (bottom middle) has an outlier higher than the line. Hover over it now.",
     "Now, now of the videos have outliers over the line, so you can select the 8th video by control-clicking it and pressing enter."
 ];

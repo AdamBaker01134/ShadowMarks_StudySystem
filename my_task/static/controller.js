@@ -59,8 +59,8 @@ Controller.prototype.handleMouseMoved = function (event) {
                 if (this.model.shadowMarkType === MARKS.CURSOR) {
                     this.model.addStreamData(EVENTS.SHADOW_CURSOR_MOVED);
                 }
-                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[7] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[7] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
             }
             // if (this.model.gridActive) {
             //     this.model.setGridHighlight(hit);
@@ -129,7 +129,6 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.currentState = STATE.HELP;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && (mark = this.model.checkMarkButtonHit())) {
                 this.model.setType(mark);
-                if (this.model.trial === 0 && this.model.task === 4 && this.model.shadowMarkType === MARKS.CURSOR && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                 this.model.addStreamData(EVENTS.TOGGLED_MARK_BUTTON);
                 return false;
             } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER && this.model.checkColourButtonHit()) {

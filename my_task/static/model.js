@@ -735,7 +735,7 @@ Model.prototype.checkMarkButtonHit = function () {
     let y = this.getScrollbarY() - 60;
     let length = 50;
     const mx = mouseX, my = mouseY;
-    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.MARKER;
+    if (this.task === 3 && mx > x && mx < x + length && my > y && my < y + length) return MARKS.MARKER;
     // y -= 60;
     // if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.RECT;
     // y -= 60;
@@ -744,8 +744,8 @@ Model.prototype.checkMarkButtonHit = function () {
     // if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.LINE;
     // y -= 60;
     // if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.FREEFORM;
-    y -= 60;
-    if (mx > x && mx < x + length && my > y && my < y + length) return MARKS.CURSOR;
+    // y -= 60;
+    if (this.task !== 3 && mx > x && mx < x + length && my > y && my < y + length) return MARKS.CURSOR;
     return null;
 }
 
@@ -874,6 +874,9 @@ Model.prototype.removeCategoryCookies = function (total) {
 }
 
 Model.prototype.logData = function () {
+    // Ensure that the visibility change does not fire.
+    document.removeEventListener("visibilitychange", sendHiddenPage);
+
     let submitForm = document.createElement("form");
     submitForm.setAttribute("action", "#");
     submitForm.setAttribute("method", "post");

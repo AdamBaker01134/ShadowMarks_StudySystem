@@ -5,7 +5,7 @@
   "questions": [
     {
       "questiontype": "slider",
-      "instructions": "How mentally demanding was these tasks?",
+      "instructions": "How mentally demanding were these tasks?",
       "id": "slider_1",
       "left": "Very Low",
       "right": "Very High",
@@ -14,7 +14,7 @@
     },
     {
       "questiontype": "slider",
-      "instructions": "How physically demanding was these tasks?",
+      "instructions": "How physically demanding were these tasks?",
       "id": "slider_2",
       "left": "Very Low",
       "right": "Very High",

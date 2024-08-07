@@ -99,12 +99,12 @@ View.prototype.draw = function () {
         this.drawHelpButton();
         if (this.model.helpMenuOpen) this.drawHelpMenu();
         if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
-            this.drawMarkerButton();
             // this.drawRectButton();
             // this.drawCircleButton();
             // this.drawLineButton();
             // this.drawFreeformButton();
-            this.drawCursorButton();
+            if (this.model.task === 3) this.drawMarkerButton();
+            else this.drawCursorButton();
             this.drawColourButton();
             if (this.model.colourMenuOpen) this.drawColourMenu();
         }
@@ -852,8 +852,9 @@ View.prototype.drawCursorButton = function () {
     stroke(0, 0, 0, highlighted ? 255 : 100);
     fill(101, 101, 101, highlighted ? 255 : 100);
     const x = this.model.getMarkButtonX();
-    // const y = this.model.getScrollbarY() - 360;
-    const y = this.model.getScrollbarY() - 120;
+    // const y = this.model.getScrollbarY() - 360; // when all the buttons are drawn
+    // const y = this.model.getScrollbarY() - 120; // when just marker/cursor buttons are drawn
+    const y = this.model.getScrollbarY() - 60; // when just the cursor button is drawn
     const length = 50;
     const centerLength = 30;
     square(x, y, length, 10);
