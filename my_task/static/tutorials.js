@@ -1,10 +1,16 @@
+//////// TASK 1 ////////
+
 const smallMultiples1 = [];
 const overlays1 = [];
 const shadowMarkers1 = [];
 
+//////// TASK 2 ////////
+
 const smallMultiples2 = [];
 const overlays2 = [];
 const shadowMarkers2 = [];
+
+//////// TASK 3 ////////
 
 const smallMultiples3 = [
     "Select the 2 videos that have the closest release points to the top left video by control-clicking and pressing enter. These should be the 7th and 9th videos."
@@ -21,6 +27,8 @@ const shadowMarkers3 = [
     "The marker tool has already been selected. Play through the first video and add a mark at the location of the ball upon release.",
     "Play through all the other videos. Select the 2 whose release points are closest to your mark by control-clicking and pressing enter. These should be the 3rd and 7th video."
 ];
+
+//////// TASK 4 ////////
 
 const smallMultiples4 = [
     "Look through each scatterplot and select the one that you think contains the highest outlier. This should be the fifth one (middle).",
