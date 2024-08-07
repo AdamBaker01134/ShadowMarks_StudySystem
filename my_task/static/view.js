@@ -462,6 +462,14 @@ View.prototype.drawInstructions = function () {
         }
         if (this.model.trial === 0) instructions.push(`Help prompts are displayed at the bottom left corner for this first trial. Follow them if you wish.`);
 
+        // // For screenshots only.
+        // instructions = [
+        //     "* Task",
+        //     "Lorem ipsum odor amet, consectetuer adipiscing elit. Volutpat aenean bibendum; lobortis torquent duis accumsan luctus. Potenti egestas et eu consectetur sit. At placerat consequat curabitur praesent ultrices dictum luctus. Pharetra lacus ut fringilla lectus placerat.",
+        //     "* Steps",
+        //     "Facilisi tortor molestie vivamus aenean mi malesuada iaculis vitae. Aptent natoque aliquam eros ex fringilla etiam. Pulvinar ac odio tempus velit taciti eget dui ipsum nascetur. Fermentum per facilisi habitasse platea consectetur suspendisse commodo."
+        // ];
+
         let txt = "";
         let size = 16;
         fill(0);

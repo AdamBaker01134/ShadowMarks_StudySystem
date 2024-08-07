@@ -110,6 +110,43 @@
                     "text": "Box and whisker plot"
                 }
             ]
-        }
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Do you have any form of colour-vision deficiency (commonly known as 'colour blindness')?",
+            "id": "cvd_1",
+            "shuffle": false,
+            "horizontal": false,
+            "required": true,
+            "labels": ["Yes", "No"]
+          },
+          {
+            "questiontype": "field",
+            "instructions": "If you answered yes to the previous question, please describe your type of colour-vision deficiency.",
+            "placeholder": "",
+            "id": "cvd_type_1",
+            "required": false
+          },
+          {
+            "questiontype": "radiolist",
+            "instructions": "Do you have normal visual ability (when wearing any prescription glasses or contacts, or reading glasses, if you use these)?",
+            "id": "vision_ability_1",
+            "shuffle": false,
+            "horizontal": false,
+            "required": true,
+            "labels": ["Yes", "No"]
+          },
+          {
+            "questiontype": "field",
+            "instructions": "If you answered No to the previous question, please describe any reduction in visual ability.",
+            "placeholder": "",
+            "id": "vision_ability_type_1",
+            "required": false
+          },
+          {
+            "questiontype": "textview",
+            "title": "",
+            "text": "Please ensure that you are wearing any required glasses, contacts, or reading glasses for this study."
+          }
     ]
   }

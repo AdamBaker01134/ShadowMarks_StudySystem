@@ -132,6 +132,7 @@ function sendLeftPage() {
 
 function sendFullscreenPage() {
     if (!(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+        document.removeEventListener("visibilitychange", sendHiddenPage);
         window.location.href = `/redirect_to_page/oops/3/${model.task}/${model.interaction}`;
     }
 }

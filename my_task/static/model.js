@@ -142,7 +142,8 @@ Model.prototype.nextTrial = function () {
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
     this.index = 0;
     this.clearShadowMarks();
-    this.shadowMarkType = MARKS.MARKER;
+    if (this.task === 3) this.shadowMarkType = MARKS.MARKER;
+    else this.shadowMarkType = MARKS.CURSOR;
     this.shadowMarkColour = COLOURS.RED;
     this.updateVideoDimensions();
     this.updateVideoLocations();
