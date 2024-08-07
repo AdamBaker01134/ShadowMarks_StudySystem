@@ -145,7 +145,7 @@ View.prototype.drawInstructionPage = function () {
         switch (this.model.task) {
             case 1:
                 title += "Tallest Plant with";
-                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -171,7 +171,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 2:
                 title += "Sea Ice Extent with";
-                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -197,7 +197,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 3:
                 title += "Baseball Registration with";
-                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
                 reminder.push('"close" means within the length of a ball.');
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
@@ -221,7 +221,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 4:
                 title += "Identifying Outliers with";
-                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
                 reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
