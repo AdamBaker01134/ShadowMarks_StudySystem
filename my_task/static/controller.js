@@ -150,7 +150,12 @@ Controller.prototype.handleMousePressed = function (event) {
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
-                    if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    if (this.model.trial === 0 && this.model.task === 1 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 1 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 1 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 1 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 1 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[2] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                     else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
                     else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
@@ -221,7 +226,9 @@ Controller.prototype.handleMouseReleased = function (event) {
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 } else {
                     this.model.addShadowMark((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, hit);
-                    if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    if (this.model.trial === 0 && this.model.task === 1 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 1 && hit === this.model.videos[1] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_MARK);
                 }
             }
@@ -242,6 +249,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                 let hit = this.model.checkShadowMarkerHit();
                 if (hit) {
                     this.model.deleteShadowMarker(hit);
+                    if (this.model.trial === 0 && this.model.task === 1 && this.model.shadowMarks.length === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.DELETED_SHADOW_MARK);
                 }
             }
@@ -373,60 +381,63 @@ Controller.prototype.handleKeyPressed = function (event) {
                     if (confirm("Confirm selection.")) {
                         if (this.model.trial === 0) {
                             switch (this.model.task) {
-                                case 1:
-                                case 2:
-                                case 3:
-                                    let indices = [this.model.videos.findIndex(video => video === this.model.selectedVideos[0]), this.model.videos.findIndex(video => video === this.model.selectedVideos[1])]
-                                    switch (this.model.interaction) {
-                                        case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (indices.includes(6) && indices.includes(8)) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
-                                            break;
-                                        case INTERACTIONS.OVERLAYS:
-                                            if (indices.includes(1) && indices.includes(4)) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
-                                            break;
-                                        case INTERACTIONS.SHADOW_MARKER:
-                                            if (indices.includes(2) && indices.includes(6)) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
-                                            break;
-                                    }
-                                    break;
-                                case 4:
+                                case 1: {
                                     let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
                                     switch (this.model.interaction) {
                                         case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (index === 4) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
+                                            if (index === 8) this.model.nextTrial();
+                                            else this.model.tryAgain({});
                                             break;
                                         case INTERACTIONS.OVERLAYS:
-                                            if (index === 2) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
+                                            if (index === 2) this.model.nextTrial();
+                                            else this.model.tryAgain({});
                                             break;
                                         case INTERACTIONS.SHADOW_MARKER:
-                                            if (index === 7) {
-                                                this.model.nextTrial();
-                                            } else {
-                                                this.model.tryAgain({});
-                                            }
+                                            if (index === 1) this.model.nextTrial();
+                                            else this.model.tryAgain({});
                                             break;
                                     }
                                     break;
+                                }
+                                case 2: {
+                                    break;
+                                }
+                                case 3: {
+                                    let indices = [this.model.videos.findIndex(video => video === this.model.selectedVideos[0]), this.model.videos.findIndex(video => video === this.model.selectedVideos[1])]
+                                    switch (this.model.interaction) {
+                                        case INTERACTIONS.SMALL_MULTIPLES:
+                                            if (indices.includes(6) && indices.includes(8)) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                        case INTERACTIONS.OVERLAYS:
+                                            if (indices.includes(1) && indices.includes(4)) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                        case INTERACTIONS.SHADOW_MARKER:
+                                            if (indices.includes(2) && indices.includes(6)) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                    }
+                                    break;
+                                }
+                                case 4: {
+                                    let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
+                                    switch (this.model.interaction) {
+                                        case INTERACTIONS.SMALL_MULTIPLES:
+                                            if (index === 4) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                        case INTERACTIONS.OVERLAYS:
+                                            if (index === 2) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                        case INTERACTIONS.SHADOW_MARKER:
+                                            if (index === 7) this.model.nextTrial();
+                                            else this.model.tryAgain({});
+                                            break;
+                                    }
+                                    break;
+                                }
                             }
                         } else {
                             this.model.addStreamData(EVENTS.SUBMIT);
@@ -628,94 +639,107 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
     return category;
 }
 
-Controller.prototype.handleLoadLemnatec = async function (selectionCondition=-1, undesired="") {
+Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCondition=-1) {
     console.log("Loading 9 random lemnatec videos...");
-    if (this.model.instructionImage === null) {
-        let instructionsName = "placeholder.webp";
-        switch(this.model.interaction) {
+    let videos = [];
+    let category = assets.lemnatec.categories[0];
+    let selectionCond = selectionCondition;
+    if (trialNum === 0) {
+        if (this.model.instructionImage === null) {
+            let instructionsName = "placeholder.webp";
+            switch(this.model.interaction) {
+                case INTERACTIONS.SMALL_MULTIPLES:
+                    instructionsName = "smallmultiples_task1_img1.webp";
+                    break;
+                case INTERACTIONS.OVERLAYS:
+                    instructionsName = "overlays_task1_img1.webp";
+                    break;
+                case INTERACTIONS.SHADOW_MARKER:
+                    instructionsName = "shadowmarkers_task1_img1.webp";
+                    break;
+            }
+            this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+        }
+        switch (this.model.interaction) {
             case INTERACTIONS.SMALL_MULTIPLES:
-                instructionsName = "smallmultiples_task1_img1.webp";
+                videos = [1,2,0,7,4,6,5,3,8];
                 break;
             case INTERACTIONS.OVERLAYS:
-                instructionsName = "overlays_task1_img1.webp";
+                videos = [0,1,8,5,6,7,3,4,2];
                 break;
             case INTERACTIONS.SHADOW_MARKER:
-                instructionsName = "shadowmarkers_task1_img1.webp";
+                videos = [5,8,2,1,3,0,6,7,4];
                 break;
         }
-        this.model.setInstructionImage(loadImage(`${instructionsPath}/${instructionsName}`));
+    } else {
+        // const n = category.videos.length;
+        // videos = category.videos;
+        // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
+        // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
+        // debugger;
+        let peakVals = [];
+        if (selectionCond === -1) selectionCond = getRandomInt(0,2);
+        else selectionCond = Math.abs(selectionCond-1);
+        let seen = [];
+        switch (selectionCond) {
+            case 0:
+                // High peak condition
+                while (videos.length < 3) {
+                    let video = getRandomInt(9,category.videos.length);
+                    let peak = category.videos[video].peak;
+                    let name = category.videos[video].name.split("-")[0];
+                    if (!videos.includes(video) && !seen.includes(name) && peak > 0.50) {
+                        videos.push(video);
+                        peakVals.push(peak);
+                        seen.push(name);
+                    }
+                }
+                while (videos.length < 9) {
+                    let video = getRandomInt(9,category.videos.length);
+                    let peak = category.videos[video].peak;
+                    if (!videos.includes(video) && peak > 0.49 && peak < 0.50) {
+                        videos.push(video);
+                        peakVals.push(peak);
+                    }
+                }
+                break;
+            case 1:
+            default:
+                // Low peak condition
+                while (videos.length < 3) {
+                    let video = getRandomInt(9,category.videos.length);
+                    let peak = category.videos[video].peak;
+                    let name = category.videos[video].name.split("-")[0];
+                    if (!videos.includes(video) && !seen.includes(name) && peak > 0.48 && peak < 0.49) {
+                        videos.push(video);
+                        peakVals.push(peak);
+                        seen.push(name);
+                    }
+                }
+                while (videos.length < 5) {
+                    let video = getRandomInt(9,category.videos.length);
+                    let peak = category.videos[video].peak;
+                    if (!videos.includes(video) && peak > 0.47 && peak < 0.48) {
+                        videos.push(video);
+                        peakVals.push(peak);
+                    }
+                }
+                while (videos.length < 9) {
+                    let video = getRandomInt(9,category.videos.length);
+                    let peak = category.videos[video].peak;
+                    if (!videos.includes(video) && peak < 0.47) {
+                        videos.push(video);
+                        peakVals.push(peak);
+                    }
+                }
+                break;
+        }
+        let tallest = Math.max(...peakVals);
+        // Shuffle array
+        shuffleArray(videos);
+        // Place correct video in the second or third row
+        videos = moveToRow(videos, videos.findIndex(video => category.videos[video].peak === tallest), getRandomInt(1,3));
     }
-    let category;
-    while ((category = assets.lemnatec.categories[getRandomInt(0, assets.lemnatec.categories.length)]).name === undesired);
-    // const n = category.videos.length;
-    // videos = category.videos;
-    // const mean = videos.reduce((a,b) => a + b.peak, 0)/n;
-    // const std = Math.sqrt(videos.map(x => Math.pow(x.peak - mean, 2)).reduce((a,b) => a + b) / n);
-    // debugger;
-    let videos = [];
-    let peakVals = [];
-    let selectionCond;
-    if (selectionCondition === -1) selectionCond = getRandomInt(0,2);
-    else selectionCond = Math.abs(selectionCondition-1);
-    let seen = [];
-    switch (selectionCond) {
-        case 0:
-            // High peak condition
-            while (videos.length < 3) {
-                let video = getRandomInt(0,category.videos.length);
-                let peak = category.videos[video].peak;
-                let name = category.videos[video].name.split("-")[0];
-                if (!videos.includes(video) && !seen.includes(name) && peak > 0.50) {
-                    videos.push(video);
-                    peakVals.push(peak);
-                    seen.push(name);
-                }
-            }
-            while (videos.length < 9) {
-                let video = getRandomInt(0,category.videos.length);
-                let peak = category.videos[video].peak;
-                if (!videos.includes(video) && peak > 0.49 && peak < 0.50) {
-                    videos.push(video);
-                    peakVals.push(peak);
-                }
-            }
-            break;
-        case 1:
-        default:
-            // Low peak condition
-            while (videos.length < 3) {
-                let video = getRandomInt(0,category.videos.length);
-                let peak = category.videos[video].peak;
-                let name = category.videos[video].name.split("-")[0];
-                if (!videos.includes(video) && !seen.includes(name) && peak > 0.48 && peak < 0.49) {
-                    videos.push(video);
-                    peakVals.push(peak);
-                    seen.push(name);
-                }
-            }
-            while (videos.length < 5) {
-                let video = getRandomInt(0,category.videos.length);
-                let peak = category.videos[video].peak;
-                if (!videos.includes(video) && peak > 0.47 && peak < 0.48) {
-                    videos.push(video);
-                    peakVals.push(peak);
-                }
-            }
-            while (videos.length < 9) {
-                let video = getRandomInt(0,category.videos.length);
-                let peak = category.videos[video].peak;
-                if (!videos.includes(video) && peak < 0.47) {
-                    videos.push(video);
-                    peakVals.push(peak);
-                }
-            }
-            break;
-    }
-    let tallest = Math.max(...peakVals);
-    // Shuffle array
-    shuffleArray(videos);
-    // Place correct video in the second or third row
-    videos = moveToRow(videos, videos.findIndex(video => category.videos[video].peak === tallest), getRandomInt(1,3));
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];

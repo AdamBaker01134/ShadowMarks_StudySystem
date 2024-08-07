@@ -32,20 +32,25 @@ function setup() {
 
     switch (model.task) {
         case 1:
-            controller.handleLoadLemnatec().then(results1 => { 
+            controller.handleLoadLemnatec(0).then(results1 => { 
                 model.setCategory(results1.category);
-                model.setTrialLoadTime(nowTime-startTime);
+                model.setTrialLoadTime(new Date().getTime()-startTime);
                 startTime = new Date().getTime();
-                controller.handleLoadLemnatec(results1.selectionCondition).then(results2 => {
+                controller.handleLoadLemnatec(1).then(results2 => {
                     model.setCategory(results2.category);
                     model.setTrialLoadTime(new Date().getTime()-startTime);
+                    startTime = new Date().getTime();
+                    controller.handleLoadLemnatec(1, results2.selectionCondition).then(results3 => {
+                        model.setCategory(results3.category);
+                        model.setTrialLoadTime(new Date().getTime()-startTime);
+                    });
                 });
             });
             break;
         case 2:
             controller.handleLoadSeaIce().then(results1 => { 
                 model.setCategory(results1.category);
-                model.setTrialLoadTime(nowTime-startTime);
+                model.setTrialLoadTime(new Date().getTime()-startTime);
                 startTime = new Date().getTime();
                 controller.handleLoadSeaIce(results1.selectionCondition).then(results2 => {
                     model.setCategory(results2.category);

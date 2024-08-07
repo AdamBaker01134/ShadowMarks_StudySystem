@@ -1,8 +1,22 @@
 //////// TASK 1 ////////
 
-const smallMultiples1 = [];
-const overlays1 = [];
-const shadowMarkers1 = [];
+const smallMultiples1 = [
+    "Play through each video and select the plant that grows the tallest by control-clicking and pressing enter. This should be the ninth video.",
+];
+const overlays1 = [
+    "Add the first video to the overlay by clicking on it.",
+    "Add the second video to the overlay.",
+    "Play through each video overlaid. Notice that the first plant grows taller than the second. So, remove the second video by clicking on its eye.",
+    "Add the third video to the overlay.",
+    "Play through the overlaid videos again. Now, the third video grows taller than the first. So, remove the first video by clicking on its eye.",
+    "Repeat. Once you've gone through them all, select the one that is still in the overlay by control-clicking and pressing enter (should be the third video)."
+];
+const shadowMarkers1 = [
+    "The cursor tool has already been selected. In the top left video, place a mark on the location where the plant grows the tallest by clicking on it.",
+    "Play through the other videos. Notice that the second video extends higher than your mark. So, remove your current mark by hovering over it and pressing d.",
+    "Now, add a new mark on the second video where the plant grows the tallest.",
+    "Repeat for all videos. Select the one that you placed the last mark on (should be the second video) by control-clicking and pressing enter."
+];
 
 //////// TASK 2 ////////
 

@@ -145,7 +145,7 @@ View.prototype.drawInstructionPage = function () {
         switch (this.model.task) {
             case 1:
                 title += "Tallest Plant with";
-                description.push("This task has 2 comparison trials. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
@@ -162,10 +162,10 @@ View.prototype.drawInstructionPage = function () {
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
                         title += " Shadow Marks";
-                        steps.push("Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:");
-                        steps.push("1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.");
-                        steps.push("2. If it does, move your cursor to the highest point of the new video. Continue on to the next video.");
-                        steps.push("Once you have gone through all the videos, select the video you are hovering over.");
+                        steps.push("Start by playing through each video and estimating which plant reachest the highest point. Place a cursor mark over the highest point you see. Then, go through each of the other videos and do the following:");
+                        steps.push("1. Play through the plant video and check if the plant grows higher than the marks horizontal line.");
+                        steps.push("2. If it does, remove your last mark by hovering over it and pressing d. Then place a new mark at the highest point of the new video. Continue on to the next video.");
+                        steps.push("Once you have gone through all the videos, select the video you marked last.");
                         break;
                 }
                 break;
@@ -379,10 +379,10 @@ View.prototype.drawInstructions = function () {
                         instructions.push(`Once you have gone through all the videos, select the video that is still in the overlay.`);
                         break;
                     case INTERACTIONS.SHADOW_MARKER:
-                        instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Select the cursor mark and position your mouse over the highest point you see. Then, go through each of the other videos and do the following:`);
-                        instructions.push(`1. Play through the plant video using the arrow keys and check if the plant grows higher than the cursors horizontal line.`);
-                        instructions.push(`2. If it does, move your cursor to the highest point of the new video. Continue on to the next video.`);
-                        instructions.push(`Once you have gone through all the videos, select the video you are hovering over.`);
+                        instructions.push(`Start by playing through each video and estimating which plant reachest the highest point. Place a cursor mark over the highest point you see. Then, go through each of the other videos and do the following:`);
+                        instructions.push(`1. Play through the plant video and check if the plant grows higher than the marks horizontal line.`);
+                        instructions.push(`2. If it does, remove your last mark by hovering over it and pressing d. Then place a new mark at the highest point of the new video. Continue on to the next video.`);
+                        instructions.push(`Once you have gone through all the videos, select the video you marked last.`);
                         break;
                     default:
                         break;
