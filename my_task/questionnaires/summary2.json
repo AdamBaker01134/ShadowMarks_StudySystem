@@ -1,0 +1,70 @@
+{
+    "title": "Summary Questionnaire",
+    "instructions": "You have now completed the task with all of the techniques. Please rate your experiences with all three techniques.",
+    "code": "",
+    "questions": [
+        {
+            "questiontype": "textview",
+            "text": "<p>Small Multiples</p><p><img src='/my_task/assets/instructions/task2/smallmultiples_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
+            "questiontype": "textview",
+            "text": "<p>Overlays</p><p><img src='/my_task/assets/instructions/task2/overlays_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
+            "questiontype": "textview",
+            "text": "<p>Shadow Marks</p><p><img src='/my_task/assets/instructions/task2/shadowmarkers_reminder_img1.webp' style='max-width: 70%; max-height: 455px'></p>"
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique allowed you to complete the task the fastest?",
+            "id": "speed_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "speed_reason_1",
+            "required": true,
+            "instructions": "Why did this technique allow you to complete the task the fastest?"
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique allowed you to complete the task most accurately?",
+            "id": "accuracy_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "accuracy_reason_1",
+            "required": true,
+            "instructions": "Why did this technique allow you to complete the task most accurately?"
+        },
+        {
+            "questiontype": "radiolist",
+            "instructions": "Which technique did you prefer the most overall?",
+            "id": "preference_1",
+            "required": true,
+            "labels": [
+                "Small Multiples",
+                "Overlays",
+                "Shadow Marks"
+            ]
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "preference_reason_1",
+            "required": true,
+            "instructions": "Why did you prefer this technique the most?"
+        }
+    ]
+  }

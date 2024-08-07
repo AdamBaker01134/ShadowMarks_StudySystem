@@ -40,7 +40,7 @@ function setup() {
                     model.setCategory(results2.category);
                     model.setTrialLoadTime(new Date().getTime()-startTime);
                     startTime = new Date().getTime();
-                    controller.handleLoadLemnatec(1, results2.selectionCondition).then(results3 => {
+                    controller.handleLoadLemnatec(2, results2.selectionCondition).then(results3 => {
                         model.setCategory(results3.category);
                         model.setTrialLoadTime(new Date().getTime()-startTime);
                     });
@@ -48,13 +48,18 @@ function setup() {
             });
             break;
         case 2:
-            controller.handleLoadSeaIce().then(results1 => { 
+            controller.handleLoadSeaIce(0).then(results1 => { 
                 model.setCategory(results1.category);
                 model.setTrialLoadTime(new Date().getTime()-startTime);
                 startTime = new Date().getTime();
-                controller.handleLoadSeaIce(results1.selectionCondition).then(results2 => {
+                controller.handleLoadSeaIce(1).then(results2 => {
                     model.setCategory(results2.category);
                     model.setTrialLoadTime(new Date().getTime()-startTime);
+                    startTime = new Date().getTime();
+                    controller.handleLoadSeaIce(2, results2.selectionCondition).then(results3 => {
+                        model.setCategory(results3.category);
+                        model.setTrialLoadTime(new Date().getTime()-startTime);
+                    });
                 });
             });
             break;

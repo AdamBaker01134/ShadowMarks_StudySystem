@@ -20,9 +20,23 @@ const shadowMarkers1 = [
 
 //////// TASK 2 ////////
 
-const smallMultiples2 = [];
-const overlays2 = [];
-const shadowMarkers2 = [];
+const smallMultiples2 = [
+    "Select the ice that extends furthest east (right) between the two islands next to Greenland (large island in the middle) by control-clicking and pressing enter (should be the fifth (middle) video).",
+];
+const overlays2 = [
+    "Add the first video to the overlay by clicking on it.",
+    "Add the second video to the overlay.",
+    "Play through each video overlaid. The ice formations in these two videos are very similar. Remove the second video for now by clicking on its eye.",
+    "Add the third video to the overlay.",
+    "Play through the overlaid videos again. At the end, we can see that the ice in the third video extends farther east. So, remove the first video by clicking on its eye.",
+    "Repeat. Once you've gone through them all, select the one that is still in the overlay by control-clicking and pressing enter (should be the third video)."
+];
+const shadowMarkers2 = [
+    "In the top left video, place a mark on the location where Arctic ice extends furthest east (right) between the two islands next to Greenland (large island in the middle) by clicking.",
+    "Play through the other videos. Notice that the second video extends further east than your mark. So, remove your current mark by hovering over it and pressing d.",
+    "Now, add a new mark on the second video where the Arctic ice extends furthest.",
+    "Repeat for all videos. Select the one that you placed the last mark on (should be the second video) by control-clicking and pressing enter."
+];
 
 //////// TASK 3 ////////
 

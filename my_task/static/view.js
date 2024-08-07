@@ -171,7 +171,7 @@ View.prototype.drawInstructionPage = function () {
                 break;
             case 2:
                 title += "Sea Ice Extent with";
-                description.push("This task has 2 comparison trials. For each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
+                description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique, and the other two will be recorded. For each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:

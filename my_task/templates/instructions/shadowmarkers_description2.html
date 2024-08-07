@@ -1,0 +1,84 @@
+<style>
+    .fig {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .fig * {
+        max-width: 100%;
+    }
+
+    /* .figrow {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .figrow * {
+        max-width: 100%;
+        margin-left: 10px;
+    } */
+</style>
+
+
+<h1>Shadow Marks</h1>
+
+A <b>Shadow Mark</b> is an object that can be placed in one display, and will be <i>shadowed</i> (or mirrored) in all other displays at the same location.
+An example Shadow Mark is the red cursor visible in all of the videos of Figure 1.
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/task2/shadowmarkers_description_img1.webp')}}" alt="Shadow Marks image"/>
+    <small><b>Fig.1.</b> Example of a Cursor Shadow Mark placed within an Arctic ice video and shadowed in all other videos.</small>
+</div>
+<br />
+<br />
+
+In this example, the user has placed a <b>Cursor</b> Shadow Mark at the rightmost edge of the ice.
+The system duplicates the lines at the same location in all the other videos. Now the user can compare the ice extent of all the videos by
+observing which videos extend to the right past the vertical line.
+
+<br /><br />
+
+Shadow Mark colour can be customized by clicking the colour button (Figure 3 left) and selecting a colour from the colour palette (Figure 3 right).
+
+<br />
+<br />
+<div class="fig" style="flex-direction: row;">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/task2/shadowmarkers_description_img3.webp')}}" alt="Colour button image" style="max-height: 100px;"/>
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/task2/shadowmarkers_description_img4.webp')}}" alt="Colour palette image" style="max-height: 100px; margin-left: 30px;"/>
+</div>
+<div class="fig"><small><b>Fig.3.</b> Shadow Mark colour button (left) which opens a colour palette (right) for selection.</small></div>
+<br />
+<br />
+
+You can play through the videos by pressing <b>SPACEBAR</b>, or by dragging the scrollbar located at the bottom of the page (as seen in Figure 4).
+Watch frame by frame by tapping the <b>LEFT ARROW</b> or the <b>RIGHT ARROW</b>.
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/task2/smallmultiples_description_img2.webp')}}" alt="Scrollbar image"/>
+    <small><b>Fig.4.</b> Scrollbar that controls all videos.</small>
+</div>
+<br />
+<br />
+
+You can also zoom in by holding <b>CONTROL</b> and pressing the <b>+</b> key, and zoom out by holding <b>CONTROL</b> and pressing the <b>-</b> key.
+<br/><br />
+If you forget any of the features available, click on the help button located on the left side of the scrollbar (as seen in Figure 5).
+
+<br />
+<br />
+<div class="fig">
+    <img src="{{url_for('my_task.static', filename = 'assets/instructions/task2/smallmultiples_description_img3.webp')}}" alt="Help button image"/>
+    <small><b>Fig.5.</b> Help button.</small>
+</div>
+<br />
+<br />
+
+Click <b>Continue</b> to enter a sandbox environment to practice with this technique.
