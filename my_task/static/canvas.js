@@ -23,6 +23,7 @@ async function preload() {
     model.setTask(parseInt(task));
 
     if (model.task !== 3) model.setType(MARKS.CURSOR);
+    else model.setColour(COLOURS.GREEN);
 }
 
 function setup() {

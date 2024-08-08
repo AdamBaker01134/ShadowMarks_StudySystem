@@ -326,7 +326,7 @@ View.prototype.drawInstructionPage = function () {
     }
     // Draw loading or begin text
     if (this.model.percentLoaded !== 100) {
-        txt = this.model.percentLoaded + "%";
+        txt = "Loading: " + this.model.percentLoaded + "%";
         fill(0);
         stroke(0);
         size = 16;
@@ -554,8 +554,6 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
     // Draw shadow marks on each video
     this.model.shadowMarks.forEach(mark => {
         const colour = mark.colour;
-        stroke(0,0,0,150);
-        strokeWeight(2);
         const markerX = vx + vw * mark.widthRatio;
         const markerY = vy + vh * mark.heightRatio;
         switch (mark.type) {
@@ -563,10 +561,12 @@ View.prototype.drawShadowMarkers = function (vx, vy, vw, vh) {
                 let maxLength = 16;
                 let markLength = Math.min(vw, vh) / 16;
                 if (markLength > maxLength) markLength = maxLength;
+                stroke(0);
+                strokeWeight(3);
                 line(markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
                 line(markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
-                stroke(colour.r, colour.g, colour.b, 150);
-                strokeWeight(1);
+                stroke(colour.r, colour.g, colour.b);
+                strokeWeight(2);
                 line(markerX, markerY - markLength / 2, markerX, markerY + markLength / 2);
                 line(markerX + markLength / 2, markerY, markerX - markLength / 2, markerY);
                 break;
