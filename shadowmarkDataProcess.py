@@ -21,9 +21,15 @@ def cleanStreamRow(participantLogDict):
     streamLog = participantLogDict["streamLog"]
     streamArray = streamLog.split("|")
     i = 0
+    startTime = 0
     for streamTrial in streamArray:
         streamData = streamTrial.split(",")
         streamArray[i] = streamData
+        if i == 1 and len(streamArray[i]) >= 8:
+            startTime = int(streamArray[i][7])
+            streamArray[i][7] = 0
+        elif i > 1 and len(streamArray[i]) >= 8:
+            streamArray[i][7] = int(streamArray[i][7]) - startTime
         i += 1
     streamArray = streamArray[0:-1]
     streamArray[0][0] = "pID"
