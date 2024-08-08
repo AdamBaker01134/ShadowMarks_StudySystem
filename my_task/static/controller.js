@@ -841,10 +841,10 @@ Controller.prototype.handleLoadSeaIce = async function (trialNum, selectionCondi
             case 1:
             default:
                 // Low extension condition
-                while (videos.length < 6) {
+                while (videos.length < 2) {
                     let video = getRandomInt(0,category.videos.length);
                     let extension = category.videos[video].extension;
-                    if (!videos.includes(video) && extension > 0.64 && extension < 0.65) {
+                    if (!videos.includes(video) && !extensionVals.includes(extension) && extension > 0.66 && extension < 0.67) {
                         videos.push(video);
                         extensionVals.push(extension);
                     }
@@ -852,7 +852,7 @@ Controller.prototype.handleLoadSeaIce = async function (trialNum, selectionCondi
                 while (videos.length < 9) {
                     let video = getRandomInt(0,category.videos.length);
                     let extension = category.videos[video].extension;
-                    if (!videos.includes(video) && extension > 0.63 && extension < 0.64) {
+                    if (!videos.includes(video) && extension > 0.65 && extension < 0.66) {
                         videos.push(video);
                         extensionVals.push(extension);
                     }
