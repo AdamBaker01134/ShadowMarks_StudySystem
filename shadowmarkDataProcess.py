@@ -29,6 +29,20 @@ def cleanStreamRow(participantLogDict):
     streamArray[0][0] = "pID"
     return streamArray
 
+def cleanErrorRow(participantLogDict):
+    errorLog = participantLogDict["errorLog"]
+    errorArray = errorLog.split("|")
+    i = 0
+    for errorTrial in errorArray:
+        errorData = errorTrial.split(",")
+        errorArray[i] = errorData
+        i += 1
+    errorArray = errorArray[0:-1]
+    errorArray[0][0] = "pID"
+    errorArray[0].append("timestamp")
+    errorArray[1].append(participantLogDict["timeSubmitted"])
+    return errorArray
+
 
 def combineEntries(rows):
     header = []
@@ -62,10 +76,12 @@ if __name__ == "__main__":
 
         trialRows = []
         streamRows = []
+        errorRows = []
         i = 0
         for participant in reader:
             cleanedParticipantLog = ""
-            cleanedParticipantMode = ""
+            cleanedParticipantStream = ""
+            cleanedParticipantError = ""
 
             if ("trialLog" in dict(participant) and len(dict(participant)["trialLog"]) > 2):
                 cleanedParticipantLog = cleanTrialRow(dict(participant))
@@ -75,8 +91,13 @@ if __name__ == "__main__":
                 cleanedParticipantStream = cleanStreamRow(dict(participant))
                 streamRows.append(cleanedParticipantStream)
 
+            if ("errorLog" in dict(participant) and len(dict(participant)["errorLog"]) > 2):
+                cleanedParticipantError = cleanErrorRow(dict(participant))
+                errorRows.append(cleanedParticipantError)
+
         combinedTrialEntries = combineEntries(trialRows)
         combinedStreamEntries = combineEntries(streamRows)
+        combinedErrorEntries = combineEntries(errorRows)
 
         today = datetime.datetime.now().date()
         csvName = "data/shadowmarksTrialData_{}.csv".format(today.isoformat())
@@ -90,3 +111,9 @@ if __name__ == "__main__":
             writer = csv.writer(csvFile)
             writer.writerow(combinedStreamEntries[0])
             writer.writerows(combinedStreamEntries[1])
+
+        csvName = "data/shadowmarksErrorData_{}.csv".format(today.isoformat())
+        with open(csvName, mode="w", newline="", encoding="utf-8") as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(combinedErrorEntries[0])
+            writer.writerows(combinedErrorEntries[1])
