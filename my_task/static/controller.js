@@ -515,6 +515,15 @@ Controller.prototype.handleKeyReleased = function(event) {
     return true;
 }
 
+Controller.prototype.handleWindowResized = function () {
+    let newWidth = width;
+    let newHeight = height;
+    if (newWidth < windowWidth*0.98) newWidth = windowWidth*0.98;
+    if (newHeight < windowHeight) newHeight = windowHeight;
+    resizeCanvas(newWidth, newHeight);
+    this.model.notifySubscribers();
+}
+
 Controller.prototype.handleScroll = function() {
     this.model.notifySubscribers();
 }
@@ -636,15 +645,15 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
         let labels = [];
         await new Promise((resolve, reject) => {
             let completed = 0;
-            for (let frame = 1; frame <= category.frames; frame++) {
+            for (let frame = 40; frame <= category.frames; frame++) {
                 frames.push(loadImage(`${assets.baseball.path}/${category.name}/${category.videos[videos[video]].name}/img${String(frame).padStart(3,"0")}.webp`,
                     () => {
-                        if (++completed >= category.frames) resolve();
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                        if (++completed >= category.frames-40) resolve();
+                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/(category.frames-40))*(100/videos.length)));
                     },
                     (err) => {
-                        if (++completed >= category.frames) reject(err);
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                        if (++completed >= category.frames-40) reject(err);
+                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/(category.frames-40))*(100/videos.length)));
                     }));
                 labels.push(`Frame ${frame}`);
             }

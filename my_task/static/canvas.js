@@ -121,6 +121,8 @@ function keyPressed(event) { return controller.handleKeyPressed(event) }
 
 function keyReleased(event) { return controller.handleKeyReleased(event) }
 
+function windowResized(event) { return controller.handleWindowResized(event) }
+
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
     document.getElementById("defaultCanvas0")?.addEventListener("contextmenu", e => e.preventDefault());
@@ -131,18 +133,20 @@ function attachUserEventListeners() {
 }
 
 function sendHiddenPage() {
-    if (document.hidden) {
+    if (model.start && document.hidden) {
         window.location.href = `/redirect_to_page/oops/1/${model.task}/${model.interaction}`;
     }
 }
 
 function sendLeftPage() {
-    document.removeEventListener("visibilitychange", sendHiddenPage);
-    window.location.href = `/redirect_to_page/oops/2/${model.task}/${model.interaction}`;
+    if (model.start) {
+        document.removeEventListener("visibilitychange", sendHiddenPage);
+        window.location.href = `/redirect_to_page/oops/2/${model.task}/${model.interaction}`;
+    }
 }
 
 function sendFullscreenPage() {
-    if (!(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+    if (model.start && !(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
         document.removeEventListener("visibilitychange", sendHiddenPage);
         window.location.href = `/redirect_to_page/oops/3/${model.task}/${model.interaction}`;
     }
