@@ -11,7 +11,7 @@
                 warning = document.createElement("div");
                 warning.style = "font-style: italic; color: red;";
                 warning.id = "fullscreen-warning";
-                warning.innerText = "Enter Fullscreen mode by pressing F11 before continuing.";
+                warning.innerText = "Please enter Fullscreen mode by pressing F11 and ensure that your browser is at 100% zoom.";
                 document.querySelector("#instructions-title")?.after(warning);
             }
         }
@@ -22,5 +22,9 @@
 
 <div>
     To optimize your experience, we request that you perform the remainder of the experiment in
-    Fullscreen mode. Press F11 to enter Fullscreen mode before you continue.
+    Fullscreen mode at 100% zoom (the default browser zoom level).
+    <br />
+    Hold <b>CONTROL</b> and press the <b>+</b> or <b>-</b> keys until you are at 100% zoom.
+    <br />
+    Press <b>F11</b> to enter Fullscreen mode before you continue.
 </div>
