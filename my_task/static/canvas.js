@@ -133,22 +133,26 @@ function attachUserEventListeners() {
 }
 
 function sendHiddenPage() {
-    if (model.start && document.hidden) {
-        window.location.href = `/redirect_to_page/oops/1/${model.task}/${model.interaction}`;
+    if (model.start && model.errorCode === -1 && document.hidden) {
+        model.error(1);
+        controller.savedState = controller.currentState;
+        controller.currentState = STATE.ERROR;
     }
 }
 
 function sendLeftPage() {
-    if (model.start) {
-        document.removeEventListener("visibilitychange", sendHiddenPage);
-        window.location.href = `/redirect_to_page/oops/2/${model.task}/${model.interaction}`;
+    if (model.start && model.errorCode === -1) {
+        model.error(2);
+        controller.savedState = controller.currentState;
+        controller.currentState = STATE.ERROR;
     }
 }
 
 function sendFullscreenPage() {
-    if (model.start && !(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
-        document.removeEventListener("visibilitychange", sendHiddenPage);
-        window.location.href = `/redirect_to_page/oops/3/${model.task}/${model.interaction}`;
+    if (model.start && model.errorCode === -1 && !(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+        model.error(3);
+        controller.savedState = controller.currentState;
+        controller.currentState = STATE.ERROR;
     }
 }
 

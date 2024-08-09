@@ -70,8 +70,13 @@ function Model() {
     this.attempt = 1;
     this.trialLog = [];
     this.streamLog = [];
+    this.errorLog = [];
     this.trialStartTime = 0;
     this.currentChecklistPrompt = 0;
+
+    this.errorCode = -1;
+    this.errorTime = 0;
+    this.errorStartTime = new Date().getTime();
 
     this.overlay = [];
 
@@ -140,6 +145,7 @@ Model.prototype.nextTrial = function () {
     this.selectedVideos = [];
     this.correctlySelectedVideos = [];
     if (this.videos.length < this.videosPerTrial) this.percentLoaded = 0;
+    this.errorTime = 0;
     this.index = 0;
     this.clearShadowMarks();
     if (this.task === 3) {
@@ -194,6 +200,17 @@ Model.prototype.checkMoveOn = function () {
         }
     }
     return false;
+}
+
+Model.prototype.error = function (errCode) {
+    this.errorCode = errCode;
+    if (this.errorCode !== -1) {
+        this.addErrorData();
+        this.errorStartTime = new Date().getTime();
+    } else {
+        this.errorTime += new Date().getTime() - this.errorStartTime;
+    }
+    this.notifySubscribers();
 }
 
 Model.prototype.setInteraction = function (interaction) {
@@ -827,6 +844,14 @@ Model.prototype.checkStartButtonHit = function () {
     return Math.sqrt(Math.pow(mouseX-x,2)+Math.pow(mouseY-y,2)) <= r;
 }
 
+Model.prototype.checkErrorButtonHit = function () {
+    const l = 100;
+    const r = l/2;
+    const x = width / 2 - l / 2;
+    const y = windowHeight / 2 + scrollY - l / 2;
+    return Math.sqrt(Math.pow(mouseX-x,2)+Math.pow(mouseY-y,2)) <= r;
+}
+
 Model.prototype.freeforming = function () {
     return this.shadowMarkType === MARKS.FREEFORM ||
         this.shadowMarkType === MARKS.LINE ||
@@ -890,7 +915,15 @@ Model.prototype.logData = function () {
     
     // Convert JSONs to formatted strings.
     let dataToSend = this.cleanLogData();
-    let submitResponses = document.createElement("input");
+
+    // writing to errorLog column
+    let errorResponses = document.createElement("input");
+    errorResponses = document.createElement("input");
+    errorResponses.setAttribute("type", "text");
+    errorResponses.setAttribute("value", JSON.stringify(dataToSend.errorLog));
+    errorResponses.setAttribute("name", "errorLog");
+    errorResponses.style.display = "none";
+    submitForm.append(errorResponses);
     
     // writing to streamLog column
     let streamResponses = document.createElement("input");
@@ -962,7 +995,27 @@ Model.prototype.cleanLogData = function () {
         }
     }
 
-    return { trialLog: cleanedTrialData, streamLog: cleanedStreamData };
+    let cleanedErrorData = ""
+    if (this.errorLog.length > 0) {
+        // Cleaning error log data
+        for (let key in this.errorLog[0]) {
+            cleanedErrorData += key + ",";
+        }
+        cleanedErrorData = cleanedErrorData.slice(0,-1);
+        cleanedErrorData += "|";
+
+        for (let entry = 0; entry < this.errorLog.length; entry++) {
+            let errorLogEntry = this.errorLog[entry];
+            let entryString = "";
+            for (let key in errorLogEntry) {
+                entryString += errorLogEntry[key] + ",";
+            }
+            entryString += "|";
+            cleanedErrorData += entryString;
+        }
+    }
+
+    return { trialLog: cleanedTrialData, streamLog: cleanedStreamData, errorLog: cleanedErrorData };
 }
 
 Model.prototype.getCorrectVideos = function () {
@@ -1009,7 +1062,7 @@ Model.prototype.getCorrectVideos = function () {
 
 Model.prototype.addTrialData = function () {
     // // Elapsed time
-    let elapsedTime = new Date().getTime() - this.trialStartTime;
+    let elapsedTime = new Date().getTime() - this.trialStartTime - this.errorTime;
 
     // // Errors
     let falseNegatives = 0;
@@ -1068,6 +1121,20 @@ Model.prototype.addStreamData = function (event) {
         shadowMarks: this.shadowMarks.length,
         shadowMarkMode: this.interaction === INTERACTIONS.SHADOW_MARKER ? this.shadowMarkType : "NONE",
         shadowMarkColour: this.interaction === INTERACTIONS.SHADOW_MARKER ? `(r:${this.shadowMarkColour.r};g:${this.shadowMarkColour.g};b:${this.shadowMarkColour.b})` : "NONE",
+    });
+}
+
+Model.prototype.addErrorData = function () {
+    this.errorLog.push({
+        pID: pID,
+        condition: condition,
+        task: this.task,
+        interaction: this.interaction,
+        trial: this.trial,
+        attempt: this.attempt,
+        errCode: this.errorCode,
+        timestamp: new Date().getTime(),
+        fullscreen: window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height),
     });
 }
 

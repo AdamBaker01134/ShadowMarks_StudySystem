@@ -7,7 +7,38 @@ function View(model) {
 
 View.prototype.draw = function () {
     clear();
-    if (this.model.percentLoaded === 100 && this.model.start) {
+    if (this.model.errorCode !== -1) {
+        let titleText = "", topText = "", buttomText = "Press the button to continue.";
+        switch (this.model.errorCode) {
+            case 1:
+                titleText = "Oops! You hid the page";
+                topText = "Please ensure that you remain active with the webpage open at all times during each trial.";
+                break;
+            case 2:
+                titleText = "Oops! You left the page";
+                topText = "Please ensure that you remain active on the webpage during each trial.";
+                break;
+            case 3:
+                topText = "Please enter Fullscreen mode by pressing F11 and ensure that your browser is at 100% zoom.";
+                break;
+            default:
+                break;
+        }
+        const l = 100;
+        const x = width / 2 - l / 2;
+        const y = windowHeight / 2 + scrollY - l / 2;
+        stroke(0);
+        fill(255);
+        circle(x,y,l);
+        noStroke();
+        fill(0);
+        textSize(36);
+        text(titleText, x-textWidth(titleText)/2, y-l*2);
+        textSize(16);
+        text(topText, x-textWidth(topText)/2,y-l);
+        text(buttomText, x-textWidth(buttomText)/2, y+l);
+        text("Continue", x-textWidth("Continue")/2, y+8);
+    } else if (this.model.percentLoaded === 100 && this.model.start) {
         // Draw divider line
         stroke(0);
         fill(0);
@@ -147,6 +178,7 @@ View.prototype.drawInstructionPage = function () {
                 title += "Tallest Plant with";
                 description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 sunflower videos will load in for you to view and compare like in the image on the left. Your task is to find the sunflower that grows the tallest.");
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
+                reminder.push("Confirm selection by pressing ENTER.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
                         title += " Small Multiples";
@@ -173,6 +205,7 @@ View.prototype.drawInstructionPage = function () {
                 title += "Sea Ice Extent with";
                 description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 Arctic sea ice videos will load in for you to view and compare. Your task is to find the video where the ice extends farthest east (right) between the two island circled on the image to the left.")
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
+                reminder.push("Confirm selection by pressing ENTER.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
                         title += " Small Multiples";
@@ -200,6 +233,7 @@ View.prototype.drawInstructionPage = function () {
                 description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 baseball pitching videos will load in for you to view and compare, like in the image on the left. Your task is to find 2 videos where the pitcher's release point (location of the ball in the first frame it leaves the pitcher's hand and is in flight) is close to the release point of the pitcher in the top left-hand corner (highlighted in red in the image on the left).");
                 reminder.push('"close" means within the length of a ball.');
                 reminder.push("Select a video by holding CONTROL and clicking on it.");
+                reminder.push("Confirm selection by pressing ENTER.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
                         title += " Small Multiples";
@@ -223,6 +257,7 @@ View.prototype.drawInstructionPage = function () {
                 title += "Identifying Outliers with";
                 description.push("This task has 3 comparison trials. The first will be a tutorial trial for you to familiarize yourself with the technique. For the second and third trial, your activities and performance will be logged by the system. In each trial, 9 scatterplots will load in for you to view and compare. One example scatterplot is shown at left. Your task is to find the scatterplot that has the highest outlier in the upper half of the plot (in the example image at left, the upper half is highlighted with a red rectangle).");
                 reminder.push("Select a scatterplot by holding CONTROL and clicking on it.");
+                reminder.push("Confirm selection by pressing ENTER.");
                 switch (this.model.interaction) {
                     case INTERACTIONS.SMALL_MULTIPLES:
                         title += " Small Multiples";

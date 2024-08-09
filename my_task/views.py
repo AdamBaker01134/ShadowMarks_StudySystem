@@ -73,12 +73,13 @@ def comparisonStudy(interaction, task):
     condition = session["condition"]
 
     if request.method == 'POST':
-        if 'trialLog' in request.form and 'streamLog' in request.form:
+        if 'trialLog' in request.form and 'streamLog' in request.form and 'errorLog' in request.form:
             log = db.comparisonStudy()  # This database table was defined in /tables/comparisonStudy.json
             # writing columns from our javascript to the log
             log.participantID = pID
             log.trialLog = request.form['trialLog']
             log.streamLog = request.form['streamLog']
+            log.errorLog = request.form['errorLog']
 
             # adding the participant log to the database
             db.session.add(log)

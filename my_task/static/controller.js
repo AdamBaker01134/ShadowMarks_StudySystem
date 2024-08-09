@@ -10,6 +10,7 @@ const STATE = {
     COLOUR_PICKER: "colour_picker",
     HELP: "help",
     NO_INTERACTION: "no_interaction",
+    ERROR: "error",
 }
 
 const EVENTS = {
@@ -200,6 +201,13 @@ Controller.prototype.handleMousePressed = function (event) {
             this.model.addStreamData(EVENTS.CLOSED_HELP_MENU);
             this.currentState = this.savedState;
             break;
+        case STATE.ERROR:
+            if (this.model.checkErrorButtonHit()) {
+                this.model.updateVideoDimensions();
+                this.model.updateVideoLocations();
+                this.model.error(-1);
+                this.currentState = this.savedState;
+            }
         default:
             break;
     }
@@ -456,7 +464,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                             }
                         } else {
                             this.model.addStreamData(EVENTS.SUBMIT);
-                            let elapsedTime = new Date().getTime() - this.model.trialStartTime;
+                            let elapsedTime = new Date().getTime() - this.model.trialStartTime - this.model.errorTime;
                             if (this.model.trial < 2) {
                                 let results = this.model.addTrialData();
                                 if (results.falsePositives === 0 && results.falseNegatives === 0) {
