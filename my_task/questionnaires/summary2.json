@@ -65,6 +65,12 @@
             "id": "preference_reason_1",
             "required": true,
             "instructions": "Why did you prefer this technique the most?"
+        },
+        {
+            "questiontype": "multi_field",
+            "id": "comments_1",
+            "required": false,
+            "instructions": "Any other comments?"
         }
     ]
   }
