@@ -387,106 +387,29 @@ Controller.prototype.handleKeyPressed = function (event) {
                 // }
                 if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
                     if (confirm("Confirm selection.")) {
-                        if (this.model.trial === 0) {
-                            switch (this.model.task) {
-                                case 1: {
-                                    let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
-                                    switch (this.model.interaction) {
-                                        case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (index === 8) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.OVERLAYS:
-                                            if (index === 2) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.SHADOW_MARKER:
-                                            if (index === 1) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                    }
-                                    break;
-                                }
-                                case 2: {
-                                    let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
-                                    switch (this.model.interaction) {
-                                        case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (index === 4) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.OVERLAYS:
-                                            if (index === 2) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.SHADOW_MARKER:
-                                            if (index === 1) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                    }
-                                    break;
-                                }
-                                case 3: {
-                                    let indices = [this.model.videos.findIndex(video => video === this.model.selectedVideos[0]), this.model.videos.findIndex(video => video === this.model.selectedVideos[1])]
-                                    switch (this.model.interaction) {
-                                        case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (indices.includes(6) && indices.includes(8)) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.OVERLAYS:
-                                            if (indices.includes(1) && indices.includes(4)) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.SHADOW_MARKER:
-                                            if (indices.includes(2) && indices.includes(6)) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                    }
-                                    break;
-                                }
-                                case 4: {
-                                    let index = this.model.videos.findIndex(video => video === this.model.selectedVideos[0]);
-                                    switch (this.model.interaction) {
-                                        case INTERACTIONS.SMALL_MULTIPLES:
-                                            if (index === 4) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.OVERLAYS:
-                                            if (index === 2) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                        case INTERACTIONS.SHADOW_MARKER:
-                                            if (index === 7) this.model.nextTrial();
-                                            else this.model.tryAgain({});
-                                            break;
-                                    }
-                                    break;
-                                }
+                        this.model.addStreamData(EVENTS.SUBMIT);
+                        let elapsedTime = new Date().getTime() - this.model.trialStartTime - this.model.errorTime;
+                        if (this.model.trial < 2) {
+                            let results = this.model.addTrialData();
+                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.nextTrial();
+                            } else if (elapsedTime > 180000) {
+                                this.model.addCategoriesToCookies();
+                                this.model.nextTrial();
+                            } else {
+                                this.model.tryAgain(results);
                             }
                         } else {
-                            this.model.addStreamData(EVENTS.SUBMIT);
-                            let elapsedTime = new Date().getTime() - this.model.trialStartTime - this.model.errorTime;
-                            if (this.model.trial < 2) {
-                                let results = this.model.addTrialData();
-                                if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                    this.model.addCategoriesToCookies();
-                                    this.model.nextTrial();
-                                } else if (elapsedTime > 180000) {
-                                    this.model.addCategoriesToCookies();
-                                    this.model.nextTrial();
-                                } else {
-                                    this.model.tryAgain(results);
-                                }
+                            let results = this.model.addTrialData();
+                            if (results.falsePositives === 0 && results.falseNegatives === 0) {
+                                this.model.addCategoriesToCookies();
+                                this.model.logData();
+                            } else if (elapsedTime > 180000) {
+                                this.model.addCategoriesToCookies();
+                                this.model.logData();
                             } else {
-                                let results = this.model.addTrialData();
-                                if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                    this.model.addCategoriesToCookies();
-                                    this.model.logData();
-                                } else if (elapsedTime > 180000) {
-                                    this.model.addCategoriesToCookies();
-                                    this.model.logData();
-                                } else {
-                                    this.model.tryAgain(results);
-                                }
+                                this.model.tryAgain(results);
                             }
                         }
                     }
