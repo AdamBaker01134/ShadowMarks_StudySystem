@@ -88,19 +88,40 @@ def getTLXPreferences(row):
 def getFavourites(row):
     pID = row["participantID"]
     condition = row["condition"]
-    observations = []
+    
+    speed_preference = {}
+    accuracy_preference = {}
+    overall_preferene = {}
 
     for key in row:
         key = key.split("_")
-        if key[0] == "summary" and key[1] != "duration":
+        if key[0][:-1] == "summary" and key[1] != "duration":
             restOfThing = ""
             for i in range(1, len(key)):
                 restOfThing += "_" + key[i]
+            if key[1] == "speed" and key[2] != "reason":
+                speed_preference["pID"] = pID
+                speed_preference["condition"] = condition
+                speed_preference["question"] = key[1]
+                speed_preference["answer"] = row[key[0] + restOfThing]
+            elif key[1] == "speed":
+                speed_preference["reason"] = row[key[0] + restOfThing]
+            elif key[1] == "accuracy" and key[2] != "reason":
+                accuracy_preference["pID"] = pID
+                accuracy_preference["condition"] = condition
+                accuracy_preference["question"] = key[1]
+                accuracy_preference["answer"] = row[key[0] + restOfThing]
+            elif key[1] == "accuracy":
+                accuracy_preference["reason"] = row[key[0] + restOfThing]
+            elif key[1] == "preference" and key[2] != "reason":
+                overall_preferene["pID"] = pID
+                overall_preferene["condition"] = condition
+                overall_preferene["question"] = key[1]
+                overall_preferene["answer"] = row[key[0] + restOfThing]
+            elif key[1] == "preference":
+                overall_preferene["reason"] = row[key[0] + restOfThing]
 
-            observations.append({"pID": pID, "condition": condition,
-                                "question": key[1], "value": row[key[0] + restOfThing]})
-
-    return observations
+    return [ speed_preference, accuracy_preference, overall_preferene]
 
 
 def dict_to_csv(list_of_dicts, csv_file):
