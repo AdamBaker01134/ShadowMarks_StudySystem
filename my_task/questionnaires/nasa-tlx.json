@@ -1,7 +1,7 @@
 {
   "title": "NASA-TLX Questionnaire",
   "instructions": "Please rate your experience with this set of tasks.",
-  "code": "<script type='text/javascript'>const slider1 = document.querySelector('#slider_1'); slider1.addEventListener('click', () => slider1.classList.add('tapped')); const slider2 = document.querySelector('#slider_2'); slider2.addEventListener('click', () => slider2.classList.add('tapped')); const slider3 = document.querySelector('#slider_3');slider3.addEventListener('click', () => slider3.classList.add('tapped'));const slider4 = document.querySelector('#slider_4');slider4.addEventListener('click', () => slider4.classList.add('tapped'));const slider5 = document.querySelector('#slider_5');slider5.addEventListener('click', () => slider5.classList.add('tapped'));const slider6 = document.querySelector('#slider_6');slider6.addEventListener('click', () => slider6.classList.add('tapped'));document.addEventListener('submit', (event) => { if (document.querySelectorAll('.tapped').length !== 6) { event.preventDefault(); event.stopPropagation(); } for (let i = 1; i <= 6; i++) { let slider = document.querySelector('#slider_'+i);if (slider && !slider.classList.contains('tapped')) { let warning = document.querySelector('#slider_'+i+'_warning');if (warning) { warning.remove(); }const node = document.createElement('div');node.style = 'font-style: italic; color: red';node.id='slider_'+i+'_warning';node.innerText = 'Please rate your experience here.';slider.after(node);} else if (slider) {let warning = document.querySelector('#slider_'+i+'_warning');if (warning) { warning.remove(); }}} });</script>",
+  "code": "<script type='text/javascript'> const slider1 = document.querySelector('#slider_1'); slider1.addEventListener('click', () => slider1.classList.add('tapped')); const slider2 = document.querySelector('#slider_2'); slider2.addEventListener('click', () => slider2.classList.add('tapped')); const slider3 = document.querySelector('#slider_3'); slider3.addEventListener('click', () => slider3.classList.add('tapped')); const slider4 = document.querySelector('#slider_4'); slider4.addEventListener('click', () => slider4.classList.add('tapped')); const slider5 = document.querySelector('#slider_5'); slider5.addEventListener('click', () => slider5.classList.add('tapped')); const slider6 = document.querySelector('#slider_6'); slider6.addEventListener('click', () => slider6.classList.add('tapped')); const slider7 = document.querySelector('#slider_7'); slider7.addEventListener('click', () => slider7.classList.add('tapped')); const slider8 = document.querySelector('#slider_8'); slider8.addEventListener('click', () => slider8.classList.add('tapped')); const slider9 = document.querySelector('#slider_9'); slider9.addEventListener('click', () => slider9.classList.add('tapped')); const slider10 = document.querySelector('#slider_10'); slider10.addEventListener('click', () => slider10.classList.add('tapped')); document.addEventListener('submit', (event) => { if (document.querySelectorAll('.tapped').length !== 10) { event.preventDefault(); event.stopPropagation(); } for (let i = 1; i <= 10; i++) { let slider = document.querySelector('#slider_' + i); if (slider && !slider.classList.contains('tapped')) { let warning = document.querySelector('#slider_' + i + '_warning'); if (warning) { warning.remove(); } const node = document.createElement('div'); node.style = 'font-style: italic; color: red'; node.id = 'slider_' + i + '_warning'; node.innerText = 'Please rate your experience here.'; slider.after(node); } else if (slider) { let warning = document.querySelector('#slider_' + i + '_warning'); if (warning) { warning.remove(); } } } });</script>",
   "questions": [
     {
       "questiontype": "slider",
@@ -54,6 +54,42 @@
       "id": "slider_6",
       "left": "Very Low",
       "right": "Very High",
+      "tick_count": 7,
+      "width": 420
+    },
+    {
+      "questiontype": "slider",
+      "instructions": "How much did you have to guess in these tasks?",
+      "id": "slider_7",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 420
+    },
+    {
+      "questiontype": "slider",
+      "instructions": "How accurately were you able to be completing these tasks?",
+      "id": "slider_8",
+      "left": "Very Low",
+      "right": "Very High",
+      "tick_count": 7,
+      "width": 420
+    },
+    {
+      "questiontype": "slider",
+      "instructions": "How hard was it to find the correct answer in these tasks?",
+      "id": "slider_9",
+      "left": "Very Easy",
+      "right": "Very Difficult",
+      "tick_count": 7,
+      "width": 420
+    },
+    {
+      "questiontype": "slider",
+      "instructions": "How hard was it to learn the technique for these tasks?",
+      "id": "slider_10",
+      "left": "Very Easy",
+      "right": "Very Difficult",
       "tick_count": 7,
       "width": 420
     }
