@@ -146,23 +146,23 @@ Controller.prototype.handleMousePressed = function (event) {
                         return true;
                     }
                     this.model.selectVideo(hit);
-                    if (this.model.trial === 0 && this.model.task === 3 && this.model.selectedVideos.length === 1 && this.model.selectedVideos[0] === this.model.videos[1] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                    if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[1] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.SELECTED_VIDEO);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.OVERLAYS) {
                     this.model.addToOverlay(hit);
-                    if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[2] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 2 && this.model.overlay[0] === this.model.videos[0] && this.model.overlay[1] === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 3 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[0] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
-                    else if (this.model.trial === 0 && this.model.task === 4 && this.model.overlay.length === 1 && this.model.overlay[0] === this.model.videos[2] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                    if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && hit === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && hit === this.model.videos[1] && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && hit === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[1] && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[2] && this.model.currentChecklistPrompt === 3) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 3 && hit === this.model.videos[2] && this.model.currentChecklistPrompt === 4) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[0] && this.model.currentChecklistPrompt === 0) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[1] && !this.model.overlay.includes(hit) && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    else if (this.model.trial === 0 && this.model.task === 4 && hit === this.model.videos[0] && !this.model.overlay.includes(hit) && this.model.currentChecklistPrompt === 2) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.ADDED_TO_OVERLAY);
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
@@ -257,7 +257,7 @@ Controller.prototype.handleKeyPressed = function (event) {
                 let hit = this.model.checkShadowMarkerHit();
                 if (hit) {
                     this.model.deleteShadowMarker(hit);
-                    if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.shadowMarks.length === 0 && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
+                    if (this.model.trial === 0 && (this.model.task === 1 || this.model.task === 2) && this.model.currentChecklistPrompt === 1) this.model.nextPrompt();
                     this.model.addStreamData(EVENTS.DELETED_SHADOW_MARK);
                 }
             }
@@ -720,7 +720,7 @@ Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCon
                     let video = getRandomInt(9,category.videos.length);
                     let peak = category.videos[video].peak;
                     let name = category.videos[video].name.split("-")[0];
-                    if (!videos.includes(video) && !seen.includes(name) && peak > 0.50) {
+                    if (!videos.includes(video) && peak > 0.50) {
                         videos.push(video);
                         peakVals.push(peak);
                         seen.push(name);
@@ -738,17 +738,17 @@ Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCon
             case 1:
             default:
                 // Low peak condition
-                while (videos.length < 3) {
+                while (videos.length < 2) {
                     let video = getRandomInt(9,category.videos.length);
                     let peak = category.videos[video].peak;
                     let name = category.videos[video].name.split("-")[0];
-                    if (!videos.includes(video) && !seen.includes(name) && peak > 0.48 && peak < 0.49) {
+                    if (!videos.includes(video) && peak > 0.48 && peak < 0.49) {
                         videos.push(video);
                         peakVals.push(peak);
                         seen.push(name);
                     }
                 }
-                while (videos.length < 5) {
+                while (videos.length < 3) {
                     let video = getRandomInt(9,category.videos.length);
                     let peak = category.videos[video].peak;
                     if (!videos.includes(video) && peak > 0.47 && peak < 0.48) {
