@@ -119,9 +119,8 @@ View.prototype.draw = function () {
                 rect(ox, oy, ow, oh);
                 noStroke();
                 fill(0);
-                textSize(24);
-                text("No videos in overlay.", ox + ow / 2 - textWidth("No videos in overlay.") / 2, oy + oh + 24);
-                text("Click video to add.", ox + ow / 2 - textWidth("Click video to add.") / 2, oy + oh + 48);
+                textSize(16);
+                text("No videos in overlay. Click video to add.", ox + ow / 2 - textWidth("No videos in overlay. Click video to add.") / 2, oy + oh + 24);
             }
         }
         this.drawInstructions();
@@ -141,18 +140,33 @@ View.prototype.draw = function () {
         }
 
         if (this.model.trial === 0) {
-            stroke(0);
-            strokeWeight(1);
-            fill(0);
-            textSize(16);
             let prompt = this.model.getTutorialChecklist()[this.model.currentChecklistPrompt];
-            let promptX = this.model.getScrollbarX() - 55;
+            let promptX = 15;
             let promptY = this.model.getScrollbarY() - 50;
-            fill(255);
-            rect(promptX-20, promptY-40, textWidth(prompt)+40, 64, 20);
+            let promptW = 0;
+            let promptH = 0;
+            let splitPrompt = prompt.split(" ");
             fill(0);
             noStroke();
-            text(prompt, promptX, promptY);
+            textSize(16);
+            let txt = "";
+            splitPrompt.forEach(word => {
+                if (textWidth(txt+word+" ")+30 > this.model.getWorkspaceWidth()) {
+                    text(txt,promptX,promptY);
+                    promptY += 20;
+                    promptW = Math.max(textWidth(txt),promptW);
+                    promptH += 20;
+                    txt = "";
+                }
+                txt+= word+" ";
+            });
+            text(txt,promptX,promptY);
+            promptW = Math.max(textWidth(txt),promptW);
+            promptH += 20;
+            noFill();
+            stroke(0);
+            strokeWeight(1);
+            rect(promptX-10, promptY-promptH-6, promptW+20, promptH+20, 20);
         }
         strokeWeight(1);
         if (this.model.videos.length > 0 && this.model.videos[0].images.length > 1) this.drawScrollbar();
@@ -169,9 +183,9 @@ View.prototype.drawInstructionPage = function () {
     let begin = "Click on the circle below to begin. Please complete the task as quickly and as accurately as possible.";
     let txt = "";
     let size = 16;
-    let x = width/2;
-    let w = width/3;
-    let y = 50;
+    let x = width/3;
+    let w = 2*width/3-5;
+    let y = 28;
     if (this.model.trial === 0) {
         switch (this.model.task) {
             case 1:
@@ -282,14 +296,15 @@ View.prototype.drawInstructionPage = function () {
         }
         
         // Draw title
-        size = 32;
+        size = 24;
         textSize(size);
+        textStyle(BOLD);
         noStroke();
         fill(0);
         strokeWeight(1);
-        text(title, x-textWidth(title)/2, y);
+        text(title, x, y);
         y+= (size+10);
-        x = width/3;
+        textStyle(NORMAL);
 
         // Draw image
         if (this.model.trial === 0 && this.model.instructionImage !== null) {
@@ -394,7 +409,9 @@ View.prototype.drawInstructions = function () {
     if (this.model.videos.length > 0 && this.model.category.length > 0) {
         let w,h,x,y;
         ({ ow: w, oh: h, ox: x, oy: y } = this.model.getOverlayDimensions());
-        y += h + 120;
+        y += h + 50;
+        x = this.model.getWorkspaceWidth() + 5;
+        w = width - this.model.getWorkspaceWidth() - 10;
 
         let instructions = [];
         switch (this.model.task) {
@@ -525,7 +542,7 @@ View.prototype.drawInstructions = function () {
                 }
             });
             text(txt, x,y);
-            y+=(size+25);
+            y+=(size+10);
             txt = "";
             textStyle(NORMAL);
         });
