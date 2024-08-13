@@ -279,7 +279,7 @@ ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="ca
 
 ### TLX DATA ###
 
-tlxData <- read_csv("shadowmarksTLXData_2024-07-24.csv", col_names=TRUE)
+tlxData <- read_csv("shadowmarksTLXData_2024-08-13.csv", col_names=TRUE)
 tlxData
 
 # ---------------------------------------
@@ -326,7 +326,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=interaction)) +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("tlx-1.png", width=18, height=10, units="cm", type="cairo-png")
+ggsave("tlx-1.png", width=30, height=10, units="cm", type="cairo-png")
 
 
 
@@ -345,7 +345,7 @@ ggsave("tlx-1.png", width=18, height=10, units="cm", type="cairo-png")
 
 #### Preference ####
 
-preferenceData <- read_csv("shadowmarksPreferenceData_2024-07-24.csv", col_names=TRUE)
+preferenceData <- read_csv("shadowmarksPreferenceData_2024-08-13.csv", col_names=TRUE)
 preferenceData
 
 preferenceData$pID <- as_factor(preferenceData$pID)
@@ -353,7 +353,9 @@ preferenceData$condition <- as_factor(preferenceData$condition)
 
 ezPrecis(preferenceData)
 
-ezDesign(data=preferenceData, x=interaction, y=pID)
+ezDesign(data=preferenceData, x=answer, y=pID)
+
+ggsave("preference-1.png", width=18, height=10, units="cm", type="cairo-png")
 
 
 
