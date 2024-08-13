@@ -26,7 +26,7 @@ new_theme <- theme_bw(base_size = 16) +
 # https://r-graphics.org/
 # https://modernstatisticswithr.com/
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-01.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-13.csv", col_names=TRUE)
 Data2
 
 # ---------------------------------------
@@ -38,7 +38,12 @@ Data2
 Data2$pID <- as_factor(Data2$pID)
 Data2$interaction <- as_factor(Data2$interaction)
 
-# Data2 <- Data2 %>% filter(pID==9)
+# Filtering out incompletes
+# incompletes <- list(18,)
+# Data2 <- Data2 %>% filter(!(pID %in% incompletes))
+# ezDesign(data=ctData2, x=interaction, y=pID)
+# ezPrecis(ctData2)
+# Data2 <- Data2 %>% filter(pID==11)
 
 ctData2 <- Data2 %>% group_by(pID,interaction,task,trial) %>% summarise(elapsedTime=max(elapsedTime))
 ctData2
@@ -46,12 +51,6 @@ ctData2
 ezPrecis(ctData2)
 
 ezDesign(data=ctData2, x=interaction, y=pID)
-
-# # Filtering out incompletes
-# incompletes <- list(13,17,19,20)
-# ctData2 <- ctData2 %>% filter(!(pID %in% incompletes))
-# ezDesign(data=ctData2, x=interaction, y=pID)
-# ezPrecis(ctData2)
 
 # ---------------------------------------
 # 2.3 calculate summary stats by interface
@@ -144,8 +143,11 @@ ggplot(ctSummaryTask4, aes(x=interaction, y=mean)) +
 
 ggsave("ct-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
 
+ggplot(ctData2, aes(x=pID,y=elapsedTime, color=interaction)) +
+  geom_jitter(size=2.0) +
+  new_theme
 
-
+ggsave("ct-outliers.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 
@@ -254,9 +256,6 @@ ggplot(accSummaryTask4, aes(x=interaction, y=mean)) +
   ylab(label='Accuracy (number of errors)')
 
 ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
-
-
-
 
 
 
