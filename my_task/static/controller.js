@@ -690,10 +690,9 @@ Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCon
                 break;
         }
         let tallest = Math.max(...peakVals);
-        // Shuffle array
-        shuffleArray(videos);
-        // Place correct video in the second or third row
-        videos = moveToRow(videos, videos.findIndex(video => category.videos[video].peak === tallest), getRandomInt(1,3));
+        // Ensure video is in the correct position
+        let position = positions[trialNum-1];
+        while (videos.findIndex(video => category.videos[video].peak === tallest) !== position) shuffleArray(videos);
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
@@ -800,10 +799,9 @@ Controller.prototype.handleLoadSeaIce = async function (trialNum, selectionCondi
                 break;
         }
         let farthest = Math.max(...extensionVals);
-        // Shuffle array
-        shuffleArray(videos);
-        // Place correct video in the second or third row
-        videos = moveToRow(videos, videos.findIndex(video => category.videos[video].extension === farthest), getRandomInt(1,3));
+        // Ensure video is in the correct position
+        let position = positions[trialNum-1];
+        while (videos.findIndex(video => category.videos[video].extension === farthest) !== position) shuffleArray(videos);
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
@@ -857,7 +855,6 @@ Controller.prototype.handleLoadScatterplots = async function (trialNum) {
                 videos = [0,1,2,4,6,7,8,5,9];
                 break;
         }
-        // shuffleArray(videos);
     } else {
         let found = false;
         let farthest = 0;
@@ -876,8 +873,9 @@ Controller.prototype.handleLoadScatterplots = async function (trialNum) {
                 if (category.videos[videos[i]].outlier > farthest) farthest = category.videos[videos[i]].outlier;
             }
         }
-        // Ensure scatterplot is not in the top left corner
-        while (videos.findIndex(video => category.videos[video].outlier === farthest) === 0) shuffleArray(videos);
+        // Ensure scatterplot is in the correct position
+        let position = positions[trialNum-1];
+        while (videos.findIndex(video => category.videos[video].outlier === farthest) !== position) shuffleArray(videos);
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
