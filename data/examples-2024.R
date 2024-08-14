@@ -26,7 +26,7 @@ new_theme <- theme_bw(base_size = 16) +
 # https://r-graphics.org/
 # https://modernstatisticswithr.com/
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-13.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
 Data2
 
 # ---------------------------------------
@@ -38,19 +38,62 @@ Data2
 Data2$pID <- as_factor(Data2$pID)
 Data2$interaction <- as_factor(Data2$interaction)
 
-# Filtering out incompletes
-# incompletes <- list(18,)
-# Data2 <- Data2 %>% filter(!(pID %in% incompletes))
-# ezDesign(data=ctData2, x=interaction, y=pID)
-# ezPrecis(ctData2)
-# Data2 <- Data2 %>% filter(pID==11)
+Data2 <- Data2 %>% filter(trial!=0)
+Data2
 
-ctData2 <- Data2 %>% group_by(pID,interaction,task,trial) %>% summarise(elapsedTime=max(elapsedTime))
+# Filtering out incompletes
+incompletes <- list(25,35)
+Data2 <- Data2 %>% filter(!(pID %in% incompletes))
+ezDesign(data=Data2, x=interaction, y=pID)
+ezPrecis(Data2)
+
+Data2 <- Data2 %>% group_by(pID,interaction,task,trial) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
+Data2
+
+ctCap <- 90
+accCap <- 12
+
+# Filtering out outliers above elapsed time cap
+nrow(Data2)
+Data2 <- Data2 %>% filter(elapsedTime < ctCap)
+nrow(Data2)
+Data2
+
+# Filtering out outliers above accuracy cap
+nrow(Data2)
+Data2 <- Data2 %>% filter(errors < accCap)
+nrow(Data2)
+Data2
+
+complete_outliers <- list(55,44,42,24,15,13)
+
+Data2 <- Data2 %>% filter(!(pID %in% complete_outliers))
+ezDesign(data=Data2, x=interaction, y=pID)
+ezPrecis(Data2)
+
+Data3 <- read_csv("shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
+Data3
+
+Conditions <- Data3 %>% filter(trial==1) %>% filter(attempt==1) %>% group_by(interaction,condition) %>% summarise(n=n())
+Conditions
+
+ctData2 <- Data2
 ctData2
 
-ezPrecis(ctData2)
+accData2 <- Data2
+accData2
 
-ezDesign(data=ctData2, x=interaction, y=pID)
+# # Capping outliers above elapased time cap
+# aboveCap <- ctData2$pID[ctData2$elapsedTime > ctCap]
+# aboveCap
+# ctData2$elapsedTime[ctData2$elapsedTime > ctCap] <- ctCap
+# ctData2
+# 
+# # Capping outliers above accuracy cap
+# aboveCap <- accData2$pID[accData2$errors > accCap]
+# aboveCap
+# accData2$errors[accData2$errors > accCap] <- accCap
+# accData2
 
 # ---------------------------------------
 # 2.3 calculate summary stats by interface
@@ -72,7 +115,7 @@ ggplot(ctSummary2, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 ctData2_task1 <- ctData2 %>% filter(task==1)
 ctData2_task2 <- ctData2 %>% filter(task==2)
@@ -112,7 +155,7 @@ ggplot(ctSummaryTask1, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 ggsave("ct-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
 
@@ -121,7 +164,7 @@ ggplot(ctSummaryTask2, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 ggsave("ct-by-interaction-task2.png", width=20, height=10, units="cm", type="cairo-png")
 
@@ -130,7 +173,7 @@ ggplot(ctSummaryTask3, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 ggsave("ct-by-interaction-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
@@ -139,7 +182,7 @@ ggplot(ctSummaryTask4, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 ggsave("ct-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
 
@@ -147,7 +190,7 @@ ggplot(ctData2, aes(x=pID,y=elapsedTime, color=interaction)) +
   geom_jitter(size=2.0) +
   new_theme
 
-ggsave("ct-outliers.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
 
 
@@ -165,13 +208,6 @@ ggsave("ct-outliers.png", width=20, height=10, units="cm", type="cairo-png")
 
 #### ACCURACY #####
 
-accData2 <- Data2 %>% group_by(pID,interaction,task,trial) %>% summarise(errors=max(attempt)-1)
-accData2
-# accData2$falsePositives <- as.numeric(accData2$falsePositives)
-# accData2$falseNegatives <- as.numeric(accData2$falseNegatives)
-# accData2$errors <- accData2$falsePositives + accData2$falseNegatives
-# accData2$errors <- unlist(map(accData2$errors,\(x) if (x > 0) 1 else 0))
-
 accSummary2 <- accData2 %>%
   group_by(interaction) %>%
   summarise(mean = mean(errors, na.rm = TRUE),
@@ -186,7 +222,7 @@ ggplot(accSummary2, aes(x=interaction, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   xlab(label='Interaction') +
-  ylab(label='Completion Time (millisec)')
+  ylab(label='Completion Time (sec)')
 
 accData2_task1 <- accData2 %>% filter(task==1)
 accData2_task2 <- accData2 %>% filter(task==2)
@@ -257,7 +293,11 @@ ggplot(accSummaryTask4, aes(x=interaction, y=mean)) +
 
 ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
 
+ggplot(accData2, aes(x=pID,y=errors, color=interaction)) +
+  geom_jitter(size=2.0) +
+  new_theme
 
+ggsave("acc-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
 
 
@@ -279,7 +319,7 @@ ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="ca
 
 ### TLX DATA ###
 
-tlxData <- read_csv("shadowmarksTLXData_2024-08-13.csv", col_names=TRUE)
+tlxData <- read_csv("shadowmarksTLXData_2024-08-14.csv", col_names=TRUE)
 tlxData
 
 # ---------------------------------------
@@ -288,6 +328,9 @@ tlxData
 
 tlxData$pID <- as_factor(tlxData$pID)
 tlxData$interaction <- as_factor(tlxData$interaction)
+
+tlxData <- tlxData %>% filter(!(pID %in% incompletes)) %>%
+  filter(!(pID %in% complete_outliers))
 
 ezPrecis(tlxData)
 
@@ -313,12 +356,14 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=interaction)) +
   ylab(label='Mean Score') +
   scale_y_continuous(limits=c(0, 6), breaks=c(0,2,4,6),
                      labels=c("1 (least)", "3", "5", "7 (most)")) +
-  scale_x_discrete(limits=c("MentalDemand","PhysicalDemand","TemporalDemand", 
-                            "Performance", "Effort", "Frustration"),
-                   labels=c("MentalDemand", "PhysicalDemand", 
-                            "TemporalDemand", "Performance", 
-                            "Effort", 
-                            "Frustration")) +
+  scale_x_discrete(limits=c("MentalDemand","PhysicalDemand","TemporalDemand",
+                            "Performance","Effort","Frustration","Guessing",
+                            "PerceivedAccuracy","TaskDifficulty",
+                            "TechniqueDifficulty"),
+                   labels=c("MentalDemand","PhysicalDemand","TemporalDemand",
+                            "Performance","Effort","Frustration","Guessing",
+                            "PerceivedAccuracy","TaskDifficulty",
+                            "TechniqueDifficulty")) +
   scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
                     values=c("#FF3300","#0066CC","#00F000"),
                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
@@ -326,7 +371,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=interaction)) +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("tlx-1.png", width=30, height=10, units="cm", type="cairo-png")
+ggsave("tlx-1.png", width=50, height=10, units="cm", type="cairo-png")
 
 
 
@@ -345,15 +390,36 @@ ggsave("tlx-1.png", width=30, height=10, units="cm", type="cairo-png")
 
 #### Preference ####
 
-preferenceData <- read_csv("shadowmarksPreferenceData_2024-08-13.csv", col_names=TRUE)
+preferenceData <- read_csv("shadowmarksPreferenceData_2024-08-14.csv", col_names=TRUE)
 preferenceData
 
 preferenceData$pID <- as_factor(preferenceData$pID)
 preferenceData$condition <- as_factor(preferenceData$condition)
 
+preferenceData <- preferenceData %>% filter(!(pID %in% incompletes)) %>%
+  filter(!(pID %in% complete_outliers))
+
 ezPrecis(preferenceData)
 
 ezDesign(data=preferenceData, x=answer, y=pID)
+
+preferenceSummary <- preferenceData %>%
+  group_by(question,answer) %>%
+  summarise(n = n())
+preferenceSummary
+
+ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
+  geom_col(position=position_dodge(width=0.8), width=0.7) +
+  xlab(label='Preference Question') +
+  ylab(label='Total Score') +
+  scale_x_discrete(limits=c("accuracy","speed","preference"),
+                   labels=c("Preferred Accuracy","Preferred Speed","Preferred Performance")) +
+  scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
+                    values=c("#FF3300","#0066CC","#00F000"),
+                    labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="bottom") +
+  guides(fill=guide_legend(title=NULL))
 
 ggsave("preference-1.png", width=18, height=10, units="cm", type="cairo-png")
 
@@ -683,4 +749,107 @@ for (name in tlxNames) {
 library(boot)
 set.seed(42)
 bs <- boot(iris,mean(data),R=1000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ctSummary2 <- ctData2 %>%
+  group_by(interaction) %>%
+  summarise(mean = mean(elapsedTime, na.rm = TRUE),
+            sd = sd(elapsedTime, na.rm = TRUE),
+            se = sd/sqrt(length(elapsedTime)))
+ctSummary2
+
+ctData2_task4 <- ctData2 %>% filter(task==4)
+
+ctSummaryTask4 <- ctData2_task4 %>%
+  group_by(interaction, trial) %>%
+  summarise(mean = mean(elapsedTime, na.rm = TRUE),
+            sd = sd(elapsedTime, na.rm = TRUE),
+            se = sd/sqrt(length(elapsedTime)))
+ctSummaryTask4
+
+ggplot(ctSummaryTask4, aes(x=trial, y=mean, group=interaction)) +
+  geom_line(aes(color=interaction)) +
+  geom_point(aes(color=interaction))+
+  xlab(label='Trial') +
+  ylab(label='Completion Time (sec)') +
+  scale_x_discrete(limits=c(0,1,2),
+                   labels=c("1","2","3")) +
+  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+                     values=c("#FF3300","#0066CC","#00F000"),
+                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="right") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("ct-lines.png", width=30, height=10, units="cm", type="cairo-png")
+
+
+
+StreamData2 <- read_csv("shadowmarksStreamData_2024-08-14.csv", col_names=TRUE)
+StreamData2
+
+StreamData2 <- StreamData2 %>% filter(!(trial==0)) %>%
+  filter(attempt==1)
+StreamData2
+
+StreamData2_cursormove <- StreamData2 %>% filter(event=="shadow_cursor_moved") %>%
+  group_by(pID) %>% summarise(n=n())
+StreamData2_cursormove
+
+StreamData2_addedmark <- StreamData2 %>% filter(event=="added_mark") %>%
+  group_by(pID) %>% summarise(n=n())
+StreamData2_addedmark
+
+
+accData2_task4 <- accData2 %>% filter(task==4)
+
+accSummaryTask4 <- accData2_task4 %>%
+  group_by(interaction,trial) %>%
+  summarise(mean = mean(errors, na.rm = TRUE),
+            sd = sd(errors, na.rm = TRUE),
+            se = sd/sqrt(length(errors)))
+accSummaryTask4
+
+ggplot(accSummaryTask4, aes(x=trial, y=mean, group=interaction)) +
+  geom_line(aes(color=interaction)) +
+  geom_point(aes(color=interaction))+
+  xlab(label='Trial') +
+  ylab(label='Accuracy (# of errors)') +
+  scale_x_discrete(limits=c(0,1,2),
+                   labels=c("1","2","3")) +
+  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+                     values=c("#FF3300","#0066CC","#00F000"),
+                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="right") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("acc-lines.png", width=20, height=10, units="cm", type="cairo-png")
 

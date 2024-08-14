@@ -80,6 +80,14 @@ def getTLXPreferences(row):
                 question = "Effort"
             elif key[2] == "6":
                 question = "Frustration"
+            elif key[2] == "7":
+                question = "Guessing"
+            elif key[2] == "8":
+                question = "PerceivedAccuracy"
+            elif key[2] == "9":
+                question = "TaskDifficulty"
+            elif key[2] == "10":
+                question = "TechniqueDifficulty"
             observations.append({"pID": pID, "condition": condition,
                                 "interaction": interaction, "task": task, "question": question, "value": row[key[0] + restOfThing]})
     return observations
@@ -95,7 +103,7 @@ def getFavourites(row):
 
     for key in row:
         key = key.split("_")
-        if key[0][:-1] == "summary" and key[1] != "duration":
+        if key[0][:-1] == "summary" and key[1] != "comments" and key[1] != "duration":
             restOfThing = ""
             for i in range(1, len(key)):
                 restOfThing += "_" + key[i]
