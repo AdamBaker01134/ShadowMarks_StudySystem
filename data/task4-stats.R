@@ -42,7 +42,7 @@ Data2 <- Data2 %>% filter(trial!=0)
 Data2
 
 # Filtering out incompletes
-incompletes <- list(25,35)
+incompletes <- list(25,35,67)
 Data2 <- Data2 %>% filter(!(pID %in% incompletes))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
@@ -74,7 +74,7 @@ ezPrecis(Data2)
 Data3 <- read_csv("shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
 Data3
 
-Conditions <- Data3 %>% filter(trial==1) %>% filter(attempt==1) %>% group_by(interaction,condition) %>% summarise(n=n())
+Conditions <- Data3 %>% filter(attempt==1) %>% group_by(interaction,condition) %>% summarise(n=n())
 Conditions
 
 ctData2 <- Data2
@@ -815,6 +815,23 @@ ggsave("ct-lines.png", width=30, height=10, units="cm", type="cairo-png")
 StreamData2 <- read_csv("shadowmarksStreamData_2024-08-14.csv", col_names=TRUE)
 StreamData2
 
+complete_outliers <- list(25,35,67,55,44,42,24,15,13)
+
+StreamData2 <- StreamData2 %>% filter(!(pID %in% complete_outliers)) %>%
+  filter(event=="submit") %>% group_by(pID,condition,interaction,trial,attempt,selectedVideos) %>% summarise()
+
+Data2 <- read_csv("shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
+Data2
+
+complete_outliers <- list(25,35,67,55,44,42,24,15,13)
+
+Data2 <- Data2 %>% filter(!(pID %in% complete_outliers)) %>%
+  group_by(pID,condition,interaction,trial,attempt,videos) %>% summarise()
+
+DataMerge <- merge(StreamData2, Data2, by=c("pID","condition","interaction","trial","attempt"))
+
+write.csv(DataMerge, "selected_videos.csv")
+
 StreamData2 <- StreamData2 %>% filter(!(trial==0)) %>%
   filter(attempt==1)
 StreamData2
@@ -826,6 +843,34 @@ StreamData2_cursormove
 StreamData2_addedmark <- StreamData2 %>% filter(event=="added_mark") %>%
   group_by(pID) %>% summarise(n=n())
 StreamData2_addedmark
+
+DifferenceData2 <- read_csv("difference_to_selection.csv", col_names=TRUE)
+DifferenceData2
+
+complete_outliers <- list(25,35,67,55,44,42,24,15,13)
+
+DifferenceData2 <- DifferenceData2 %>% filter(!(pID %in% complete_outliers)) %>%
+  group_by(interaction,trial) %>% summarise(mean=mean(difference,na.rm=TRUE),
+                                            sd=sd(difference,na.rm=TRUE),
+                                            se=sd/sqrt(length(difference)))
+
+ggplot(DifferenceData2, aes(x=trial, y=mean, group=interaction)) +
+  geom_line(aes(color=interaction)) +
+  geom_point(aes(color=interaction))+
+  xlab(label='Trial') +
+  ylab(label='Mean distance to correct answer') +
+  scale_x_discrete(limits=c(0,1,2),
+                   labels=c("1","2","3")) +
+  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+                     values=c("#FF3300","#0066CC","#00F000"),
+                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="right") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("difference_to_selection.png", width=30, height=10, units="cm", type="cairo-png")
+
+
 
 
 accData2_task4 <- accData2 %>% filter(task==4)
