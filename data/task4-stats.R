@@ -42,7 +42,7 @@ Data2 <- Data2 %>% filter(trial!=0)
 Data2
 
 # Filtering out incompletes
-incompletes <- list(25,35)
+incompletes <- list(25,35,67)
 Data2 <- Data2 %>% filter(!(pID %in% incompletes))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
@@ -74,7 +74,7 @@ ezPrecis(Data2)
 Data3 <- read_csv("shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
 Data3
 
-Conditions <- Data3 %>% filter(trial==1) %>% filter(attempt==1) %>% group_by(interaction,condition) %>% summarise(n=n())
+Conditions <- Data3 %>% filter(attempt==1) %>% group_by(interaction,condition) %>% summarise(n=n())
 Conditions
 
 ctData2 <- Data2
