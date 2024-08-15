@@ -1060,6 +1060,48 @@ Model.prototype.getCorrectVideos = function () {
     return correctVideos;
 }
 
+Model.prototype.getSelectedDifferences = function (selected, correct) {
+    if (selected.length === 0 || correct.length === 0 || (this.task === 3 && selected.length !== 2)) return [-1,-1];
+    let category = this.category[0];
+    switch (this.task) {
+        case 1:
+            let selectedPeak = category.videos.find(video => video.name === selected[0].name)?.peak;
+            let correctPeak = category.videos.find(video => video.name === correct[0].name)?.peak;
+            if (selectedPeak !== undefined && correctPeak !== undefined) {
+                return [ Math.abs(selectedPeak - correctPeak), -1 ];
+            }
+            break;
+        case 2:
+            let selectedExtension = category.videos.find(video => video.name === selected[0].name)?.extension;
+            let correctExtension = category.videos.find(video => video.name === correct[0].name)?.extension;
+            if (selectedExtension !== undefined && correctExtension !== undefined) {
+                return [ Math.abs(selectedExtension - correctExtension), -1 ];
+            }
+            break;
+        case 3:
+            let selectedReleases = [ category.videos.find(video => video.name === selected[0].name)?.release, category.videos.find(video => video.name === selected[1].name)?.release ];
+            let refereceRelease = category.videos.find(video => video.name === this.videos[0].name)?.release;
+            if (!selectedReleases.includes(undefined) && refereceRelease !== (undefined)) {
+                let x1 = selectedReleases[0][0];
+                let y1 = selectedReleases[0][1];
+                let x2 = selectedReleases[1][0];
+                let y2 = selectedReleases[1][1];
+                let x3 = refereceRelease[0];
+                let y3 = refereceRelease[1];
+                return [ Math.sqrt(Math.pow(x1-x3,2) + Math.pow(y1-y3,2)), Math.sqrt(Math.pow(x2-x3,2) + Math.pow(y2-y3,2)) ];
+            }
+            break;
+        case 4:
+            let selectedOutlier = category.videos.find(video => video.name === selected[0].name)?.outlier;
+            let correctOutlier = category.videos.find(video => video.name === correct[0].name)?.outlier;
+            if (selectedOutlier !== undefined && correctOutlier !== undefined) {
+                return [ Math.abs(selectedOutlier - correctOutlier), -1 ];
+            }
+            break;
+    }
+    return [-1,-1];
+}
+
 Model.prototype.addTrialData = function () {
     // // Elapsed time
     let elapsedTime = new Date().getTime() - this.trialStartTime - this.errorTime;
@@ -1080,6 +1122,8 @@ Model.prototype.addTrialData = function () {
         if (this.selectedVideos.findIndex(selectedVideo => correctVideo.name === selectedVideo.name) === -1) falseNegatives++;
     });
 
+    let differences = this.getSelectedDifferences(this.selectedVideos,correctVideos);
+
     // Construct trial data object
     let results = {
         pID: pID,
@@ -1091,6 +1135,10 @@ Model.prototype.addTrialData = function () {
         dataset: this.getCurrentDataset(),
         category: this.category[0].name,
         videos: this.videos.slice(0,this.videosPerTrial).reduce((prev,curr) => prev+curr.name+";",""),
+        selectedVideos: this.selectedVideos.reduce((prev,curr) => prev+curr.name+";",""),
+        correctVideos: correctVideos.reduce((prev,curr) => prev+curr.name+";",""),
+        difference1: differences[0],
+        difference2: differences[1],
         loadTime: this.trialLoadTime[0],
         elapsedTime: elapsedTime,
         totalCorrect: this.correctlySelectedVideos.length,
