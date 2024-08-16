@@ -844,19 +844,21 @@ StreamData2_addedmark <- StreamData2 %>% filter(event=="added_mark") %>%
   group_by(pID) %>% summarise(n=n())
 StreamData2_addedmark
 
-DifferenceData2 <- read_csv("difference_to_selection.csv", col_names=TRUE)
+DifferenceData2 <- read_csv("shadowmarksTrialData_2024-08-15.csv", col_names=TRUE)
 DifferenceData2
 
-complete_outliers <- list(25,35,67,55,44,42,24,15,13)
+
+complete_outliers <- list(3,23,43,53,68,2,7,31,32,47)
 
 DifferenceData2 <- DifferenceData2 %>% filter(!(pID %in% complete_outliers)) %>%
-  group_by(interaction,trial) %>% summarise(mean=mean(difference,na.rm=TRUE),
-                                            sd=sd(difference,na.rm=TRUE),
-                                            se=sd/sqrt(length(difference)))
+  group_by(interaction,trial) %>% summarise(mean=mean(difference1,na.rm=TRUE),
+                                            sd=sd(difference1,na.rm=TRUE),
+                                            se=sd/sqrt(length(difference1)))
 
 ggplot(DifferenceData2, aes(x=trial, y=mean, group=interaction)) +
   geom_line(aes(color=interaction)) +
   geom_point(aes(color=interaction))+
+  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
   ylab(label='Mean distance to correct answer') +
   scale_x_discrete(limits=c(0,1,2),
