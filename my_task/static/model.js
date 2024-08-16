@@ -70,7 +70,7 @@ function Model() {
     this.attempt = 1;
     this.trialLog = [];
     this.streamLog = [];
-    this.errorLog = [];
+    this.errorLog = JSON.parse(localStorage.getItem("errorCache")) || [];
     this.trialStartTime = 0;
     this.currentChecklistPrompt = 0;
 
@@ -207,6 +207,7 @@ Model.prototype.error = function (errCode) {
     if (this.errorCode !== -1) {
         this.addErrorData();
         this.errorStartTime = new Date().getTime();
+        if (this.errorCode === 4) localStorage.setItem("errorCache", JSON.stringify(this.errorLog));
     } else {
         this.errorTime += new Date().getTime() - this.errorStartTime;
     }
@@ -874,38 +875,12 @@ Model.prototype.getCurrentDataset = function () {
     }
 }
 
-Model.prototype.getCookieCategories = function () {
-    let cookieValue = document.cookie.split("; ").find((row) => row.startsWith("previousCategories="))?.split("=")[1];
-    if (cookieValue) {
-        return cookieValue.split("|");
-    } else {
-        return [];
-    }
-}
-
-Model.prototype.addCategoriesToCookies = function () {
-    if (this.task !== 3) return;
-    let previousCategories = this.getCookieCategories();
-    if (!previousCategories.includes(this.category[0].name)) previousCategories.push(this.category[0].name);
-    let cookieString = "";
-    previousCategories.forEach(previousCategory => cookieString += previousCategory + "|");
-    cookieString = cookieString.slice(0,-1);
-    document.cookie = `previousCategories=${cookieString}; Secure`;
-}
-
-Model.prototype.removeCategoryCookies = function (total) {
-    let previousCategories = this.getCookieCategories();
-    previousCategories = previousCategories.slice(0, -total);
-    let cookieString = "";
-    previousCategories.forEach(previousCategory => cookieString += previousCategory + "|");
-    cookieString = cookieString.slice(0,-1);
-    document.cookie = `previousCategories=${cookieString}; Secure`;
-    return previousCategories;
-}
-
 Model.prototype.logData = function () {
     // Ensure that the visibility change does not fire.
     document.removeEventListener("visibilitychange", sendHiddenPage);
+
+    // Remove cached error log
+    localStorage.removeItem("errorCache");
 
     let submitForm = document.createElement("form");
     submitForm.setAttribute("action", "#");

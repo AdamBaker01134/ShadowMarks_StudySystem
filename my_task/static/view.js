@@ -21,23 +21,30 @@ View.prototype.draw = function () {
             case 3:
                 topText = "Please enter Fullscreen mode by pressing F11 and ensure that your browser is at 100% zoom.";
                 break;
+            case 4:
+                titleText = "Oops! Something went wrong";
+                topText = "Please refresh the page. If the error persists, contact the Prolific experimenter.";
             default:
                 break;
         }
         const l = 100;
         const x = width / 2 - l / 2;
         const y = windowHeight / 2 + scrollY - l / 2;
-        stroke(0);
-        fill(255);
-        circle(x,y,l);
+        if (this.model.errorCode !== 4) {
+            stroke(0);
+            fill(255);
+            circle(x,y,l);
+        }
         noStroke();
         fill(0);
         textSize(36);
         text(titleText, x-textWidth(titleText)/2, y-l*2);
         textSize(16);
         text(topText, x-textWidth(topText)/2,y-l);
-        text(buttomText, x-textWidth(buttomText)/2, y+l);
-        text("Continue", x-textWidth("Continue")/2, y+8);
+        if (this.model.errorCode !== 4) {
+            text(buttomText, x-textWidth(buttomText)/2, y+l);
+            text("Continue", x-textWidth("Continue")/2, y+8);
+        }
     } else if (this.model.percentLoaded === 100 && this.model.start) {
         // Draw divider line
         stroke(0);

@@ -11,22 +11,23 @@
     const condition = "{{ condition }}";
     const instructionsPath = "{{url_for('my_task.static', filename = 'assets/instructions')}}" + "/task" + task;
     
-    let positions;
+    let positions, positions2;
+    let blockNum;
     switch(interaction) {
         case INTERACTIONS.SMALL_MULTIPLES:
-            if (condition === "1" || condition === "2") positions = [4,6];
-            else if (condition === "3" || condition === "5") positions = [3,7];
-            else if (condition === "4" || condition === "6") positions = [5,8];
+            if (condition === "1" || condition === "2") { positions = [4,6]; positions2 = [7,8]; blockNum = 1; }
+            else if (condition === "3" || condition === "5") { positions = [3,7]; positions2 = [5,6]; blockNum = 2; }
+            else if (condition === "4" || condition === "6") { positions = [5,8]; positions2 = [6,4]; blockNum = 3; }
             break;
         case INTERACTIONS.OVERLAYS:
-            if (condition === "3" || condition === "4") positions = [4,6];
-            else if (condition === "1" || condition === "6") positions = [3,7];
-            else if (condition === "2" || condition === "5") positions = [5,8];
+            if (condition === "3" || condition === "4") { positions = [4,6]; positions2 = [7,8]; blockNum = 1; }
+            else if (condition === "1" || condition === "6") { positions = [3,7]; positions2 = [5,6]; blockNum = 2; }
+            else if (condition === "2" || condition === "5") { positions = [5,8]; positions2 = [6,4]; blockNum = 3; }
             break;
         case INTERACTIONS.SHADOW_MARKER:
-            if (condition === "5" || condition === "6") positions = [4,6];
-            else if (condition === "2" || condition === "4") positions = [3,7];
-            else if (condition === "1" || condition === "3") positions = [5,8];
+            if (condition === "5" || condition === "6") { positions = [4,6]; positions2 = [7,8]; blockNum = 1; }
+            else if (condition === "2" || condition === "4") { positions = [3,7]; positions2 = [5,6]; blockNum = 2; }
+            else if (condition === "1" || condition === "3") { positions = [5,8]; positions2 = [6,4]; blockNum = 3; }
             break;
     }
 

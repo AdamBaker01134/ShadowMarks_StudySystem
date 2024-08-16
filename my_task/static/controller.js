@@ -392,10 +392,8 @@ Controller.prototype.handleKeyPressed = function (event) {
                         if (this.model.trial < 2) {
                             let results = this.model.addTrialData();
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             } else if (elapsedTime > 180000) {
-                                this.model.addCategoriesToCookies();
                                 this.model.nextTrial();
                             } else {
                                 this.model.tryAgain(results);
@@ -403,10 +401,8 @@ Controller.prototype.handleKeyPressed = function (event) {
                         } else {
                             let results = this.model.addTrialData();
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
-                                this.model.addCategoriesToCookies();
                                 this.model.logData();
                             } else if (elapsedTime > 180000) {
-                                this.model.addCategoriesToCookies();
                                 this.model.logData();
                             } else {
                                 this.model.tryAgain(results);
@@ -466,6 +462,7 @@ Controller.prototype.handleLoadSandbox = async function () {
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
+        let errorOccurred = false;
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 0; frame < category.frames.length; frame++) {
@@ -475,8 +472,11 @@ Controller.prototype.handleLoadSandbox = async function () {
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
                     },
                     (err) => {
-                        if (++completed >= category.frames.length) reject(err);
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                        if (!errorOccurred) {
+                            errorOccurred = true;
+                            this.model.error(4);
+                            reject(err);
+                        }
                     }));
                 labels.push(category.frames[frame]);
             }
@@ -527,23 +527,35 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
                 break;
         }
     } else {
-        let previousCategories = this.model.getCookieCategories();
-        if (this.model.videos.length === 0 && previousCategories.length % 2 !== 0) previousCategories = this.model.removeCategoryCookies(1);
-        while ((previousCategories.includes((category = assets.baseball.categories[getRandomInt(0, assets.baseball.categories.length)]).name) && previousCategories.length < this.model.videosPerTrial) || undesired.includes(category.name));
+        let categoryIndex = 0;
+        if (blockNum === 1) {
+            categoryIndex = -blockNum + trialNum;
+        } else if (blockNum === 2) {
+            categoryIndex = blockNum + trialNum - 1;
+        } else if (blockNum === 3) {
+            categoryIndex = blockNum + trialNum;
+        }
+        category = assets.baseball.categories[categoryIndex];
         let releases = category.videos.map(video => video.release);
         let registered = [];
+        let registeredIndices = [];
         for (let i = 0; i < releases.length; i++) {
             let totalRegistered = [];
+            let totalRegisteredIndices = [];
             for (let j = 0; j < releases.length; j++) {
                 if (i !== j) {
                     let x1 = releases[i][0];
                     let y1 = releases[i][1];
                     let x2 = releases[j][0];
                     let y2 = releases[j][1];
-                    if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) totalRegistered.push(category.videos[j]);
+                    if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) {
+                        totalRegistered.push(category.videos[j]);
+                        totalRegisteredIndices.push(j);
+                    }
                 }
             }
             registered.push(totalRegistered);
+            registeredIndices.push(totalRegisteredIndices);
         }
     
         let firstRow = [];
@@ -568,12 +580,17 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
             let video = getRandomInt(0, category.videos.length);
             if (!firstRow.includes(video) && !otherRows.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
         }
-        shuffleArray(otherRows);
+        let firstVideo = firstRow[0];
+        let registeredVideos = registeredIndices[firstVideo].filter(video => otherRows.includes(video));
+        let position = positions[trialNum-1];
+        let position2 = positions2[trialNum-1];
+        while (otherRows.indexOf(registeredVideos[0])+3 !== position || otherRows.indexOf(registeredVideos[1])+3 !== position2) shuffleArray(otherRows);
         videos = [...firstRow, ...otherRows];
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
+        let errorOccurred = false;
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 40; frame <= category.frames; frame++) {
@@ -583,8 +600,11 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/(category.frames-40))*(100/videos.length)));
                     },
                     (err) => {
-                        if (++completed >= category.frames-40) reject(err);
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/(category.frames-40))*(100/videos.length)));
+                        if (!errorOccurred) {
+                            errorOccurred = true;
+                            this.model.error(4);
+                            reject(err);
+                        }
                     }));
                 labels.push(`Frame ${frame}`);
             }
@@ -697,6 +717,7 @@ Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCon
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
+        let errorOccurred = false;
         await new Promise((resolve, reject) => {
             let completed = 0;
             for (let frame = 0; frame < category.frames.length; frame++) {
@@ -706,8 +727,11 @@ Controller.prototype.handleLoadLemnatec = async function (trialNum, selectionCon
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
                     },
                     (err) => {
-                        if (++completed >= category.frames.length) reject(err);
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames.length)*(100/videos.length)));
+                        if (!errorOccurred) {
+                            errorOccurred = true;
+                            this.model.error(4);
+                            reject(err);
+                        }
                     }));
                 labels.push(category.frames[frame]);
             }
@@ -806,6 +830,7 @@ Controller.prototype.handleLoadSeaIce = async function (trialNum, selectionCondi
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
+        let errorOccurred = false;
         await new Promise((resolve, reject) => {
             let completed = 214;
             for (let frame = 215; frame <= category.frames; frame++) {
@@ -815,8 +840,11 @@ Controller.prototype.handleLoadSeaIce = async function (trialNum, selectionCondi
                         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
                     },
                     (err) => {
-                        if (++completed >= category.frames) reject(err);
-                        if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round((video/videos.length*100) + (completed/category.frames)*(100/videos.length)));
+                        if (!errorOccurred) {
+                            errorOccurred = true;
+                            this.model.error(4);
+                            reject(err);
+                        }
                     }));
                 labels.push(`Day ${frame}`);
             }
@@ -880,8 +908,16 @@ Controller.prototype.handleLoadScatterplots = async function (trialNum) {
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
         let labels = [];
+        let errorOccurred = false;
         await new Promise((resolve, reject) => {
-            frames.push(loadImage(`${assets.scatterplots.path}/${category.name}/${category.videos[videos[video]].name}.webp`, () => resolve(), (err) => reject(err)));
+            frames.push(loadImage(`${assets.scatterplots.path}/${category.name}/${category.videos[videos[video]].name}.webp`,
+                () => resolve(),
+                (err) => {
+                    if (!errorOccurred) {
+                        errorOccurred = true;
+                        this.model.error(4);
+                        reject(err);
+                    }}));
             labels.push(`scatterplot-${videos[video]}`);
         });
         if (this.model.videos.length < this.model.videosPerTrial) this.model.setPercentLoaded(Math.round(100*((video+1)/this.model.videosPerTrial)));
