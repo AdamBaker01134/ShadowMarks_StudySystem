@@ -42,7 +42,7 @@ Data2 <- Data2 %>% filter(trial!=0)
 Data2
 
 # Filtering out incompletes
-incompletes <- list(3,23,43,53)
+incompletes <- list(3,23,43,53,68)
 Data2 <- Data2 %>% filter(!(pID %in% incompletes))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
