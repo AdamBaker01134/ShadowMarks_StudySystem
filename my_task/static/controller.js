@@ -530,34 +530,28 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
         // Categories and videos hardcoded for task 3
         if (blockNum === 1 && trialNum === 1) {
             category = assets.baseball.categories[0];
-            videos = [0,1,9,15,17,8,11];
-            videos.splice(positions[0],0,5);
-            videos.splice(positions2[0],0,2);
+            // ref: 0 ; correct: 5,2 ; positions: 4,7
+            videos = [0,1,9,15,5,17,8,2,11];
         } else if (blockNum === 1 && trialNum === 2) {
             category = assets.baseball.categories[1];
-            videos = [3,0,2,8,9,10,17];
-            videos.splice(positions[1],0,5);
-            videos.splice(positions2[1],0,11);
+            // ref: 3 ; correct: 5,11 ; positions: 6,8
+            videos = [3,0,2,8,9,10,5,17,11];
         } else if (blockNum === 2 && trialNum === 1) {
             category = assets.baseball.categories[2];
-            videos = [3,2,7,11,14,16,17];
-            videos.splice(positions[0],0,4);
-            videos.splice(positions2[0],0,10);
+            // ref: 3 ; correct: 4,10 ; positions: 3,5
+            videos = [3,2,7,4,11,10,14,16,17];
         } else if (blockNum === 2 && trialNum === 2) {
             category = assets.baseball.categories[3];
-            videos = [7,3,4,8,10,15,17];
-            videos.splice(positions[1],0,1);
-            videos.splice(positions2[1],0,16);
+            // ref: 7 ; correct: 1,16 ; positions: 7,6
+            videos = [7,3,4,8,10,15,16,1,17];
         } else if (blockNum === 3 && trialNum === 1) {
             category = assets.baseball.categories[4];
-            videos = [17,1,4,9,12,13,14];
-            videos.splice(positions[0],0,0);
-            videos.splice(positions2[0],0,7);
+            // ref: 17 ; correct: 0,7 ; positions: 5,6
+            videos = [17,1,4,9,12,0,7,13,14];
         } else if (blockNum === 3 && trialNum === 2) {
             category = assets.baseball.categories[5];
-            videos = [11,1,6,7,8,12,13];
-            videos.splice(positions[1],0,9);
-            videos.splice(positions2[1],0,16);
+            // ref: 11 ; correct: 9,16 ; positions: 8,4
+            videos = [11,1,6,7,16,8,12,13,9];
         }
     }
     for (let video = 0; video < videos.length; video++) {
