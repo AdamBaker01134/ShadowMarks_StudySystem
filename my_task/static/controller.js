@@ -527,65 +527,38 @@ Controller.prototype.handleLoadBaseball = async function (trialNum, undesired=[]
                 break;
         }
     } else {
-        let categoryIndex = 0;
-        if (blockNum === 1) {
-            categoryIndex = -blockNum + trialNum;
-        } else if (blockNum === 2) {
-            categoryIndex = blockNum + trialNum - 1;
-        } else if (blockNum === 3) {
-            categoryIndex = blockNum + trialNum;
+        // Categories and videos hardcoded for task 3
+        if (blockNum === 1 && trialNum === 1) {
+            category = assets.baseball.categories[0];
+            videos = [0,1,9,15,17,8,11];
+            videos.splice(positions[0],0,5);
+            videos.splice(positions2[0],0,2);
+        } else if (blockNum === 1 && trialNum === 2) {
+            category = assets.baseball.categories[1];
+            videos = [3,0,2,8,9,10,17];
+            videos.splice(positions[1],0,5);
+            videos.splice(positions2[1],0,11);
+        } else if (blockNum === 2 && trialNum === 1) {
+            category = assets.baseball.categories[2];
+            videos = [3,2,7,11,14,16,17];
+            videos.splice(positions[0],0,4);
+            videos.splice(positions2[0],0,10);
+        } else if (blockNum === 2 && trialNum === 2) {
+            category = assets.baseball.categories[3];
+            videos = [7,3,4,8,10,15,17];
+            videos.splice(positions[1],0,1);
+            videos.splice(positions2[1],0,16);
+        } else if (blockNum === 3 && trialNum === 1) {
+            category = assets.baseball.categories[4];
+            videos = [17,1,4,9,12,13,14];
+            videos.splice(positions[0],0,0);
+            videos.splice(positions2[0],0,7);
+        } else if (blockNum === 3 && trialNum === 2) {
+            category = assets.baseball.categories[5];
+            videos = [11,1,6,7,8,12,13];
+            videos.splice(positions[1],0,9);
+            videos.splice(positions2[1],0,16);
         }
-        category = assets.baseball.categories[categoryIndex];
-        let releases = category.videos.map(video => video.release);
-        let registered = [];
-        let registeredIndices = [];
-        for (let i = 0; i < releases.length; i++) {
-            let totalRegistered = [];
-            let totalRegisteredIndices = [];
-            for (let j = 0; j < releases.length; j++) {
-                if (i !== j) {
-                    let x1 = releases[i][0];
-                    let y1 = releases[i][1];
-                    let x2 = releases[j][0];
-                    let y2 = releases[j][1];
-                    if (Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)) < 0.025) {
-                        totalRegistered.push(category.videos[j]);
-                        totalRegisteredIndices.push(j);
-                    }
-                }
-            }
-            registered.push(totalRegistered);
-            registeredIndices.push(totalRegisteredIndices);
-        }
-    
-        let firstRow = [];
-        let otherRows = [];
-        while (firstRow.length < 1) {
-            // Retrieve reference video
-            let video = getRandomInt(0, registered.length);
-            if (registered[video].length >= 2) firstRow.push(video);
-        }
-        while (firstRow.length < 3) {
-            // Retrieve 2 unregistered videos for first row
-            let video = getRandomInt(0, category.videos.length);
-            if (!firstRow.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) firstRow.push(video);
-        }
-        while (otherRows.length < 2) {
-            // Retreive 2 registered videos for other rows
-            let video = getRandomInt(0, category.videos.length);
-            if (!firstRow.includes(video) && !otherRows.includes(video) && registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
-        }
-        while (otherRows.length < 6) {
-            // Retrieve 4 unregistered videos for other rows
-            let video = getRandomInt(0, category.videos.length);
-            if (!firstRow.includes(video) && !otherRows.includes(video) && !registered[firstRow[0]].includes(category.videos[video])) otherRows.push(video);
-        }
-        let firstVideo = firstRow[0];
-        let registeredVideos = registeredIndices[firstVideo].filter(video => otherRows.includes(video));
-        let position = positions[trialNum-1];
-        let position2 = positions2[trialNum-1];
-        while (otherRows.indexOf(registeredVideos[0])+3 !== position || otherRows.indexOf(registeredVideos[1])+3 !== position2) shuffleArray(otherRows);
-        videos = [...firstRow, ...otherRows];
     }
     for (let video = 0; video < videos.length; video++) {
         let frames = [];
