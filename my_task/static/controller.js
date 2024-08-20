@@ -109,10 +109,14 @@ Controller.prototype.handleMousePressed = function (event) {
     if (this.model.percentLoaded !== 100) return true;
     if (!this.model.start) {
         if (this.model.checkStartButtonHit()) {
+            fullscreen(true);
             this.model.startTrial();
             return false;
         }
         return true;
+    } else if (!fullscreen() && this.model.errorCode === -1) {
+        sendFullscreenPage();
+        return false;
     }
     let hit = null, mark = null;
     switch (this.currentState) {
@@ -203,6 +207,7 @@ Controller.prototype.handleMousePressed = function (event) {
             break;
         case STATE.ERROR:
             if (this.model.checkErrorButtonHit()) {
+                fullscreen(true);
                 this.model.updateVideoDimensions();
                 this.model.updateVideoLocations();
                 this.model.error(-1);
@@ -448,6 +453,8 @@ Controller.prototype.handleWindowResized = function () {
     if (newWidth < windowWidth*0.98) newWidth = windowWidth*0.98;
     if (newHeight < windowHeight) newHeight = windowHeight;
     resizeCanvas(newWidth, newHeight);
+    this.model.updateVideoDimensions();
+    this.model.updateVideoLocations();
     this.model.notifySubscribers();
 }
 

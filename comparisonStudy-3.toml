@@ -54,7 +54,6 @@ PAGE_LIST = [
     { name = "Demographics Questionnaire", path = "questionnaire/demographics" },
 
     { name = "Introduction", path = "instructions/introduction3" },
-    { name = "Fullscreen Verification", path = "fullscreen/0" },
 
     { conditional_routing = [
         { condition = 1, page_list = [

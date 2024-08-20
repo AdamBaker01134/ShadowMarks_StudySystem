@@ -129,7 +129,6 @@ function attachUserEventListeners() {
     document.addEventListener("visibilitychange", sendHiddenPage);
     document.addEventListener("mouseleave", e => { attentionTimer = setTimeout(sendLeftPage, 5000)});
     document.addEventListener("mouseenter", e => clearTimeout(attentionTimer));
-    document.addEventListener("click", sendFullscreenPage);
 }
 
 function sendHiddenPage() {
@@ -149,7 +148,7 @@ function sendLeftPage() {
 }
 
 function sendFullscreenPage() {
-    if (model.start && model.errorCode === -1 && !(window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height))) {
+    if (model.start && model.errorCode === -1 && !fullscreen()) {
         model.error(3);
         controller.savedState = controller.currentState;
         controller.currentState = STATE.ERROR;

@@ -19,7 +19,7 @@ View.prototype.draw = function () {
                 topText = "Please ensure that you remain active on the webpage during each trial.";
                 break;
             case 3:
-                topText = "Please enter Fullscreen mode by pressing F11 and ensure that your browser is at 100% zoom.";
+                topText = "Please ensure that you remain in fullscreen mode throughout the trial.";
                 break;
             case 4:
                 titleText = "Oops! Something went wrong";
