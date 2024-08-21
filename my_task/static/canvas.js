@@ -126,32 +126,49 @@ function windowResized(event) { return controller.handleWindowResized(event) }
 function attachUserEventListeners() {
     document.addEventListener("scroll", e => controller.handleScroll());
     document.getElementById("defaultCanvas0")?.addEventListener("contextmenu", e => e.preventDefault());
-    document.addEventListener("visibilitychange", sendHiddenPage);
-    document.addEventListener("mouseleave", e => { attentionTimer = setTimeout(sendLeftPage, 5000)});
-    document.addEventListener("mouseenter", e => clearTimeout(attentionTimer));
+    document.getElementById("defaultCanvas0")?.addEventListener("mouseleave", e => { attentionTimer = setTimeout(sendLeftPage, 3000)});
+    document.getElementById("defaultCanvas0")?.addEventListener("mouseenter", e => clearTimeout(attentionTimer));
 }
 
 function sendHiddenPage() {
     if (model.start && model.errorCode === -1 && document.hidden) {
         model.error(1);
-        controller.savedState = controller.currentState;
-        controller.currentState = STATE.ERROR;
+        let prompt = document.getElementById("prompt");
+        if (prompt) {
+            prompt.style.display = "none";
+            controller.currentState = STATE.ERROR;
+        } else {
+            controller.savedState = controller.currentState;
+            controller.currentState = STATE.ERROR;
+        }
     }
 }
 
 function sendLeftPage() {
     if (model.start && model.errorCode === -1) {
         model.error(2);
-        controller.savedState = controller.currentState;
-        controller.currentState = STATE.ERROR;
+        let prompt = document.getElementById("prompt");
+        if (prompt) {
+            prompt.style.display = "none";
+            controller.currentState = STATE.ERROR;
+        } else {
+            controller.savedState = controller.currentState;
+            controller.currentState = STATE.ERROR;
+        }
     }
 }
 
 function sendFullscreenPage() {
     if (model.start && model.errorCode === -1 && !fullscreen()) {
         model.error(3);
-        controller.savedState = controller.currentState;
-        controller.currentState = STATE.ERROR;
+        let prompt = document.getElementById("prompt");
+        if (prompt) {
+            prompt.style.display = "none";
+            controller.currentState = STATE.ERROR;
+        } else {
+            controller.savedState = controller.currentState;
+            controller.currentState = STATE.ERROR;
+        }
     }
 }
 
@@ -189,4 +206,76 @@ function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+}
+
+/**
+ * Custom confirm() generator
+ * @param {string} txt text message
+ * @param {Function} okCallback ok button callback function
+ * @param {Function} cancelCallback cancel button callback function
+ */
+function customConfirm (txt, okCallback=()=>{}, cancelCallback=()=>{}) {
+    let div = createElement("div",`<div>${txt}</div>`);
+    let w = windowWidth/8;
+    let h = windowHeight/8;
+    div.id("prompt");
+    div.style("width",`${w}px`);
+    div.style("height",`${h}px`);
+    div.style("background","#696969");
+    div.style("color","white");
+    div.style("padding","20px");
+    div.style("border-radius","20px");
+    div.style("border","3px black solid");
+    div.style("display","flex");
+    div.style("flex-direction","column");
+    div.style("justify-content","space-between");
+    div.style("align-items","center");
+    div.style("font-family", "Arial, Helvetica, sans-serif");
+    div.style("font-size", "32");
+    div.style("text-align", "center");
+    div.position(windowWidth/2-w/2,windowHeight/2-h/2);
+    let buttons = createElement("div");
+    buttons.style("display","flex");
+    buttons.style("justify-content","space-between");
+    buttons.style("width","80%");
+    let ok = createElement("button", "Ok");
+    ok.elt.addEventListener("click", (e) => { div.elt.remove(); okCallback(); });
+    ok.style("width",w/5);
+    buttons.elt.appendChild(ok.elt);
+    let cancel = createElement("button", "Cancel");
+    cancel.elt.addEventListener("click", (e) => { div.elt.remove(); cancelCallback(); });
+    cancel.style("width",w/5);
+    buttons.elt.appendChild(cancel.elt);
+    div.elt.appendChild(buttons.elt);
+}
+
+/**
+ * Custom alert() generator
+ * @param {string} txt text message
+ * @param {Function} callback ok button callback function
+ */
+function customAlert(txt, callback=()=>{}) {
+    let div = createElement("div",`<div>${txt}</div>`);
+    let w = windowWidth/8;
+    let h = windowHeight/8;
+    div.id("prompt");
+    div.style("width",`${w}px`);
+    div.style("height",`${h}px`);
+    div.style("background","#696969");
+    div.style("color","white");
+    div.style("padding","20px");
+    div.style("border-radius","20px");
+    div.style("border","3px black solid");
+    div.style("display","flex");
+    div.style("flex-direction","column");
+    div.style("justify-content","space-between");
+    div.style("align-items","center");
+    div.style("font-family", "Arial, Helvetica, sans-serif");
+    div.style("font-size", "32");
+    div.style("text-align", "center");
+    div.position(windowWidth/2-w/2,windowHeight/2-h/2);
+    let ok = createElement("button", "Ok");
+    ok.elt.addEventListener("click", (e) => { div.elt.remove(); callback(); });
+    ok.style("width",w/5);
+    div.elt.appendChild(ok.elt);
 }

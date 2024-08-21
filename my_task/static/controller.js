@@ -11,6 +11,7 @@ const STATE = {
     HELP: "help",
     NO_INTERACTION: "no_interaction",
     ERROR: "error",
+    PROMPT: "prompt",
 }
 
 const EVENTS = {
@@ -211,7 +212,13 @@ Controller.prototype.handleMousePressed = function (event) {
                 this.model.updateVideoDimensions();
                 this.model.updateVideoLocations();
                 this.model.error(-1);
-                this.currentState = this.savedState;
+                let prompt = document.getElementById("prompt");
+                if (prompt) {
+                    prompt.style.display = "flex";
+                    this.currentState = STATE.PROMPT;
+                } else {
+                    this.currentState = this.savedState;
+                }
             }
         default:
             break;
@@ -391,17 +398,24 @@ Controller.prototype.handleKeyPressed = function (event) {
                 //         console.log(resultTxt);
                 // }
                 if (this.model.selectedVideos.length > 0 && (this.model.task !== 3 || this.model.selectedVideos.length === 2)) {
-                    if (confirm("Confirm selection.")) {
+                    customConfirm("Confirm selection", () => {
                         this.model.addStreamData(EVENTS.SUBMIT);
                         let elapsedTime = new Date().getTime() - this.model.trialStartTime - this.model.errorTime;
                         if (this.model.trial < 2) {
                             let results = this.model.addTrialData();
                             if (results.falsePositives === 0 && results.falseNegatives === 0) {
                                 this.model.nextTrial();
+                                this.currentState = this.savedState;
                             } else if (elapsedTime > 180000) {
                                 this.model.nextTrial();
+                                this.currentState = this.savedState;
                             } else {
-                                this.model.tryAgain(results);
+                                this.model.tryAgain();
+                                if (this.model.task === 3 && results.totalCorrect === 1) {
+                                    customAlert("1/2 correct.<br />Correct video will be highlighted in green. Try again.", () => this.currentState = this.savedState);
+                                } else {
+                                    customAlert("Incorrect. Try again.", () => this.currentState = this.savedState);
+                                }
                             }
                         } else {
                             let results = this.model.addTrialData();
@@ -410,16 +424,27 @@ Controller.prototype.handleKeyPressed = function (event) {
                             } else if (elapsedTime > 180000) {
                                 this.model.logData();
                             } else {
-                                this.model.tryAgain(results);
+                                this.model.tryAgain();
+                                if (this.model.task === 3 && results.totalCorrect === 1) {
+                                    customAlert("1/2 correct.<br />Correct video will be highlighted in green. Try again.", () => this.currentState = this.savedState);
+                                } else {
+                                    customAlert("Incorrect. Try again.", () => this.currentState = this.savedState);
+                                }
                             }
                         }
-                    }
+                    }, () => this.currentState = this.savedState);
+                    this.savedState = this.currentState;
+                    this.currentState = STATE.PROMPT;
                 } else {
                     let required = this.model.task === 3 ? 2 : 1;
                     if (this.model.selectedVideos.length > required) {
-                        alert("Warning: Too many videos selected.");
+                        customAlert("Warning: Too many videos selected.", () => this.currentState = this.savedState);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.PROMPT;
                     } else {
-                        alert("Warning: Not enough videos selected.");
+                        customAlert("Warning: Not enough videos selected.", () => this.currentState = this.savedState);
+                        this.savedState = this.currentState;
+                        this.currentState = STATE.PROMPT;
                     }
                 }
             }

@@ -168,13 +168,8 @@ Model.prototype.startTrial = function () {
     this.notifySubscribers();
 }
 
-Model.prototype.tryAgain = function (results) {
+Model.prototype.tryAgain = function () {
     this.attempt++;
-    if (this.task === 3 && results.totalCorrect === 1) {
-        alert("1/2 correct. Correct video will be highlighted in green. Try again.");
-    } else {
-        alert("Incorrect. Try again.");
-    }
     this.notifySubscribers();
 }
 
@@ -1157,7 +1152,7 @@ Model.prototype.addErrorData = function () {
         attempt: this.attempt,
         errCode: this.errorCode,
         timestamp: new Date().getTime(),
-        fullscreen: window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height),
+        fullscreen: !!fullscreen(),
     });
 }
 
