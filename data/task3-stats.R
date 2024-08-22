@@ -26,7 +26,7 @@ new_theme <- theme_bw(base_size = 16) +
 # https://r-graphics.org/
 # https://modernstatisticswithr.com/
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-19.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-22.csv", col_names=TRUE)
 Data2
 
 # ---------------------------------------
@@ -42,7 +42,7 @@ Data2 <- Data2 %>% filter(trial!=0)
 Data2
 
 # Filtering out incompletes
-incompletes <- list(9,38,53,56,57,59,71,73)
+incompletes <- list(21,32,48)
 Data2 <- Data2 %>% filter(!(pID %in% incompletes))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
@@ -53,7 +53,6 @@ Data2
 
 ctCap <- 180
 accCap <- 12
-loadingCap <- 180
 
 # Filtering out outliers above elapsed time cap
 nrow(Data2)
@@ -67,13 +66,8 @@ Data2 <- Data2 %>% filter(errors < accCap)
 nrow(Data2)
 Data2
 
-# Filtering out outliers above loading time cap
-# nrow(Data2)
-# Data2 <- Data2 %>% filter(loadTime < loadingCap)
-# nrow(Data2)
-# Data2
-
-complete_outliers <- list(14,15,27,33,34,39,54,60,61,62,81,82,85)
+complete_outliers <- list(8,10,13,24,36,41,44,52,56)
+# complete_outliers <- list()
 
 Data2 <- Data2 %>% filter(!(pID %in% complete_outliers))
 ezDesign(data=Data2, x=interaction, y=pID)
@@ -130,19 +124,19 @@ ctData2_task2 <- ctData2 %>% filter(task==2)
 ctData2_task3 <- ctData2 %>% filter(task==3)
 ctData2_task4 <- ctData2 %>% filter(task==4)
 
-ctSummaryTask1 <- ctData2_task1 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(elapsedTime, na.rm = TRUE),
-            sd = sd(elapsedTime, na.rm = TRUE),
-            se = sd/sqrt(length(elapsedTime)))
-ctSummaryTask1
-
-ctSummaryTask2 <- ctData2_task2 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(elapsedTime, na.rm = TRUE),
-            sd = sd(elapsedTime, na.rm = TRUE),
-            se = sd/sqrt(length(elapsedTime)))
-ctSummaryTask2
+# ctSummaryTask1 <- ctData2_task1 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(elapsedTime, na.rm = TRUE),
+#             sd = sd(elapsedTime, na.rm = TRUE),
+#             se = sd/sqrt(length(elapsedTime)))
+# ctSummaryTask1
+# 
+# ctSummaryTask2 <- ctData2_task2 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(elapsedTime, na.rm = TRUE),
+#             sd = sd(elapsedTime, na.rm = TRUE),
+#             se = sd/sqrt(length(elapsedTime)))
+# ctSummaryTask2
 
 ctSummaryTask3 <- ctData2_task3 %>%
   group_by(interaction) %>%
@@ -151,30 +145,30 @@ ctSummaryTask3 <- ctData2_task3 %>%
             se = sd/sqrt(length(elapsedTime)))
 ctSummaryTask3
 
-ctSummaryTask4 <- ctData2_task4 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(elapsedTime, na.rm = TRUE),
-            sd = sd(elapsedTime, na.rm = TRUE),
-            se = sd/sqrt(length(elapsedTime)))
-ctSummaryTask4
+# ctSummaryTask4 <- ctData2_task4 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(elapsedTime, na.rm = TRUE),
+#             sd = sd(elapsedTime, na.rm = TRUE),
+#             se = sd/sqrt(length(elapsedTime)))
+# ctSummaryTask4
 
-ggplot(ctSummaryTask1, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Completion Time (sec)')
-
-ggsave("ct-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
-
-ggplot(ctSummaryTask2, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Completion Time (sec)')
-
-ggsave("ct-by-interaction-task2.png", width=20, height=10, units="cm", type="cairo-png")
+# ggplot(ctSummaryTask1, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Completion Time (sec)')
+# 
+# ggsave("ct-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
+# 
+# ggplot(ctSummaryTask2, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Completion Time (sec)')
+# 
+# ggsave("ct-by-interaction-task2.png", width=20, height=10, units="cm", type="cairo-png")
 
 ggplot(ctSummaryTask3, aes(x=interaction, y=mean)) +
   geom_col(fill="lightblue", colour="#808080") +
@@ -185,14 +179,14 @@ ggplot(ctSummaryTask3, aes(x=interaction, y=mean)) +
 
 ggsave("ct-by-interaction-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
-ggplot(ctSummaryTask4, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Completion Time (sec)')
-
-ggsave("ct-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
+# ggplot(ctSummaryTask4, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Completion Time (sec)')
+# 
+# ggsave("ct-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
 
 ggplot(ctData2, aes(x=pID,y=elapsedTime, color=interaction)) +
   geom_jitter(size=2.0) +
@@ -200,7 +194,29 @@ ggplot(ctData2, aes(x=pID,y=elapsedTime, color=interaction)) +
 
 ggsave("ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
+ctTrialSummaryTask3 <- ctData2_task3 %>%
+  group_by(interaction,trial) %>%
+  summarise(mean = mean(elapsedTime, na.rm = TRUE),
+            sd = sd(elapsedTime, na.rm = TRUE),
+            se = sd/sqrt(length(elapsedTime)))
+ctTrialSummaryTask3
 
+ggplot(ctTrialSummaryTask3, aes(x=trial, y=mean, group=interaction)) +
+  geom_line(aes(color=interaction)) +
+  geom_point(aes(color=interaction))+
+  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  xlab(label='Trial') +
+  ylab(label='Mean time taken (sec)') +
+  scale_x_discrete(limits=c(1,2),
+                   labels=c("1","2")) +
+  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+                     values=c("#FF3300","#0066CC","#00F000"),
+                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="right") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("ct-per-trial-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 
@@ -237,19 +253,19 @@ accData2_task2 <- accData2 %>% filter(task==2)
 accData2_task3 <- accData2 %>% filter(task==3)
 accData2_task4 <- accData2 %>% filter(task==4)
 
-accSummaryTask1 <- accData2_task1 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(errors, na.rm = TRUE),
-            sd = sd(errors, na.rm = TRUE),
-            se = sd/sqrt(length(errors)))
-accSummaryTask1
-
-accSummaryTask2 <- accData2_task2 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(errors, na.rm = TRUE),
-            sd = sd(errors, na.rm = TRUE),
-            se = sd/sqrt(length(errors)))
-accSummaryTask2
+# accSummaryTask1 <- accData2_task1 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(errors, na.rm = TRUE),
+#             sd = sd(errors, na.rm = TRUE),
+#             se = sd/sqrt(length(errors)))
+# accSummaryTask1
+# 
+# accSummaryTask2 <- accData2_task2 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(errors, na.rm = TRUE),
+#             sd = sd(errors, na.rm = TRUE),
+#             se = sd/sqrt(length(errors)))
+# accSummaryTask2
 
 accSummaryTask3 <- accData2_task3 %>%
   group_by(interaction) %>%
@@ -258,30 +274,30 @@ accSummaryTask3 <- accData2_task3 %>%
             se = sd/sqrt(length(errors)))
 accSummaryTask3
 
-accSummaryTask4 <- accData2_task4 %>%
-  group_by(interaction) %>%
-  summarise(mean = mean(errors, na.rm = TRUE),
-            sd = sd(errors, na.rm = TRUE),
-            se = sd/sqrt(length(errors)))
-accSummaryTask4
+# accSummaryTask4 <- accData2_task4 %>%
+#   group_by(interaction) %>%
+#   summarise(mean = mean(errors, na.rm = TRUE),
+#             sd = sd(errors, na.rm = TRUE),
+#             se = sd/sqrt(length(errors)))
+# accSummaryTask4
 
-ggplot(accSummaryTask1, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Accuracy (number of errors)')
-
-ggsave("acc-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
-
-ggplot(accSummaryTask2, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Accuracy (number of errors)')
-
-ggsave("acc-by-interaction-task2.png", width=20, height=10, units="cm", type="cairo-png")
+# ggplot(accSummaryTask1, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Accuracy (number of errors)')
+# 
+# ggsave("acc-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
+# 
+# ggplot(accSummaryTask2, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Accuracy (number of errors)')
+# 
+# ggsave("acc-by-interaction-task2.png", width=20, height=10, units="cm", type="cairo-png")
 
 ggplot(accSummaryTask3, aes(x=interaction, y=mean)) +
   geom_col(fill="lightblue", colour="#808080") +
@@ -292,20 +308,44 @@ ggplot(accSummaryTask3, aes(x=interaction, y=mean)) +
 
 ggsave("acc-by-interaction-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
-ggplot(accSummaryTask4, aes(x=interaction, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  new_theme +
-  xlab(label='Interaction') +
-  ylab(label='Accuracy (number of errors)')
-
-ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
+# ggplot(accSummaryTask4, aes(x=interaction, y=mean)) +
+#   geom_col(fill="lightblue", colour="#808080") +
+#   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   new_theme +
+#   xlab(label='Interaction') +
+#   ylab(label='Accuracy (number of errors)')
+# 
+# ggsave("acc-by-interaction-task4.png", width=20, height=10, units="cm", type="cairo-png")
 
 ggplot(accData2, aes(x=pID,y=errors, color=interaction)) +
   geom_jitter(size=2.0) +
   new_theme
 
 ggsave("acc-outliers.png", width=30, height=10, units="cm", type="cairo-png")
+
+accTrialSummaryTask3 <- accData2_task3 %>%
+  group_by(interaction,trial) %>%
+  summarise(mean = mean(errors, na.rm = TRUE),
+            sd = sd(errors, na.rm = TRUE),
+            se = sd/sqrt(length(errors)))
+accTrialSummaryTask3
+
+ggplot(accTrialSummaryTask3, aes(x=trial, y=mean, group=interaction)) +
+  geom_line(aes(color=interaction)) +
+  geom_point(aes(color=interaction))+
+  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  xlab(label='Trial') +
+  ylab(label='Mean errors') +
+  scale_x_discrete(limits=c(1,2),
+                   labels=c("1","2")) +
+  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+                     values=c("#FF3300","#0066CC","#00F000"),
+                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+  new_theme +
+  theme(legend.position="right") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("acc-per-trial-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 
@@ -834,10 +874,10 @@ StreamData2
 
 ezDesign(data=StreamData2, x=interaction, y=pID)
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-19.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-21.csv", col_names=TRUE)
 Data2
 
-complete_outliers <- list(14,15,27,33,34,39,42,54,60,61,62,81,82,85,9,38,53,56,57,59,71,73)
+complete_outliers <- list(8,10,13,21,24)
 
 DifferenceData2 <- Data2 %>% filter(!(pID %in% complete_outliers)) %>%
   group_by(interaction,trial) %>% summarise(mean=mean(difference1,na.rm=TRUE),
