@@ -66,7 +66,7 @@ Data2 <- Data2 %>% filter(errors < accCap)
 nrow(Data2)
 Data2
 
-complete_outliers <- list(8,10,13,24,36,41,44,52,56)
+complete_outliers <- list(8,10,13,24,36,41,44,52,56,57,64)
 # complete_outliers <- list()
 
 Data2 <- Data2 %>% filter(!(pID %in% complete_outliers))
