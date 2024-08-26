@@ -26,7 +26,7 @@ new_theme <- theme_bw(base_size = 16) +
 # https://r-graphics.org/
 # https://modernstatisticswithr.com/
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-22.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-23.csv", col_names=TRUE)
 Data2
 
 # ---------------------------------------
@@ -42,33 +42,34 @@ Data2 <- Data2 %>% filter(trial!=0)
 Data2
 
 # Filtering out incompletes
-incompletes <- list(21,32,48)
+incompletes <- list(21,32,48,65)
 Data2 <- Data2 %>% filter(!(pID %in% incompletes))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
 
-Data2 <- Data2 %>% group_by(pID,interaction,task,trial,loadTime) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
+Data2 <- Data2 %>% filter(!incompleteTrial) %>% group_by(pID,interaction,task,trial,loadTime) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
 # Data2$loadTime <- Data2$loadTime/1000
 Data2
 
-ctCap <- 180
+# ctCap <- 180
 accCap <- 12
 
-# Filtering out outliers above elapsed time cap
-nrow(Data2)
-Data2 <- Data2 %>% filter(elapsedTime < ctCap)
-nrow(Data2)
-Data2
-
-# Filtering out outliers above accuracy cap
+# # Filtering out outliers above elapsed time cap
+# nrow(Data2)
+# Data2 <- Data2 %>% filter(elapsedTime < ctCap)
+# nrow(Data2)
+# Data2
+# 
+# # Filtering out outliers above accuracy cap
 nrow(Data2)
 Data2 <- Data2 %>% filter(errors < accCap)
 nrow(Data2)
 Data2
 
-complete_outliers <- list(8,10,13,24,36,41,44,52,56,57,64)
-# complete_outliers <- list()
-
+# 
+# complete_outliers <- list(8,10,13,24,36,41,44,52,56,57,64,80,81,82)
+complete_outliers <- list(13,80)
+# 
 Data2 <- Data2 %>% filter(!(pID %in% complete_outliers))
 ezDesign(data=Data2, x=interaction, y=pID)
 ezPrecis(Data2)
@@ -367,7 +368,7 @@ ggsave("acc-per-trial-task3.png", width=20, height=10, units="cm", type="cairo-p
 
 ### TLX DATA ###
 
-tlxData <- read_csv("shadowmarksTLXData_2024-08-19.csv", col_names=TRUE)
+tlxData <- read_csv("shadowmarksTLXData_2024-08-23.csv", col_names=TRUE)
 tlxData
 
 # ---------------------------------------
@@ -419,7 +420,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=interaction)) +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("tlx-1.png", width=50, height=10, units="cm", type="cairo-png")
+ggsave("tlx-3.png", width=50, height=10, units="cm", type="cairo-png")
 
 
 
@@ -438,7 +439,7 @@ ggsave("tlx-1.png", width=50, height=10, units="cm", type="cairo-png")
 
 #### Preference ####
 
-preferenceData <- read_csv("shadowmarksPreferenceData_2024-08-19.csv", col_names=TRUE)
+preferenceData <- read_csv("shadowmarksPreferenceData_2024-08-23.csv", col_names=TRUE)
 preferenceData
 
 preferenceData$pID <- as_factor(preferenceData$pID)
@@ -469,7 +470,7 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("preference-1.png", width=18, height=10, units="cm", type="cairo-png")
+ggsave("preference-3.png", width=18, height=10, units="cm", type="cairo-png")
 
 
 
@@ -874,10 +875,10 @@ StreamData2
 
 ezDesign(data=StreamData2, x=interaction, y=pID)
 
-Data2 <- read_csv("shadowmarksTrialData_2024-08-21.csv", col_names=TRUE)
+Data2 <- read_csv("shadowmarksTrialData_2024-08-23.csv", col_names=TRUE)
 Data2
 
-complete_outliers <- list(8,10,13,21,24)
+complete_outliers <- list(21,32,48,65,13,80)
 
 DifferenceData2 <- Data2 %>% filter(!(pID %in% complete_outliers)) %>%
   group_by(interaction,trial) %>% summarise(mean=mean(difference1,na.rm=TRUE),
@@ -898,7 +899,7 @@ ggplot(DifferenceData2, aes(x=trial, y=mean, group=interaction)) +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("difference_to_selection1.png", width=30, height=10, units="cm", type="cairo-png")
+ggsave("difference_to_selection1-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 
@@ -921,7 +922,7 @@ ggplot(DifferenceData2, aes(x=trial, y=mean, group=interaction)) +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("difference_to_selection2.png", width=30, height=10, units="cm", type="cairo-png")
+ggsave("difference_to_selection2-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 DifferenceData2 <- Data2 %>% filter(!(pID %in% complete_outliers)) %>%
@@ -943,7 +944,7 @@ ggplot(DifferenceData2, aes(x=trial, y=mean, group=interaction)) +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("difference_to_selection_avg.png", width=30, height=10, units="cm", type="cairo-png")
+ggsave("difference_to_selection_avg-task3.png", width=20, height=10, units="cm", type="cairo-png")
 
 
 accData2_task4 <- accData2 %>% filter(task==4)

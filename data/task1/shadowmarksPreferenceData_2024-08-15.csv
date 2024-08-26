@@ -1,55 +1,25 @@
 pID,condition,question,answer,reason
-1,smallmultiples_overlays_shadowmarks,speed,,
-1,smallmultiples_overlays_shadowmarks,accuracy,,
-1,smallmultiples_overlays_shadowmarks,preference,,
-2,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,It was easier to compare all the videos faster.
-2,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,It was the easiest way to compare all the videos at once.
-2,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,The other techniques were too time consuming and stressful. I also wasn't very good at this.
-3,smallmultiples_shadowmarks_overlays,speed,,
-3,smallmultiples_shadowmarks_overlays,accuracy,,
-3,smallmultiples_shadowmarks_overlays,preference,,
-4,overlays_smallmultiples_shadowmarks,speed,,
-4,overlays_smallmultiples_shadowmarks,accuracy,,
-4,overlays_smallmultiples_shadowmarks,preference,,
 5,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,"I was able to leave a marker, keep playing the video and accuratly determine if another plant went over the set marker"
 5,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,as above
 5,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,as above
 6,shadowmarks_smallmultiples_overlays,speed,Shadow Marks,direct comparison between many more sunflowers in one go
 6,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,direct comparison between many more sunflowers in one go
 6,shadowmarks_smallmultiples_overlays,preference,Shadow Marks,direct comparison between many more sunflowers in one go
-7,shadowmarks_overlays_smallmultiples,speed,Shadow Marks,The grid made it a lot easier to find the tallest plant.
-7,shadowmarks_overlays_smallmultiples,accuracy,Shadow Marks,The grid.
-7,shadowmarks_overlays_smallmultiples,preference,Shadow Marks,It was the easiest to vizualize with.
 8,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,it allowed you to compare the heights more easily 
 8,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,there was a guideline of the height of a specific plant so if you were uncertain you could easily check the height of that one compared to another
 8,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,it was quicker
 9,smallmultiples_shadowmarks_overlays,speed,Overlays,easies to directly compare and easy to add or remove a plant from the overlay.
 9,smallmultiples_shadowmarks_overlays,accuracy,Overlays,Was able to easily measure up and compare multiple plants and easily tell which one reached a higher point. 
 9,smallmultiples_shadowmarks_overlays,preference,Overlays,Very easy to add and remove plants from the overlay with a simple click. 
-10,overlays_smallmultiples_shadowmarks,speed,,
-10,overlays_smallmultiples_shadowmarks,accuracy,,
-10,overlays_smallmultiples_shadowmarks,preference,,
 11,overlays_smallmultiples_shadowmarks,speed,Overlays,easier to spot the tallest by stacking them on top of each other
 11,overlays_smallmultiples_shadowmarks,accuracy,Overlays,easier to spot the tallest by stacking them on top of each other
 11,overlays_smallmultiples_shadowmarks,preference,Overlays,easier to spot the tallest by stacking them on top of each other
-12,shadowmarks_overlays_smallmultiples,speed,,
-12,shadowmarks_overlays_smallmultiples,accuracy,,
-12,shadowmarks_overlays_smallmultiples,preference,,
-13,,speed,,
-13,,accuracy,,
-13,,preference,,
-14,,speed,,
-14,,accuracy,,
-14,,preference,,
 15,shadowmarks_smallmultiples_overlays,speed,Small Multiples,It's more intuitive and less system dependant.
 15,shadowmarks_smallmultiples_overlays,accuracy,Small Multiples,Same reason as above.
 15,shadowmarks_smallmultiples_overlays,preference,Small Multiples,It's easier to operate and find the right solution.
 16,overlays_smallmultiples_shadowmarks,speed,Overlays,I could see through
 16,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,Dimensions
 16,overlays_smallmultiples_shadowmarks,preference,Overlays,Seeing Through others
-17,overlays_shadowmarks_smallmultiples,speed,,
-17,overlays_shadowmarks_smallmultiples,accuracy,,
-17,overlays_shadowmarks_smallmultiples,preference,,
 18,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,It allowed me to compare all the flowers at once instead of having to compare 2 at a time to easily find the highest point.
 18,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,Having a constant mark of the highest point made it easier to compare each flower
 18,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,Easier to use and quicker to find the correct result
@@ -65,9 +35,6 @@ pID,condition,question,answer,reason
 22,shadowmarks_smallmultiples_overlays,speed,Shadow Marks,It was easier having a grid to help measure the plants.
 22,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,The red lines really kelped.
 22,shadowmarks_smallmultiples_overlays,preference,Shadow Marks,It was the easiest.
-23,overlays_shadowmarks_smallmultiples,speed,,
-23,overlays_shadowmarks_smallmultiples,accuracy,,
-23,overlays_shadowmarks_smallmultiples,preference,,
 24,shadowmarks_overlays_smallmultiples,speed,Shadow Marks,This technique allows me to compare all of the plants at the same time by looking at the horizontal line.
 24,shadowmarks_overlays_smallmultiples,accuracy,Shadow Marks,The red horizontal line was precise and useful.
 24,shadowmarks_overlays_smallmultiples,preference,Shadow Marks,It saved me the most time out of all of them.
@@ -83,114 +50,36 @@ pID,condition,question,answer,reason
 28,smallmultiples_overlays_shadowmarks,speed,Overlays,"It required less precision than the shadow marks, and the small multiples required too much guess work so it took longer because I kept getting it wrong."
 28,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,"This technique was most helpful for me as it provided me with a visual, unmoving border to compare each sunflower to, instead of trying to picture it in my head, I think my depth perception is worse at the top and bottom of my vision instead of in the middle so I could never tell if the distances were the same or not."
 28,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,"Once I got past the difficulty of learning the task and realised the flowers were growing at different paces and had different peaks, it was easiest to compare the sunflowers with these guided lines that did all the distance measuring for me"
-29,overlays_smallmultiples_shadowmarks,speed,,
-29,overlays_smallmultiples_shadowmarks,accuracy,,
-29,overlays_smallmultiples_shadowmarks,preference,,
-30,shadowmarks_overlays_smallmultiples,speed,,
-30,shadowmarks_overlays_smallmultiples,accuracy,,
-30,shadowmarks_overlays_smallmultiples,preference,,
-31,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,The line across all the flowers was these easiest as it was able to clearly show whether the other flowers were below or above it 
-31,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,Due to the lines being in red I could clearly see what plants measured up to others 
-31,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,This was the easist and quickest and least hard to understand the technique 
-32,shadowmarks_overlays_smallmultiples,speed,Small Multiples,Because you could see all in one go rather than going through them all individually
-32,shadowmarks_overlays_smallmultiples,accuracy,Shadow Marks,Much easier to tell which went the tallest
-32,shadowmarks_overlays_smallmultiples,preference,Shadow Marks,Because it was easier to tell which was the tallest once you had the hang of it
-33,overlays_shadowmarks_smallmultiples,speed,,
-33,overlays_shadowmarks_smallmultiples,accuracy,,
-33,overlays_shadowmarks_smallmultiples,preference,,
-34,shadowmarks_smallmultiples_overlays,speed,,
-34,shadowmarks_smallmultiples_overlays,accuracy,,
-34,shadowmarks_smallmultiples_overlays,preference,,
 35,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,helped to see the marker line
 35,overlays_shadowmarks_smallmultiples,accuracy,Overlays,showed comparison
 35,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,fastest/easiest
 36,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,It felt a lot easier to keep track of the tallest by simply moving the grid to the highest point of one and then checking the others
 36,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,"The grid made it easier to pin point the actual height and keep track, so it was more accurate however the last take i struggled with due to them all being so similar in height so im not sure if my results will match this opinion"
 36,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,It was the quickest to use and easiest to see clearly 
-37,,speed,,
-37,,accuracy,,
-37,,preference,,
-38,shadowmarks_overlays_smallmultiples,speed,,
-38,shadowmarks_overlays_smallmultiples,accuracy,,
-38,shadowmarks_overlays_smallmultiples,preference,,
 39,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,Quick to easily detect
 39,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,The grid lines were easy to use
 39,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,Really straightforward
 40,smallmultiples_shadowmarks_overlays,speed,Shadow Marks,the cursor help way better for me 
 40,smallmultiples_shadowmarks_overlays,accuracy,Shadow Marks,was easy to visualize 
 40,smallmultiples_shadowmarks_overlays,preference,Shadow Marks,faster 
-41,shadowmarks_overlays_smallmultiples,speed,,
-41,shadowmarks_overlays_smallmultiples,accuracy,,
-41,shadowmarks_overlays_smallmultiples,preference,,
-42,shadowmarks_smallmultiples_overlays,speed,,
-42,shadowmarks_smallmultiples_overlays,accuracy,,
-42,shadowmarks_smallmultiples_overlays,preference,,
-43,overlays_smallmultiples_shadowmarks,speed,,
-43,overlays_smallmultiples_shadowmarks,accuracy,,
-43,overlays_smallmultiples_shadowmarks,preference,,
-44,shadowmarks_smallmultiples_overlays,speed,,
-44,shadowmarks_smallmultiples_overlays,accuracy,,
-44,shadowmarks_smallmultiples_overlays,preference,,
 45,overlays_smallmultiples_shadowmarks,speed,Shadow Marks,I was able to measure the high of each flower with the shadow mark.
 45,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,It was a precise method.
 45,overlays_smallmultiples_shadowmarks,preference,Shadow Marks,It made the task easy for me.
-46,shadowmarks_smallmultiples_overlays,speed,,
-46,shadowmarks_smallmultiples_overlays,accuracy,,
-46,shadowmarks_smallmultiples_overlays,preference,,
-47,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,I could mark the one in the first row that I thought was the tallest and then just watch row 2 and 3 to see if any of those passed the mark.
-47,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,Without the shadow marks you couldn't tell the exact height on the rest of the rows.
-47,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,It took less time and I was able to get a more accurate idea of the height when comparing with the shadow mark.
-48,shadowmarks_smallmultiples_overlays,speed,,
-48,shadowmarks_smallmultiples_overlays,accuracy,,
-48,shadowmarks_smallmultiples_overlays,preference,,
-49,overlays_smallmultiples_shadowmarks,speed,,
-49,overlays_smallmultiples_shadowmarks,accuracy,,
-49,overlays_smallmultiples_shadowmarks,preference,,
-50,,speed,,
-50,,accuracy,,
-50,,preference,,
-51,shadowmarks_smallmultiples_overlays,speed,,
-51,shadowmarks_smallmultiples_overlays,accuracy,,
-51,shadowmarks_smallmultiples_overlays,preference,,
 52,overlays_shadowmarks_smallmultiples,speed,Overlays,"BY playing the videos over each other, it was easier to find the accurate answer."
 52,overlays_shadowmarks_smallmultiples,accuracy,Small Multiples,by placing the shadow marks i could see accurately how each flower measured against the other.
 52,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,It provided the most accurate results.
-53,overlays_smallmultiples_shadowmarks,speed,,
-53,overlays_smallmultiples_shadowmarks,accuracy,,
-53,overlays_smallmultiples_shadowmarks,preference,,
 54,shadowmarks_smallmultiples_overlays,speed,Shadow Marks,Because of the grid assistance
 54,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,Because of the grid assistance
 54,shadowmarks_smallmultiples_overlays,preference,Shadow Marks,Because of the grid assistance
-55,overlays_smallmultiples_shadowmarks,speed,,
-55,overlays_smallmultiples_shadowmarks,accuracy,,
-55,overlays_smallmultiples_shadowmarks,preference,,
-56,overlays_smallmultiples_shadowmarks,speed,,
-56,overlays_smallmultiples_shadowmarks,accuracy,,
-56,overlays_smallmultiples_shadowmarks,preference,,
 57,overlays_smallmultiples_shadowmarks,speed,Shadow Marks,I didn't have to do it over multiple times or keep guessing.
 57,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,The lines were there to keep comparing as the plants changed.
 57,overlays_smallmultiples_shadowmarks,preference,Shadow Marks,It's easier
-58,shadowmarks_overlays_smallmultiples,speed,,
-58,shadowmarks_overlays_smallmultiples,accuracy,,
-58,shadowmarks_overlays_smallmultiples,preference,,
-59,shadowmarks_overlays_smallmultiples,speed,,
-59,shadowmarks_overlays_smallmultiples,accuracy,,
-59,shadowmarks_overlays_smallmultiples,preference,,
 60,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,Its the fastest because I could just select a shadow mark of one flow at its highest height. Then skim through others to see who passed the line highest.
 60,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,I think its the most accurate because it seemed like I had a ruler to use for compare each of the 9 videos.
 60,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,I would prefer this technique because you have a direct comparison of each of the nine boxes at their same relative squares like you do with a ruler.
-61,shadowmarks_smallmultiples_overlays,speed,,
-61,shadowmarks_smallmultiples_overlays,accuracy,,
-61,shadowmarks_smallmultiples_overlays,preference,,
 62,shadowmarks_overlays_smallmultiples,speed,Small Multiples,Because it's basically guess work. I don't really need to view the video. The all look just as tall. I could just quickly perform trial and error to find the answers.
 62,shadowmarks_overlays_smallmultiples,accuracy,Shadow Marks,I could compare plants purely based on their highest points. I wouldn't be affected by when they become mature and have decline in their lifecycle that would affect their heights.
 62,shadowmarks_overlays_smallmultiples,preference,Shadow Marks,It's the most accurate.
-63,shadowmarks_overlays_smallmultiples,speed,,
-63,shadowmarks_overlays_smallmultiples,accuracy,,
-63,shadowmarks_overlays_smallmultiples,preference,,
-64,,speed,,
-64,,accuracy,,
-64,,preference,,
 65,overlays_shadowmarks_smallmultiples,speed,Overlays,it was easier to compare the heights when all the plants were on top of each other
 65,overlays_shadowmarks_smallmultiples,accuracy,Overlays,easier to compare the height of the plants
 65,overlays_shadowmarks_smallmultiples,preference,Overlays,it was the easiest
@@ -200,33 +89,6 @@ pID,condition,question,answer,reason
 67,shadowmarks_overlays_smallmultiples,speed,Small Multiples,Greater ability to view both stages 
 67,shadowmarks_overlays_smallmultiples,accuracy,Small Multiples,Greater ability to view both stages 
 67,shadowmarks_overlays_smallmultiples,preference,Small Multiples,Small multiples was by far the easiest for me to use
-68,shadowmarks_smallmultiples_overlays,speed,,
-68,shadowmarks_smallmultiples_overlays,accuracy,,
-68,shadowmarks_smallmultiples_overlays,preference,,
-69,smallmultiples_overlays_shadowmarks,speed,,
-69,smallmultiples_overlays_shadowmarks,accuracy,,
-69,smallmultiples_overlays_shadowmarks,preference,,
-70,shadowmarks_smallmultiples_overlays,speed,,
-70,shadowmarks_smallmultiples_overlays,accuracy,,
-70,shadowmarks_smallmultiples_overlays,preference,,
-71,smallmultiples_overlays_shadowmarks,speed,,
-71,smallmultiples_overlays_shadowmarks,accuracy,,
-71,smallmultiples_overlays_shadowmarks,preference,,
-72,shadowmarks_smallmultiples_overlays,speed,,
-72,shadowmarks_smallmultiples_overlays,accuracy,,
-72,shadowmarks_smallmultiples_overlays,preference,,
-73,shadowmarks_smallmultiples_overlays,speed,,
-73,shadowmarks_smallmultiples_overlays,accuracy,,
-73,shadowmarks_smallmultiples_overlays,preference,,
-74,smallmultiples_overlays_shadowmarks,speed,,
-74,smallmultiples_overlays_shadowmarks,accuracy,,
-74,smallmultiples_overlays_shadowmarks,preference,,
 75,shadowmarks_smallmultiples_overlays,speed,Shadow Marks,It was easier to make comparisons.
 75,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,I could easily check if it crossed the line.
 75,shadowmarks_smallmultiples_overlays,preference,Shadow Marks,It was the easiest to check nine samples at the same time.
-76,smallmultiples_overlays_shadowmarks,speed,,
-76,smallmultiples_overlays_shadowmarks,accuracy,,
-76,smallmultiples_overlays_shadowmarks,preference,,
-77,smallmultiples_overlays_shadowmarks,speed,,
-77,smallmultiples_overlays_shadowmarks,accuracy,,
-77,smallmultiples_overlays_shadowmarks,preference,,
