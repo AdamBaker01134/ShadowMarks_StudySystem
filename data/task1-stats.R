@@ -358,6 +358,9 @@ ggsave("task1/preference-1.png", width=18, height=10, units="cm", type="cairo-pn
 demographicsData <- read.csv("task1/shadowmarksDemographicsData_2024-08-15.csv")
 demographicsData
 
+demographicsData <- demographicsData %>% filter(!(pID %in% incompletes)) %>% filter(!(pID %in% complete_outliers))
+demographicsData
+
 mean(demographicsData$age)
 nrow(demographicsData %>% filter(identify=="Man"))
 nrow(demographicsData %>% filter(identify=="Woman"))
@@ -377,13 +380,13 @@ nrow(demographicsData %>% filter(identify=="Woman"))
 ct_anova <- ezANOVA(data=Data, dv=elapsedTime, wid=pID, within=.(technique),type=3, detailed=TRUE, return_aov=TRUE)
 ct_anova
 
-write.csv(ct_anova["ANOVA"], "task1/ct-anova-task1.csv", row.names=TRUE)
+write.csv(ct_anova["ANOVA"], "task4/ct-anova-task4.csv", row.names=TRUE)
 
 pairwise.t.test(Data$elapsedTime, Data$technique, p.adj = "holm")
 
 acc_anova <- ezANOVA(data=Data, dv=errors, wid=pID, within=.(technique),type=3, detailed=TRUE, return_aov=TRUE)
 acc_anova
 
-write.csv(acc_anova["ANOVA"], "task1/acc-anova-task1.csv", row.names=TRUE)
+write.csv(acc_anova["ANOVA"], "task4/acc-anova-task4.csv", row.names=TRUE)
 
 pairwise.t.test(Data$errors, Data$technique, p.adj = "holm")
