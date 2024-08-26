@@ -31,6 +31,8 @@ DataFull
 
 DataFull <- DataFull %>% rename(technique = interaction)
 
+DataFull$difference <- DataFull$difference1 * 446.67
+
 DataFull$pID <- as_factor(DataFull$pID)
 DataFull$technique <- as_factor(DataFull$technique)
 DataFull$trial <- as_factor(DataFull$trial)
@@ -65,6 +67,7 @@ Data
 
 complete_outliers <- list(2,7,31,32,47)
 
+DataFull <- DataFull %>% filter(!(pID %in% complete_outliers))
 Data <- Data %>% filter(!(pID %in% complete_outliers))
 ezDesign(data=Data, x=technique, y=pID)
 ezPrecis(Data)
@@ -96,7 +99,7 @@ ggplot(ctSummary, aes(x=technique, y=mean)) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
-                   labels=c("Small\nMultiples","Overlays","Shadow\nMarkers")) +
+                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
   ylab(label='Completion Time (sec)')
 
@@ -128,7 +131,7 @@ ggplot(ctTrialSummary, aes(x=trial, y=mean, group=technique)) +
                    labels=c("1","2")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   new_theme +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
@@ -155,20 +158,20 @@ accSummary <- Data %>%
 accSummary
 
 ggplot(accSummary, aes(x=technique, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080") +
+  geom_col(fill="lightblue", colour="#808080", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
-                   labels=c("Small Multiples","Overlays","Shadow Markers")) +
+                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Interaction') +
   ylab(label='Accuracy (number of errors)')
 
-ggsave("task1/acc-by-interaction-task1.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("task1/acc-by-interaction-task1.png", width=10, height=10, units="cm", type="cairo-png")
 
 ggplot(Data, aes(x=pID,y=errors, color=technique)) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   geom_jitter(size=2.0) +
   new_theme
 
@@ -191,7 +194,7 @@ ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
                    labels=c("1","2")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   new_theme +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
@@ -210,11 +213,11 @@ ggsave("task1/acc-per-trial-task1.png", width=20, height=10, units="cm", type="c
 #                                                                                           
 #
 
-DifferenceData <- DataFull %>% 
+DifferenceData <- DataFull %>% filter(attempt==1) %>%
   group_by(technique,trial) %>% 
-  summarise(mean=mean(difference1,na.rm=TRUE),
-            sd=sd(difference1,na.rm=TRUE),
-            se=sd/sqrt(length(difference1)))
+  summarise(mean=mean(difference,na.rm=TRUE),
+            sd=sd(difference,na.rm=TRUE),
+            se=sd/sqrt(length(difference)))
 DifferenceData
 
 ggplot(DifferenceData, aes(x=trial, y=mean, group=technique)) +
@@ -222,17 +225,18 @@ ggplot(DifferenceData, aes(x=trial, y=mean, group=technique)) +
   geom_point(aes(color=technique))+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Distance to correct answer') +
+  ylab(label='Distance to correct answer (pixels)') +
   scale_x_discrete(limits=c(1,2),
                    labels=c("1","2","3")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
+  scale_y_discrete(limits=c("1","2","3","4")) +
   new_theme +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task1/difference_to_selection-task1.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("task1/error-distance-task1.png", width=20, height=10, units="cm", type="cairo-png")
 
 # 
 # _________ _                
@@ -288,7 +292,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
                             "TechniqueDifficulty")) +
   scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
                     values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   new_theme +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
@@ -336,7 +340,7 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
                    labels=c("Preferred Accuracy","Preferred Speed","Preferred Performance")) +
   scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
                     values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small Multiples", "Overlays", "Shadow Marks")) +
+                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   new_theme +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
@@ -380,13 +384,22 @@ nrow(demographicsData %>% filter(identify=="Woman"))
 ct_anova <- ezANOVA(data=Data, dv=elapsedTime, wid=pID, within=.(technique),type=3, detailed=TRUE, return_aov=TRUE)
 ct_anova
 
-write.csv(ct_anova["ANOVA"], "task4/ct-anova-task4.csv", row.names=TRUE)
+write.csv(ct_anova["ANOVA"], "task1/ct-anova-task1.csv", row.names=TRUE)
 
 pairwise.t.test(Data$elapsedTime, Data$technique, p.adj = "holm")
 
 acc_anova <- ezANOVA(data=Data, dv=errors, wid=pID, within=.(technique),type=3, detailed=TRUE, return_aov=TRUE)
 acc_anova
 
-write.csv(acc_anova["ANOVA"], "task4/acc-anova-task4.csv", row.names=TRUE)
+write.csv(acc_anova["ANOVA"], "task1/acc-anova-task1.csv", row.names=TRUE)
 
 pairwise.t.test(Data$errors, Data$technique, p.adj = "holm")
+
+attempt1Data <- DataFull %>% filter(attempt==1)
+
+errdist_anova <- ezANOVA(data=attempt1Data, dv=difference, wid=pID, within=.(technique), type=3, detailed=TRUE, return_aov=TRUE)
+errdist_anova
+
+write.csv(errdist_anova["ANOVA"], "task1/errdist-anova-task1.csv", row.names=TRUE)
+
+pairwise.t.test(attempt1Data$difference, attempt1Data$technique, p.adj = "holm")
