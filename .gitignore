@@ -13,9 +13,9 @@ data/*
 data/task1/*
 !data/task1/*.csv
 
-# !data/task3/
-# data/task3/*
-# !data/task3/*.csv
+!data/task3/
+data/task3/*
+!data/task3/*.csv
 
 !data/task4/
 data/task4/*
