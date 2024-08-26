@@ -307,6 +307,22 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
 
 ggsave("task4/tlx-4.png", width=50, height=10, units="cm", type="cairo-png")
 
+# Anovas all at once
+tlxNames <- c("MentalDemand", "PhysicalDemand", "TemporalDemand", "Performance", "Effort", "Frustration", "Guessing", "PerceivedAccuracy", "TaskDifficulty", "TechniqueDifficulty")
+for (name in tlxNames) {
+  cat("\n\n---------------------------------\n")
+  cat(name)
+  cat("\n---------------------------------\n\n")
+  tlxSingle <- filter(tlxData, question==name)
+  artResult <- art(value ~ technique + Error(pID), data=tlxSingle)
+  print(summary(artResult))
+  cat("\n----------\n")
+  tlxAnova <- anova(artResult)
+  print(tlxAnova)
+  tlxFollowup <- art.con(artResult, "technique")
+  print(tlxFollowup)
+}
+
 #
 #  _______  _______  _______  _______  _______  _______  _______  _        _______  _______ 
 # (  ____ )(  ____ )(  ____ \(  ____ \(  ____ \(  ____ )(  ____ \( (    /|(  ____ \(  ____ \
@@ -355,6 +371,13 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
 
 ggsave("task4/preference-4.png", width=18, height=10, units="cm", type="cairo-png")
 
+test <- chisq.test(table(preferenceData$answer))
+test
+
+test$expected
+
+table(preferenceData$answer)
+
 #
 #  ______   _______  _______  _______  _______  _______  _______  _______          _________ _______  _______ 
 # (  __  \ (  ____ \(       )(  ___  )(  ____ \(  ____ )(  ___  )(  ____ )|\     /|\__   __/(  ____ \(  ____ \
@@ -378,6 +401,12 @@ nrow(demographicsData %>% filter(identify=="Man"))
 nrow(demographicsData %>% filter(identify=="Woman"))
 nrow(demographicsData %>% filter(identify=="Non-binary"))
 nrow(demographicsData %>% filter(identify=="Two-Spirit"))
+mean(demographicsData$ComputerExperience)
+mean(demographicsData$GamesExperience)
+mean(demographicsData$VideoEditingExperience)
+mean(demographicsData$VideoComparisonExperience)
+mean(demographicsData$VisualizationExperience)
+mean(demographicsData$VisualizationComparisonExperience)
 
 #
 #  _______  _        _______           _______ 
