@@ -88,24 +88,24 @@ ctSummary <- Data %>%
 ctSummary
 
 ggplot(ctSummary, aes(x=technique, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080", width=0.5) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
-  ylab(label='Completion Time (sec)')
+  ylab(label='Mean Completion Time (sec)')
 
 ggsave("task3/ct-by-interaction-task3.png", width=10, height=10, units="cm", type="cairo-png")
 
-ggplot(Data, aes(x=pID,y=elapsedTime, color=technique)) +
-  geom_jitter(size=2.0) +
-  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-                     values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small\nMultiples", "Overlays", "Shadow\nMarks")) +
-  new_theme
-
-ggsave("task3/ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
+# ggplot(Data, aes(x=pID,y=elapsedTime, color=technique)) +
+#   geom_jitter(size=2.0) +
+#   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+#                      values=c("#FF3300","#0066CC","#00F000"),
+#                      labels=c("Small\nMultiples", "Overlays", "Shadow\nMarks")) +
+#   new_theme
+# 
+# ggsave("task3/ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
 ctTrialSummary <- Data %>%
   group_by(technique,trial) %>%
@@ -119,12 +119,13 @@ ggplot(ctTrialSummary, aes(x=trial, y=mean, group=technique)) +
   geom_point(aes(color=technique))+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Completion Time (sec)') +
+  ylab(label='Mean Completion Time (sec)') +
+  labs(color = "Technique") +
   scale_x_discrete(limits=c(1,2),
                    labels=c("1","2")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
@@ -151,24 +152,24 @@ accSummary <- Data %>%
 accSummary
 
 ggplot(accSummary, aes(x=technique, y=mean)) +
-  geom_col(fill="lightblue", colour="#808080", width=0.5) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
-  xlab(label='Interaction') +
+  xlab(label='Technique') +
   ylab(label='Accuracy (number of errors)')
 
 ggsave("task3/acc-by-interaction-task3.png", width=10, height=10, units="cm", type="cairo-png")
 
-ggplot(Data, aes(x=pID,y=errors, color=technique)) +
-  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-                     values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
-  geom_jitter(size=2.0) +
-  new_theme
-
-ggsave("task3/acc-outliers.png", width=30, height=10, units="cm", type="cairo-png")
+# ggplot(Data, aes(x=pID,y=errors, color=technique)) +
+#   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+#                      values=c("#FF3300","#0066CC","#00F000"),
+#                      labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+#   geom_jitter(size=2.0) +
+#   new_theme
+# 
+# ggsave("task3/acc-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
 accTrialSummary <- Data %>%
   group_by(technique,trial) %>%
@@ -183,11 +184,12 @@ ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
   ylab(label='Accuracy (number of errors)') +
+  labs(color = "Technique") +
   scale_x_discrete(limits=c(1,2),
                    labels=c("1","2")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="right") +
   guides(fill=guide_legend(title=NULL))
@@ -218,7 +220,8 @@ ggplot(DifferenceData, aes(x=trial, y=mean, group=technique)) +
   geom_point(aes(color=technique))+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Distance to correct answer (pixels)') +
+  ylab(label='Error Distance (pixels)') +
+  labs(color = "Technique") +
   scale_x_discrete(limits=c(1,2),
                    labels=c("1","2","3")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
@@ -428,3 +431,35 @@ errdist_anova
 write.csv(errdist_anova["ANOVA"], "task3/errdist-anova-task3.csv", row.names=TRUE)
 
 pairwise.t.test(attempt1Data$difference, attempt1Data$technique, p.adj = "holm")
+
+#
+#  _______  _______  _______  _        _______ 
+# (       )(  ____ \(  ___  )( (    /|(  ____ \
+# | () () || (    \/| (   ) ||  \  ( || (    \/
+# | || || || (__    | (___) ||   \ | || (_____ 
+# | |(_)| ||  __)   |  ___  || (\ \) |(_____  )
+# | |   | || (      | (   ) || | \   |      ) |
+# | )   ( || (____/\| )   ( || )  \  |/\____) |
+# |/     \|(_______/|/     \||/    )_)\_______)
+#                                              
+#
+
+smallmultiples_Data <- Data %>% filter(technique=="smallMultiples")
+overlays_Data <- Data %>% filter(technique=="overlays")
+shadowmarks_Data <- Data %>% filter(technique=="shadowMarkers")
+
+mean(smallmultiples_Data$elapsedTime)
+mean(overlays_Data$elapsedTime)
+mean(shadowmarks_Data$elapsedTime)
+
+mean(smallmultiples_Data$errors)
+mean(overlays_Data$errors)
+mean(shadowmarks_Data$errors)
+
+smallmultiples_Data <- attempt1Data %>% filter(technique=="smallMultiples")
+overlays_Data <- attempt1Data %>% filter(technique=="overlays")
+shadowmarks_Data <- attempt1Data %>% filter(technique=="shadowMarkers")
+
+mean(smallmultiples_Data$difference)
+mean(overlays_Data$difference)
+mean(shadowmarks_Data$difference)
