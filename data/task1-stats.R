@@ -122,22 +122,22 @@ ctTrialSummary <- Data %>%
 ctTrialSummary
 
 ggplot(ctTrialSummary, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique)) +
-  geom_point(aes(color=technique))+
+  geom_line(aes(color=technique),size=1.5) +
+  geom_point(aes(color=technique),size=2)+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
   ylab(label='Mean Completion Time (sec)') +
   labs(color = "Technique") +
-  scale_x_discrete(limits=c(1,2),
-                   labels=c("1","2")) +
+  scale_x_discrete(expand = c(0.1,0.1)) +
+  scale_y_continuous(limits = c(0, 100)) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
-  theme(legend.position="right") +
+  theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task1/ct-per-trial-task1.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("task1/ct-per-trial-task1.png", width=20, height=20, units="cm", type="cairo-png")
 
 #
 #  _______  _______  _______           _______  _______  _______          
@@ -165,7 +165,7 @@ ggplot(accSummary, aes(x=technique, y=mean)) +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
-  ylab(label='Accuracy (number of errors)')
+  ylab(label='Mean Error Count')
 
 ggsave("task1/acc-by-interaction-task1.png", width=10, height=10, units="cm", type="cairo-png")
 
@@ -186,22 +186,22 @@ accTrialSummary <- Data %>%
 accTrialSummary
 
 ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique)) +
-  geom_point(aes(color=technique))+
+  geom_line(aes(color=technique),size=1.5) +
+  geom_point(aes(color=technique),size=2)+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Accuracy (number of errors)') +
+  ylab(label='Mean Error Count') +
   labs(color = "Technique") +
-  scale_x_discrete(limits=c(1,2),
-                   labels=c("1","2")) +
+  scale_x_discrete(expand = c(0.1,0.1)) +
+  scale_y_continuous(limits = c(0, 4)) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
-  theme(legend.position="right") +
+  theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task1/acc-per-trial-task1.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("task1/acc-per-trial-task1.png", width=20, height=20, units="cm", type="cairo-png")
 
 #
 #  ______  _________ _______  _______  _______  _______  _______  _        _______  _______ 
@@ -223,23 +223,22 @@ DifferenceData <- DataFull %>% filter(attempt==1) %>%
 DifferenceData
 
 ggplot(DifferenceData, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique)) +
-  geom_point(aes(color=technique))+
+  geom_line(aes(color=technique),size=1.5) +
+  geom_point(aes(color=technique),size=2)+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Error Distance (pixels)') +
+  ylab(label='Mean Error Distance (pixels)') +
   labs(color = "Technique") +
-  scale_x_discrete(limits=c(1,2),
-                   labels=c("1","2","3")) +
   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
                      values=c("#FF3300","#0066CC","#00F000"),
                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
-  scale_y_discrete(limits=c("1","2","3","4")) +
+  scale_x_discrete(expand = c(0.1,0.1)) +
+  scale_y_continuous(limits = c(0, 4)) +
   new_theme +
-  theme(legend.position="right") +
+  theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task1/error-distance-task1.png", width=20, height=10, units="cm", type="cairo-png")
+ggsave("task1/error-distance-task1.png", width=20, height=20, units="cm", type="cairo-png")
 
 # 
 # _________ _                
@@ -262,6 +261,9 @@ tlxData
 tlxData$pID <- as_factor(tlxData$pID)
 tlxData$technique <- as_factor(tlxData$technique)
 
+tlxData$value[tlxData$question=="Performance"] <- 7-tlxData$value[tlxData$question=="Performance"]
+tlxData
+
 tlxData <- tlxData %>% filter(!(pID %in% incompletes)) %>%
   filter(!(pID %in% complete_outliers))
 
@@ -281,26 +283,43 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
   geom_col(position=position_dodge(width=0.8), width=0.7) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se),width=0.2,
                 position=position_dodge(width=0.8)) +
-  xlab(label='NASA TLX Question') +
+  xlab(label='\nNASA TLX Question') +
   ylab(label='Mean Score') +
   scale_y_continuous(limits=c(0, 6), breaks=c(0,2,4,6),
                      labels=c("1 (least)", "3", "5", "7 (most)")) +
   scale_x_discrete(limits=c("MentalDemand","PhysicalDemand","TemporalDemand",
-                            "Performance","Effort","Frustration","Guessing",
-                            "PerceivedAccuracy","TaskDifficulty",
-                            "TechniqueDifficulty"),
-                   labels=c("MentalDemand","PhysicalDemand","TemporalDemand",
-                            "Performance","Effort","Frustration","Guessing",
-                            "PerceivedAccuracy","TaskDifficulty",
-                            "TechniqueDifficulty")) +
+                            "Performance","Effort","Frustration"),
+                   labels=c("Mental Demand \u2193","Physical Demand \u2193","Temporal Demand \u2193",
+                            "Performance \u2191","Effort \u2193","Frustration \u2193")) +
   scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
                     values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task1/tlx-1.png", width=50, height=10, units="cm", type="cairo-png")
+ggsave("task1/tlx-1.png", width=30, height=20, units="cm", type="cairo-png")
+
+ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
+  geom_col(position=position_dodge(width=0.8), width=0.7) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se),width=0.2,
+                position=position_dodge(width=0.8)) +
+  xlab(label='\nUX Question') +
+  ylab(label='Mean Score') +
+  scale_y_continuous(limits=c(0, 6), breaks=c(0,2,4,6),
+                     labels=c("1 (least)", "3", "5", "7 (most)")) +
+  scale_x_discrete(limits=c("Guessing","PerceivedAccuracy","TaskDifficulty",
+                            "TechniqueDifficulty"),
+                   labels=c("Guessing \u2193","Perceived Accuracy \u2191","Task Difficulty \u2193",
+                            "Technique Difficulty \u2193")) +
+  scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
+                    values=c("#FF3300","#0066CC","#00F000"),
+                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
+  new_theme +
+  theme(legend.position="bottom") +
+  guides(fill=guide_legend(title=NULL))
+
+ggsave("task1/ux-1.png", width=20, height=20, units="cm", type="cairo-png")
 
 # Anovas all at once
 tlxNames <- c("MentalDemand", "PhysicalDemand", "TemporalDemand", "Performance", "Effort", "Frustration", "Guessing", "PerceivedAccuracy", "TaskDifficulty", "TechniqueDifficulty")
@@ -338,6 +357,8 @@ preferenceData
 
 preferenceData$pID <- as_factor(preferenceData$pID)
 preferenceData$condition <- as_factor(preferenceData$condition)
+preferenceData$question <- as_factor(preferenceData$question)
+preferenceData$answer <- factor(preferenceData$answer, levels=c("Small Multiples","Overlays", "Shadow Marks"))
 
 preferenceData <- preferenceData %>% filter(!(pID %in% incompletes)) %>%
   filter(!(pID %in% complete_outliers))
@@ -354,12 +375,12 @@ preferenceSummary
 ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
   geom_col(position=position_dodge(width=0.8), width=0.7) +
   xlab(label='Preference Question') +
-  ylab(label='Total Score') +
-  scale_x_discrete(limits=c("accuracy","speed","preference"),
-                   labels=c("Preferred Accuracy","Preferred Speed","Preferred Performance")) +
+  ylab(label='Number of Participants') +
+  scale_x_discrete(limits=c("speed","accuracy","preference"),
+                   labels=c("Fastest","Most Accurate","Preferred Overall")) +
   scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
                     values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
