@@ -165,7 +165,7 @@ ggplot(accSummary, aes(x=technique, y=mean)) +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
-  ylab(label='Mean Error Count')
+  ylab(label='Mean Errors per Trial')
 
 ggsave("task1/acc-by-interaction-task1.png", width=10, height=10, units="cm", type="cairo-png")
 
@@ -190,7 +190,7 @@ ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
   geom_point(aes(color=technique),size=2)+
   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   xlab(label='Trial') +
-  ylab(label='Mean Error Count') +
+  ylab(label='Mean Errors per Trial') +
   labs(color = "Technique") +
   scale_x_discrete(expand = c(0.1,0.1)) +
   scale_y_continuous(limits = c(0, 4)) +
@@ -261,7 +261,7 @@ tlxData
 tlxData$pID <- as_factor(tlxData$pID)
 tlxData$technique <- as_factor(tlxData$technique)
 
-tlxData$value[tlxData$question=="Performance"] <- 7-tlxData$value[tlxData$question=="Performance"]
+tlxData$value[tlxData$question=="Performance"] <- 8-tlxData$value[tlxData$question=="Performance"]
 tlxData
 
 tlxData <- tlxData %>% filter(!(pID %in% incompletes)) %>%
@@ -270,6 +270,14 @@ tlxData <- tlxData %>% filter(!(pID %in% incompletes)) %>%
 ezPrecis(tlxData)
 
 ezDesign(data=tlxData, x=technique, y=pID)
+
+tlxSummary <- tlxData %>% 
+  group_by(technique,question) %>% 
+  summarise(median = median(value, na.rm = TRUE),
+            mean = mean(value, na.rm = TRUE),
+            sd = sd(value, na.rm = TRUE),
+            se = sd/sqrt(length(value)))
+print(tlxSummary,n=30)
 
 tlxSummary <- tlxData %>% 
   group_by(technique,question) %>% 
