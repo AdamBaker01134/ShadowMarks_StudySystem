@@ -8,6 +8,7 @@ my_task/static/assets/
 
 data/*
 !data/*.R
+!data/preference-comments.xlsx
 
 !data/task1/
 data/task1/*

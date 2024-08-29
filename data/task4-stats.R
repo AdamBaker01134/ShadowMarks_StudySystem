@@ -32,7 +32,7 @@ DataFull
 DataFull <- DataFull %>% rename(technique = interaction)
 
 DataFull$pID <- as_factor(DataFull$pID)
-DataFull$technique <- as_factor(DataFull$technique)
+DataFull$technique <- factor(DataFull$technique, levels=c("smallMultiples","overlays", "shadowMarkers"))
 DataFull$trial <- as_factor(DataFull$trial)
 DataFull
 
@@ -101,7 +101,7 @@ ggplot(ctSummary, aes(x=technique, y=mean)) +
   xlab(label='Technique') +
   ylab(label='Mean Completion Time (sec)')
 
-ggsave("task4/ct-by-interaction-task4.png", width=10, height=10, units="cm", type="cairo-png")
+ggsave("task4/ct-by-technique-task4.png", width=10, height=10, units="cm", type="cairo-png")
 
 # ggplot(Data, aes(x=pID,y=elapsedTime, color=technique)) +
 #   geom_jitter(size=2.0) +
@@ -165,7 +165,7 @@ ggplot(accSummary, aes(x=technique, y=mean)) +
   xlab(label='Technique') +
   ylab(label='Mean Errors per Trial')
 
-ggsave("task4/acc-by-interaction-task4.png", width=10, height=10, units="cm", type="cairo-png")
+ggsave("task4/acc-by-technique-task4.png", width=10, height=10, units="cm", type="cairo-png")
 
 # ggplot(Data, aes(x=pID,y=errors, color=technique)) +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
@@ -221,8 +221,27 @@ DifferenceData <- DifferenceData %>% filter(trial!=0) %>% filter(attempt==1) %>%
   filter(!(pID %in% complete_outliers)) %>% rename(technique = interaction)
 DifferenceData
 
+DifferenceData$technique <- factor(DifferenceData$technique, levels=c("smallMultiples","overlays", "shadowMarkers"))
 DifferenceData$trial <- as_factor(DifferenceData$trial)
 DifferenceData$difference <- DifferenceData$difference1
+
+DifferenceDataSummary <- DifferenceData %>%
+  group_by(technique) %>%
+  summarise(mean = mean(difference1, na.rm = TRUE),
+            sd = sd(difference1, na.rm = TRUE),
+            se = sd/sqrt(length(difference1)))
+DifferenceDataSummary
+
+ggplot(DifferenceDataSummary, aes(x=technique, y=mean)) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  new_theme +
+  scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
+                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+  xlab(label='Technique') +
+  ylab(label='Mean Error Distance (pixels)')
+
+ggsave("task4/error-distance-by-technique-task4.png", width=10, height=10, units="cm", type="cairo-png")
 
 DifferenceDataSummary <- DifferenceData %>% 
   group_by(technique,trial) %>% 
@@ -247,7 +266,7 @@ ggplot(DifferenceDataSummary, aes(x=trial, y=mean, group=technique)) +
   theme(legend.position="bottom") +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task4/error-distance-task4.png", width=20, height=20, units="cm", type="cairo-png")
+ggsave("task4/error-distance-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
 
 # 
 # _________ _                
