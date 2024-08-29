@@ -131,6 +131,22 @@ def getFavourites(row):
 
     return [ speed_preference, accuracy_preference, overall_preferene]
 
+def getComments(row):
+    pID = row["participantID"]
+    condition = row["condition"]
+
+    commentsDict = {"pID": pID, "condition": condition}
+
+    for key in row:
+        key = key.split("_")
+        if key[0][:-1] == "summary" and key[1] == "comments":
+            restOfThing = ""
+            for i in range(1, len(key)):
+                restOfThing += "_" + key[i]
+            commentsDict["comments"] = row[key[0] + restOfThing]  
+    return [commentsDict]
+        
+
 
 def dict_to_csv(list_of_dicts, csv_file):
     # Extract the header from the keys of the first dictionary
@@ -155,16 +171,17 @@ if __name__ == "__main__":
         TLXRows = []
         demographicRows = []
         preferenceRows = []
+        commentRows = []
 
         for participant in reader:
             row = dict(participant)
             demographicRows.extend(getDemographics(row))
             TLXRows.extend(getTLXPreferences(row))
             preferenceRows.extend(getFavourites(row))
+            commentRows.extend(getComments(row))
 
         today = datetime.datetime.now().date()
-        dict_to_csv(demographicRows,
-                    "shadowmarksDemographicsData_{}.csv".format(today.isoformat()))
-        dict_to_csv(TLXRows, "shadowmarksTLXData_{}.csv".format(today.isoformat()))
-        dict_to_csv(preferenceRows,
-                    "shadowmarksPreferenceData_{}.csv".format(today.isoformat()))
+        dict_to_csv(demographicRows,"shadowmarksDemographicsData_{}.csv".format(today.isoformat()))
+        dict_to_csv(TLXRows,"shadowmarksTLXData_{}.csv".format(today.isoformat()))
+        dict_to_csv(preferenceRows,"shadowmarksPreferenceData_{}.csv".format(today.isoformat()))
+        dict_to_csv(commentRows,"shadowmarksCommentsData_{}.csv".format(today.isoformat()))
