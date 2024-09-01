@@ -39,23 +39,22 @@ DataFull
 DataFull <- DataFull %>% filter(trial!=0) %>% filter(task==4)
 DataFull
 
-# Filtering out incompletes
+# Filtering out incompletes and outliers above 90s elapsed time cap
 incompletes <- list(25,35,67)
-DataFull <- DataFull %>% filter(!(pID %in% incompletes))
+DataFull <- DataFull %>% filter(!(pID %in% incompletes)) %>% filter(elapsedTime < 90000)
 ezDesign(data=DataFull, x=technique, y=pID)
 ezPrecis(DataFull)
 
 Data <- DataFull %>% group_by(pID,technique,task,trial) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
 Data
 
-ctCap <- 90
 accCap <- 12
 
-# Filtering out outliers above elapsed time cap
-nrow(Data)
-Data <- Data %>% filter(elapsedTime < ctCap)
-nrow(Data)
-Data
+# # Filtering out outliers above elapsed time cap
+# nrow(Data)
+# Data <- Data %>% filter(elapsedTime < ctCap)
+# nrow(Data)
+# Data
 
 # Filtering out outliers above accuracy cap
 nrow(Data)
@@ -63,7 +62,7 @@ Data <- Data %>% filter(errors < accCap)
 nrow(Data)
 Data
 
-complete_outliers <- list(13,15,24,42,44,55)
+complete_outliers <- list()
 
 DataFull <- DataFull %>% filter(!(pID %in% complete_outliers))
 Data <- Data %>% filter(!(pID %in% complete_outliers))
@@ -525,3 +524,36 @@ mean(smallmultiples_Data$difference)
 mean(overlays_Data$difference)
 mean(shadowmarks_Data$difference)
 
+#
+#  _______  _______  _        _______  _______  _______ _________ _______    ______  _________ _______  _______ 
+# (  ____ \(  ____ \( (    /|(  ____ \(  ____ )(  ___  )\__   __/(  ____ \  (  __  \ \__   __/(  ____ \(  ____ \
+# | (    \/| (    \/|  \  ( || (    \/| (    )|| (   ) |   ) (   | (    \/  | (  \  )   ) (   | (    \/| (    \/
+# | |      | (__    |   \ | || (__    | (____)|| (___) |   | |   | (__      | |   ) |   | |   | (__    | (__    
+# | | ____ |  __)   | (\ \) ||  __)   |     __)|  ___  |   | |   |  __)     | |   | |   | |   |  __)   |  __)   
+# | | \_  )| (      | | \   || (      | (\ (   | (   ) |   | |   | (        | |   ) |   | |   | (      | (      
+# | (___) || (____/\| )  \  || (____/\| ) \ \__| )   ( |   | |   | (____/\  | (__/  )___) (___| )      | )      
+# (_______)(_______/|/    )_)(_______/|/   \__/|/     \|   )_(   (_______/  (______/ \_______/|/       |/       
+#                                                                                                               
+#
+
+TrialData <- read_csv("task4/shadowmarksTrialData_2024-08-14.csv", col_names=TRUE)
+TrialData <- TrialData %>% filter(!(pID %in% incompletes)) %>% filter(trial!=0)
+TrialData
+
+StreamData <- read_csv("task4/shadowmarksStreamData_2024-08-14.csv", col_names=TRUE)
+StreamData <- StreamData %>% filter(!(pID %in% incompletes)) %>% filter(event=="submit") %>% filter(trial!=0)
+StreamData
+
+Merged <- tibble(merge(TrialData,StreamData))
+Merged <- Merged %>% filter(elapsedTime < 90000)
+Merged
+
+Merged <- Merged %>% group_by(pID,interaction,task,trial) %>%
+  filter(max(attempt-1) < accCap) %>%
+  ungroup()
+Merged
+
+Merged <- Merged %>% group_by(pID,condition,trial,interaction,attempt,elapsedTime,selectedVideos,videos) %>%
+  summarise()
+
+write.csv(Merged, "task4/selected_videos.csv")

@@ -41,9 +41,9 @@ DataFull
 DataFull <- DataFull %>% filter(trial!=0) %>% filter(task==3)
 DataFull
 
-# Filtering out incompletes
+# Filtering out incompletes and outliers above 180s elapsed time cap
 incompletes <- list(21,32,48,65)
-DataFull <- DataFull %>% filter(!(pID %in% incompletes)) %>% filter(!incompleteTrial)
+DataFull <- DataFull %>% filter(!(pID %in% incompletes)) %>% filter(elapsedTime < 180000)
 ezDesign(data=DataFull, x=technique, y=pID)
 ezPrecis(DataFull)
 

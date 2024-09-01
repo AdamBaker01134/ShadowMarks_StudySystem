@@ -41,23 +41,16 @@ DataFull
 DataFull <- DataFull %>% filter(trial!=0) %>% filter(task==1)
 DataFull
 
-# Filtering out incompletes
+# Filtering out incompletes and outliers above 180s elapsed time cap
 incompletes <- list(3,23,43,53,68)
-DataFull <- DataFull %>% filter(!(pID %in% incompletes))
+DataFull <- DataFull %>% filter(!(pID %in% incompletes)) %>% filter(elapsedTime < 180000)
 ezDesign(data=DataFull, x=technique, y=pID)
 ezPrecis(DataFull)
 
 Data <- DataFull %>% group_by(pID,technique,task,trial) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
 Data
 
-ctCap <- 180
 accCap <- 12
-
-# Filtering out outliers above elapsed time cap
-nrow(Data)
-Data <- Data %>% filter(elapsedTime < ctCap)
-nrow(Data)
-Data
 
 # Filtering out outliers above accuracy cap
 nrow(Data)
@@ -65,7 +58,7 @@ Data <- Data %>% filter(errors < accCap)
 nrow(Data)
 Data
 
-complete_outliers <- list(2,7,31,32,47)
+complete_outliers <- list(32)
 
 DataFull <- DataFull %>% filter(!(pID %in% complete_outliers))
 Data <- Data %>% filter(!(pID %in% complete_outliers))
