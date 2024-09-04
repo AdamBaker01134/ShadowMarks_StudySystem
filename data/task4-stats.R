@@ -424,7 +424,7 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
   geom_col(position=position_dodge(width=0.8), width=0.7) +
   xlab(label='Preference Question') +
   ylab(label='Number of Participants') +
-  scale_x_discrete(limits=c("accuracy","speed","preference"),
+  scale_x_discrete(limits=c("speed","accuracy","preference"),
                    labels=c("Fastest","Most Accurate","Preferred Overall")) +
   scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
                     values=c("#FF3300","#0066CC","#00F000"),
@@ -435,12 +435,24 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
 
 ggsave("task4/preference-4.png", width=18, height=10, units="cm", type="cairo-png")
 
-test <- chisq.test(table(preferenceData$answer))
-test
+preferenceData_speed <- preferenceData %>% filter(question=="speed")
+preferenceData_accuracy <- preferenceData %>% filter(question=="accuracy")
+preferenceData_preference <- preferenceData %>% filter(question=="preference")
 
-test$expected
+test_speed <- chisq.test(table(preferenceData_speed$answer))
+test_speed
+test_speed$expected
+table(preferenceData_speed$answer)
 
-table(preferenceData$answer)
+test_accuracy <- chisq.test(table(preferenceData_accuracy$answer))
+test_accuracy
+test_accuracy$expected
+table(preferenceData_accuracy$answer)
+
+test_preference <- chisq.test(table(preferenceData_preference$answer))
+test_preference
+test_preference$expected
+table(preferenceData_preference$answer)
 
 #
 #  ______   _______  _______  _______  _______  _______  _______  _______          _________ _______  _______ 

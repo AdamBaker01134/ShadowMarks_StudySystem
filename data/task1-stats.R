@@ -419,12 +419,25 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
 
 ggsave("task1/preference-1.png", width=18, height=10, units="cm", type="cairo-png")
 
-test <- chisq.test(table(preferenceData$answer))
-test
 
-test$expected
+preferenceData_speed <- preferenceData %>% filter(question=="speed")
+preferenceData_accuracy <- preferenceData %>% filter(question=="accuracy")
+preferenceData_preference <- preferenceData %>% filter(question=="preference")
 
-table(preferenceData$answer)
+test_speed <- chisq.test(table(preferenceData_speed$answer))
+test_speed
+test_speed$expected
+table(preferenceData_speed$answer)
+
+test_accuracy <- chisq.test(table(preferenceData_accuracy$answer))
+test_accuracy
+test_accuracy$expected
+table(preferenceData_accuracy$answer)
+
+test_preference <- chisq.test(table(preferenceData_preference$answer))
+test_preference
+test_preference$expected
+table(preferenceData_preference$answer)
 
 #
 #  ______   _______  _______  _______  _______  _______  _______  _______          _________ _______  _______ 
