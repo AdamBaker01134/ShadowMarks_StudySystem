@@ -107,6 +107,8 @@ ctSummary
 ggplot(ctSummary, aes(x=technique, y=mean)) +
   geom_col(fill=c("#FF3300","#0066CC","#00F000"),width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = 5, size = 4,
+             label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
@@ -124,30 +126,30 @@ ggsave("task4/ct-by-technique-task4.png", width=10, height=10, units="cm", type=
 # 
 # ggsave("task4/ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
-ctTrialSummary <- Data %>%
-  group_by(technique,trial) %>%
-  summarise(mean = mean(elapsedTime, na.rm = TRUE),
-            sd = sd(elapsedTime, na.rm = TRUE),
-            se = sd/sqrt(length(elapsedTime)))
-ctTrialSummary
-
-ggplot(ctTrialSummary, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique),size=1.5) +
-  geom_point(aes(color=technique),size=2)+
-  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  xlab(label='Trial') +
-  ylab(label='Mean Completion Time (sec)') +
-  labs(color = "Technique") +
-  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-                     values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
-  scale_x_discrete(expand = c(0.1,0.1)) +
-  scale_y_continuous(limits = c(0, 50)) +
-  new_theme +
-  theme(legend.position="bottom") +
-  guides(fill=guide_legend(title=NULL))
-
-ggsave("task4/ct-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
+# ctTrialSummary <- Data %>%
+#   group_by(technique,trial) %>%
+#   summarise(mean = mean(elapsedTime, na.rm = TRUE),
+#             sd = sd(elapsedTime, na.rm = TRUE),
+#             se = sd/sqrt(length(elapsedTime)))
+# ctTrialSummary
+# 
+# ggplot(ctTrialSummary, aes(x=trial, y=mean, group=technique)) +
+#   geom_line(aes(color=technique),size=1.5) +
+#   geom_point(aes(color=technique),size=2)+
+#   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   xlab(label='Trial') +
+#   ylab(label='Mean Completion Time (sec)') +
+#   labs(color = "Technique") +
+#   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+#                      values=c("#FF3300","#0066CC","#00F000"),
+#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#   scale_x_discrete(expand = c(0.1,0.1)) +
+#   scale_y_continuous(limits = c(0, 50)) +
+#   new_theme +
+#   theme(legend.position="bottom") +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# ggsave("task4/ct-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
 
 #
 #  _______  _______  _______           _______  _______  _______          
@@ -171,6 +173,8 @@ accSummary
 ggplot(accSummary, aes(x=technique, y=mean)) +
   geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(0.5,0.48,0.37), size = 4,
+             label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
@@ -188,30 +192,30 @@ ggsave("task4/acc-by-technique-task4.png", width=10, height=10, units="cm", type
 # 
 # ggsave("task4/acc-outliers.png", width=30, height=10, units="cm", type="cairo-png")
 
-accTrialSummary <- Data %>%
-  group_by(technique,trial) %>%
-  summarise(mean = mean(errors, na.rm = TRUE),
-            sd = sd(errors, na.rm = TRUE),
-            se = sd/sqrt(length(errors)))
-accTrialSummary
-
-ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique),size=1.5) +
-  geom_point(aes(color=technique),size=2)+
-  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  xlab(label='Trial') +
-  ylab(label='Mean Errors per Trial') +
-  labs(color = "Technique") +
-  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-                     values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
-  scale_x_discrete(expand = c(0.1,0.1)) +
-  scale_y_continuous(limits = c(0, 4)) +
-  new_theme +
-  theme(legend.position="bottom") +
-  guides(fill=guide_legend(title=NULL))
-
-ggsave("task4/acc-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
+# accTrialSummary <- Data %>%
+#   group_by(technique,trial) %>%
+#   summarise(mean = mean(errors, na.rm = TRUE),
+#             sd = sd(errors, na.rm = TRUE),
+#             se = sd/sqrt(length(errors)))
+# accTrialSummary
+# 
+# ggplot(accTrialSummary, aes(x=trial, y=mean, group=technique)) +
+#   geom_line(aes(color=technique),size=1.5) +
+#   geom_point(aes(color=technique),size=2)+
+#   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   xlab(label='Trial') +
+#   ylab(label='Mean Errors per Trial') +
+#   labs(color = "Technique") +
+#   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+#                      values=c("#FF3300","#0066CC","#00F000"),
+#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#   scale_x_discrete(expand = c(0.1,0.1)) +
+#   scale_y_continuous(limits = c(0, 4)) +
+#   new_theme +
+#   theme(legend.position="bottom") +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# ggsave("task4/acc-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
 
 #
 #  ______  _________ _______  _______  _______  _______  _______  _        _______  _______ 
@@ -247,6 +251,8 @@ DifferenceDataSummary
 ggplot(DifferenceDataSummary, aes(x=technique, y=mean)) +
   geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = 1.5, size = 4,
+             label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
                    labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
@@ -255,30 +261,30 @@ ggplot(DifferenceDataSummary, aes(x=technique, y=mean)) +
 
 ggsave("task4/error-distance-by-technique-task4.png", width=10, height=10, units="cm", type="cairo-png")
 
-DifferenceDataSummary <- DifferenceData %>% 
-  group_by(technique,trial) %>% 
-  summarise(mean=mean(difference1,na.rm=TRUE),
-            sd=sd(difference1,na.rm=TRUE),
-            se=sd/sqrt(length(difference1)))
-DifferenceDataSummary
-
-ggplot(DifferenceDataSummary, aes(x=trial, y=mean, group=technique)) +
-  geom_line(aes(color=technique),size=1.5) +
-  geom_point(aes(color=technique),size=2)+
-  # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  xlab(label='Trial') +
-  ylab(label='Mean Error Distance (pixels)') +
-  labs(color = "Technique") +
-  scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-                     values=c("#FF3300","#0066CC","#00F000"),
-                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
-  scale_x_discrete(expand = c(0.1,0.1)) +
-  scale_y_continuous(limits=c(0,15)) +
-  new_theme +
-  theme(legend.position="bottom") +
-  guides(fill=guide_legend(title=NULL))
-
-ggsave("task4/error-distance-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
+# DifferenceDataSummary <- DifferenceData %>% 
+#   group_by(technique,trial) %>% 
+#   summarise(mean=mean(difference1,na.rm=TRUE),
+#             sd=sd(difference1,na.rm=TRUE),
+#             se=sd/sqrt(length(difference1)))
+# DifferenceDataSummary
+# 
+# ggplot(DifferenceDataSummary, aes(x=trial, y=mean, group=technique)) +
+#   geom_line(aes(color=technique),size=1.5) +
+#   geom_point(aes(color=technique),size=2)+
+#   # geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
+#   xlab(label='Trial') +
+#   ylab(label='Mean Error Distance (pixels)') +
+#   labs(color = "Technique") +
+#   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
+#                      values=c("#FF3300","#0066CC","#00F000"),
+#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#   scale_x_discrete(expand = c(0.1,0.1)) +
+#   scale_y_continuous(limits=c(0,15)) +
+#   new_theme +
+#   theme(legend.position="bottom") +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# ggsave("task4/error-distance-per-trial-task4.png", width=20, height=20, units="cm", type="cairo-png")
 
 # 
 # _________ _                
