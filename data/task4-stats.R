@@ -41,7 +41,20 @@ DataFull
 
 # Filtering out incompletes and outliers above 90s elapsed time cap
 incompletes <- list(25,35,67)
-DataFull <- DataFull %>% filter(!(pID %in% incompletes)) %>% filter(elapsedTime < 90000)
+DataFull <- DataFull %>% filter(!(pID %in% incompletes))
+
+# Counting number of trials capped
+DataTooLong <- DataFull %>% filter(elapsedTime >= 90000) %>% group_by(pID,technique,task,trial) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1)
+DataTooLong
+
+# Counting number of trials removed
+DataTooLongRemove <- DataFull %>% filter(elapsedTime >= 90000) %>% group_by(pID,technique,task,trial,attempt) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1) %>% filter(attempt==1)
+DataTooLongRemove
+
+DataTooManyErrors <- DataFull %>% group_by(pID,technique,task,trial) %>% summarise(elapsedTime=max(elapsedTime)/1000, errors=max(attempt)-1) %>% filter(errors >= 12)
+DataTooManyErrors
+
+DataFull <- DataFull  %>% filter(elapsedTime < 90000)
 ezDesign(data=DataFull, x=technique, y=pID)
 ezPrecis(DataFull)
 

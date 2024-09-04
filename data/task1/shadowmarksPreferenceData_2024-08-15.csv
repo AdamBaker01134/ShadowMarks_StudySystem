@@ -1,10 +1,16 @@
 pID,condition,question,answer,reason
+2,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,It was easier to compare all the videos faster.
+2,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,It was the easiest way to compare all the videos at once.
+2,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,The other techniques were too time consuming and stressful. I also wasn't very good at this.
 5,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,"I was able to leave a marker, keep playing the video and accuratly determine if another plant went over the set marker"
 5,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,as above
 5,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,as above
 6,shadowmarks_smallmultiples_overlays,speed,Shadow Marks,direct comparison between many more sunflowers in one go
 6,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,direct comparison between many more sunflowers in one go
 6,shadowmarks_smallmultiples_overlays,preference,Shadow Marks,direct comparison between many more sunflowers in one go
+7,shadowmarks_overlays_smallmultiples,speed,Shadow Marks,The grid made it a lot easier to find the tallest plant.
+7,shadowmarks_overlays_smallmultiples,accuracy,Shadow Marks,The grid.
+7,shadowmarks_overlays_smallmultiples,preference,Shadow Marks,It was the easiest to vizualize with.
 8,smallmultiples_overlays_shadowmarks,speed,Shadow Marks,it allowed you to compare the heights more easily 
 8,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,there was a guideline of the height of a specific plant so if you were uncertain you could easily check the height of that one compared to another
 8,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,it was quicker
@@ -50,6 +56,9 @@ pID,condition,question,answer,reason
 28,smallmultiples_overlays_shadowmarks,speed,Overlays,"It required less precision than the shadow marks, and the small multiples required too much guess work so it took longer because I kept getting it wrong."
 28,smallmultiples_overlays_shadowmarks,accuracy,Shadow Marks,"This technique was most helpful for me as it provided me with a visual, unmoving border to compare each sunflower to, instead of trying to picture it in my head, I think my depth perception is worse at the top and bottom of my vision instead of in the middle so I could never tell if the distances were the same or not."
 28,smallmultiples_overlays_shadowmarks,preference,Shadow Marks,"Once I got past the difficulty of learning the task and realised the flowers were growing at different paces and had different peaks, it was easiest to compare the sunflowers with these guided lines that did all the distance measuring for me"
+31,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,The line across all the flowers was these easiest as it was able to clearly show whether the other flowers were below or above it 
+31,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,Due to the lines being in red I could clearly see what plants measured up to others 
+31,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,This was the easist and quickest and least hard to understand the technique 
 35,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,helped to see the marker line
 35,overlays_shadowmarks_smallmultiples,accuracy,Overlays,showed comparison
 35,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,fastest/easiest
@@ -65,6 +74,9 @@ pID,condition,question,answer,reason
 45,overlays_smallmultiples_shadowmarks,speed,Shadow Marks,I was able to measure the high of each flower with the shadow mark.
 45,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,It was a precise method.
 45,overlays_smallmultiples_shadowmarks,preference,Shadow Marks,It made the task easy for me.
+47,overlays_shadowmarks_smallmultiples,speed,Shadow Marks,I could mark the one in the first row that I thought was the tallest and then just watch row 2 and 3 to see if any of those passed the mark.
+47,overlays_shadowmarks_smallmultiples,accuracy,Shadow Marks,Without the shadow marks you couldn't tell the exact height on the rest of the rows.
+47,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,It took less time and I was able to get a more accurate idea of the height when comparing with the shadow mark.
 52,overlays_shadowmarks_smallmultiples,speed,Overlays,"BY playing the videos over each other, it was easier to find the accurate answer."
 52,overlays_shadowmarks_smallmultiples,accuracy,Small Multiples,by placing the shadow marks i could see accurately how each flower measured against the other.
 52,overlays_shadowmarks_smallmultiples,preference,Shadow Marks,It provided the most accurate results.

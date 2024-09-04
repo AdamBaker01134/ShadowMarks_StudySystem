@@ -14,6 +14,12 @@ pID,condition,question,answer,reason
 10,smallmultiples_shadowmarks_overlays,speed,Shadow Marks,It broke up the data into easily digestible segments that were the least difficult to compare.
 10,smallmultiples_shadowmarks_overlays,accuracy,Shadow Marks,Because any data that fell above or below the shadow marks was instantly apparent to the eye.
 10,smallmultiples_shadowmarks_overlays,preference,Shadow Marks,It was the least mentally frustrating and physically demanding; the other techniques required a lot of squinting and double-checking.
+13,shadowmarks_smallmultiples_overlays,speed,Overlays,It was hard
+13,shadowmarks_smallmultiples_overlays,accuracy,Small Multiples,It was hard
+13,shadowmarks_smallmultiples_overlays,preference,Overlays,It was hard
+15,smallmultiples_shadowmarks_overlays,speed,Shadow Marks,I could compare the outliers from each plot at once
+15,smallmultiples_shadowmarks_overlays,accuracy,Shadow Marks,I could compare the outliers from each plot at once
+15,smallmultiples_shadowmarks_overlays,preference,Shadow Marks,I could compare the outliers from each plot at once
 16,smallmultiples_overlays_shadowmarks,speed,Small Multiples,It was the easiest to understand what to do. 
 16,smallmultiples_overlays_shadowmarks,accuracy,Overlays,It was easier to see all the pictures and how the were different.
 16,smallmultiples_overlays_shadowmarks,preference,Small Multiples,This technique was the easiest for me to use.
@@ -23,6 +29,9 @@ pID,condition,question,answer,reason
 21,shadowmarks_overlays_smallmultiples,speed,Overlays,I think the overlay was by far the easiest as it took out the physical aspect.
 21,shadowmarks_overlays_smallmultiples,accuracy,Overlays,I felt this was on par with shadow marks but the fact it was in one place made it slightly better.
 21,shadowmarks_overlays_smallmultiples,preference,Overlays,By far the least taxing physically and mentally.
+24,overlays_smallmultiples_shadowmarks,speed,Small Multiples,"Not sure if I was lucky, but it seemed easy to eyeball which plot had the highest outlier without any tool. But I did not feel as confident about my picks than I was with the slower, but more reliable shadow marks."
+24,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,"It was slow to be pixel precise with the mouse, but I had a much higher confidence that no other outliers were above my selection."
+24,overlays_smallmultiples_shadowmarks,preference,Shadow Marks,"It's slower, but it takes the guessing out of the equation."
 27,shadowmarks_smallmultiples_overlays,speed,Overlays,"It helped me to see differences visually within few seconds, then I just had to compare boxes few times just to make sure I'm selecting a correct box with higher outlier"
 27,shadowmarks_smallmultiples_overlays,accuracy,Shadow Marks,"The lines helped me to see the correct answer, but it took more time to find an outlier I think was the highest, then I was looking through all the boxes to make sure it is the highest one"
 27,shadowmarks_smallmultiples_overlays,preference,Overlays,"I didn't need to look for the highest outlier manually, I just clicked on 'the eye' and visually compared what I saw. For me it seemed like less work"
@@ -41,6 +50,12 @@ pID,condition,question,answer,reason
 41,shadowmarks_smallmultiples_overlays,speed,Overlays,"I could compare them not side by side, but on top of one another to find a more accurate response."
 41,shadowmarks_smallmultiples_overlays,accuracy,Overlays,"I could compare them not side by side, but on top of one another to find a more accurate response."
 41,shadowmarks_smallmultiples_overlays,preference,Overlays,"I could compare them not side by side, but on top of one another to find a more accurate response. For this reason, I prefer it the most."
+42,smallmultiples_overlays_shadowmarks,speed,Small Multiples,It was less complex.
+42,smallmultiples_overlays_shadowmarks,accuracy,Small Multiples,There were fewer steps to take.
+42,smallmultiples_overlays_shadowmarks,preference,Small Multiples,It was easier.
+44,smallmultiples_shadowmarks_overlays,speed,Small Multiples,Less variables and factors involved.  Much simpler to accomplish as a result.
+44,smallmultiples_shadowmarks_overlays,accuracy,Small Multiples,I felt more in control of the task and it was much easier to follow the instructions and implement them.
+44,smallmultiples_shadowmarks_overlays,preference,Overlays,"I felt more challenged and when I got something correct, it made me feel good."
 46,smallmultiples_shadowmarks_overlays,speed,Shadow Marks,The precision of the red line on all of the plots at once made it easier to compare and identify if there were any higher outliers at a glance.
 46,smallmultiples_shadowmarks_overlays,accuracy,Shadow Marks,The thinness of the red line allowed for an exact height comparison of the outliers.
 46,smallmultiples_shadowmarks_overlays,preference,Shadow Marks,"This technique was the most efficient, simple to use, and precise of the three. "
@@ -56,6 +71,9 @@ pID,condition,question,answer,reason
 54,shadowmarks_overlays_smallmultiples,speed,Overlays,Because I could quickly directly compare and eliminate options to narrow it down
 54,shadowmarks_overlays_smallmultiples,accuracy,Overlays,Because I could compare them directly to each other
 54,shadowmarks_overlays_smallmultiples,preference,Overlays,Because it was the easiest and most efficient
+55,shadowmarks_overlays_smallmultiples,speed,Overlays,"Overlays allowed for quick comparisons of multiple scatter plots simultaneously, making it easier to identify patterns and differences without switching between separate displays."
+55,shadowmarks_overlays_smallmultiples,accuracy,Small Multiples," Small Multiples provided distinct, separate views of each scatter plot, reducing visual clutter and allowing for more precise analysis of individual data points and trends."
+55,shadowmarks_overlays_smallmultiples,preference,Overlays," I preferred Overlays for their ability to visually combine multiple datasets in one view, facilitating immediate comparisons while still maintaining some context from the underlying plots."
 56,overlays_smallmultiples_shadowmarks,speed,Shadow Marks,Comparison of all images simultaneously
 56,overlays_smallmultiples_shadowmarks,accuracy,Shadow Marks,Comparison of all images simultaneously
 56,overlays_smallmultiples_shadowmarks,preference,Shadow Marks,Comparison of all images simultaneously

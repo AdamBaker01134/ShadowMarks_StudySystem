@@ -1,6 +1,8 @@
 pID,condition,comments
+2,smallmultiples_overlays_shadowmarks,"This took me way longer than expected. Sorry, I guess I was slow."
 5,overlays_shadowmarks_smallmultiples,
 6,shadowmarks_smallmultiples_overlays,"for overlays, prefer if the window on the right was bigger. found it challenging that it was small. "
+7,shadowmarks_overlays_smallmultiples,N/A
 8,smallmultiples_overlays_shadowmarks,
 9,smallmultiples_shadowmarks_overlays,
 11,overlays_smallmultiples_shadowmarks,
@@ -16,11 +18,13 @@ pID,condition,comments
 26,smallmultiples_shadowmarks_overlays,
 27,shadowmarks_overlays_smallmultiples,No
 28,smallmultiples_overlays_shadowmarks,"Technical issues - a very 'bugged' study for me. I found it hard to complete as it messed with my keyboard a lot and one of the pages kept opening in a new tab, so I had to go out of full-screen mode into a new tab and then it wouldn't let me go back into full-screen mode, it bugged my keyboard out and I had to restart my PC twice."
+31,overlays_shadowmarks_smallmultiples,
 35,overlays_shadowmarks_smallmultiples,
 36,smallmultiples_overlays_shadowmarks,
 39,smallmultiples_overlays_shadowmarks,N/A
 40,smallmultiples_shadowmarks_overlays,none
 45,overlays_smallmultiples_shadowmarks,
+47,overlays_shadowmarks_smallmultiples,
 52,overlays_shadowmarks_smallmultiples,Good study!!
 54,shadowmarks_smallmultiples_overlays,None
 57,overlays_smallmultiples_shadowmarks,

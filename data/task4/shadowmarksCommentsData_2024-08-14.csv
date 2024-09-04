@@ -4,20 +4,26 @@ pID,condition,comments
 6,overlays_shadowmarks_smallmultiples,
 9,smallmultiples_overlays_shadowmarks,
 10,smallmultiples_shadowmarks_overlays,
+13,shadowmarks_smallmultiples_overlays,
+15,smallmultiples_shadowmarks_overlays,
 16,smallmultiples_overlays_shadowmarks,No comments. 
 18,overlays_smallmultiples_shadowmarks,
 21,shadowmarks_overlays_smallmultiples,
+24,overlays_smallmultiples_shadowmarks,"I'm not sure if I've missed a screen size requirement, but it was almost impossible to see anything on the overlay exercise. As soon as I added more than 1 overlay, the preview screen, which was about 1.5 inch wide, trying to display outliers smaller than the pixel size on my screen, and getting 50% dimmer with each overlay being added... It was ridiculous. I tried to zoom as the instructions mentioned, but it only zoomed the selections, not the preview area."
 27,shadowmarks_smallmultiples_overlays,
 29,overlays_shadowmarks_smallmultiples,N/A
 34,smallmultiples_shadowmarks_overlays,
 37,shadowmarks_smallmultiples_overlays,
 39,overlays_shadowmarks_smallmultiples,
 41,shadowmarks_smallmultiples_overlays,n/a
+42,smallmultiples_overlays_shadowmarks,
+44,smallmultiples_shadowmarks_overlays,
 46,smallmultiples_shadowmarks_overlays,"Initially, I was unable to complete this task in Google Chrome as it would not register as fullscreen. I had to switch to Mozilla Firefox."
 47,overlays_shadowmarks_smallmultiples,thanks
 48,shadowmarks_smallmultiples_overlays,
 52,overlays_smallmultiples_shadowmarks,the dots were very light and small so they were hard to see properly
 54,shadowmarks_overlays_smallmultiples,
+55,shadowmarks_overlays_smallmultiples,No comment
 56,overlays_smallmultiples_shadowmarks,
 58,smallmultiples_overlays_shadowmarks,
 59,shadowmarks_overlays_smallmultiples,"It would have helped if the outliers were brighter,"
