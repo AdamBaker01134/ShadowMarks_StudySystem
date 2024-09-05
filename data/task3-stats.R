@@ -324,7 +324,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
   xlab(label='\nNASA TLX Question') +
   ylab(label='Mean Score') +
   scale_y_continuous(limits=c(0, 6), breaks=c(0,2,4,6),
-                     labels=c("1 (least)", "3", "5", "7 (most)")) +
+                     labels=c("1    \n(least)", "3", "5", "7    \n(most)")) +
   scale_x_discrete(limits=c("MentalDemand","PhysicalDemand","TemporalDemand",
                             "Performance","Effort","Frustration"),
                    labels=c("Mental Demand \u2193","Physical Demand \u2193","Temporal Demand \u2193",
@@ -333,10 +333,14 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
                     values=c("#FF3300","#0066CC","#00F000"),
                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
-  theme(legend.position="bottom") +
+  theme(legend.position="bottom",
+        axis.title=element_text(size=24),
+        axis.text=element_text(size=22),
+        legend.text=element_text(size=22),
+        axis.text.x=element_text(angle=30,hjust=0.95)) +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task3/tlx-3.png", width=30, height=20, units="cm", type="cairo-png")
+ggsave("task3/tlx-3.png", width=20, height=20, units="cm", type="cairo-png")
 
 ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
   geom_col(position=position_dodge(width=0.8), width=0.7) +
@@ -345,7 +349,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
   xlab(label='\nUX Question') +
   ylab(label='Mean Score') +
   scale_y_continuous(limits=c(0, 6), breaks=c(0,2,4,6),
-                     labels=c("1 (least)", "3", "5", "7 (most)")) +
+                     labels=c("1    \n(least)", "3", "5", "7    \n(most)")) +
   scale_x_discrete(limits=c("Guessing","PerceivedAccuracy","TaskDifficulty",
                             "TechniqueDifficulty"),
                    labels=c("Guessing \u2193","Perceived Accuracy \u2191","Task Difficulty \u2193",
@@ -354,7 +358,11 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
                     values=c("#FF3300","#0066CC","#00F000"),
                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
-  theme(legend.position="bottom") +
+  theme(legend.position="bottom",
+        axis.title=element_text(size=24),
+        axis.text=element_text(size=22),
+        legend.text=element_text(size=22),
+        axis.text.x=element_text(angle=30,hjust=0.95)) +
   guides(fill=guide_legend(title=NULL))
 
 ggsave("task3/ux-3.png", width=20, height=20, units="cm", type="cairo-png")
@@ -412,18 +420,24 @@ preferenceSummary
 
 ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
   geom_col(position=position_dodge(width=0.8), width=0.7) +
+  geom_label(aes(label = paste(n)), nudge_x = c(-0.265,0,0.265), nudge_y = 2, size = 6,
+             label.size = 0, label.r = unit(0, "pt"), fill="white") +
+  scale_y_continuous(limits=c(0, 30), breaks=c(0,10,20,30)) +
   xlab(label='Preference Question') +
   ylab(label='Number of Participants') +
   scale_x_discrete(limits=c("speed","accuracy","preference"),
-                   labels=c("Fastest","Most Accurate","Preferred Overall")) +
+                   labels=c("Fastest","Most\nAccurate","Preferred\nOverall")) +
   scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
                     values=c("#FF3300","#0066CC","#00F000"),
                     labels=c("Small Multiples","Overlays","Shadow Marks")) +
   new_theme +
-  theme(legend.position="bottom") +
+  theme(legend.position="bottom",
+        axis.title=element_text(size=24),
+        axis.text=element_text(size=22),
+        legend.text=element_text(size=22)) +
   guides(fill=guide_legend(title=NULL))
 
-ggsave("task3/preference-3.png", width=18, height=10, units="cm", type="cairo-png")
+ggsave("task3/preference-3.png", width=20, height=20, units="cm", type="cairo-png")
 
 preferenceData_speed <- preferenceData %>% filter(question=="speed")
 preferenceData_accuracy <- preferenceData %>% filter(question=="accuracy")
