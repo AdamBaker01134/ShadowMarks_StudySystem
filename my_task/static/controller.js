@@ -86,13 +86,13 @@ Controller.prototype.handleMouseDragged = function (event) {
         case STATE.MARKING:
             hit = this.model.checkVideoHit();
             if (this.model.freeforming() && hit && hit === this.model.freeformTarget && !(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-hit.x)/hit.width,(mouseY-hit.y)/hit.height))) {
-                this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, event.shiftKey);
             } else if (this.model.freeforming() && this.model.checkOverlayHit() && this.model.freeformTarget === "OVERLAY") {
                 let ow, oh, ox, oy;
                 ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
                 hit = "OVERLAY";
                 if (!(this.model.shadowMarkType === MARKS.CIRCLE && this.model.circleOutOfBounds((mouseX-ox)/ow,(mouseY-oy)/oh))) {
-                    this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
+                    this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh, event.shiftKey);
                 }
             }
             this.model.setHoverTarget(hit);
@@ -172,7 +172,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     return false;
                 } else if (this.model.interaction === INTERACTIONS.SHADOW_MARKER) {
                     if (this.model.freeforming()) {
-                        this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height);
+                        this.model.addToFreeformPath((mouseX-hit.x) / hit.width, (mouseY-hit.y) / hit.height, event.shiftKey);
                         this.model.setFreeformTarget(hit);
                     }
                     this.savedState = this.currentState;
@@ -184,7 +184,7 @@ Controller.prototype.handleMousePressed = function (event) {
                     let ow, oh, ox, oy;
                     ({ ow, oh, ox, oy } = this.model.getOverlayDimensions());
                     if (this.model.freeforming()) {
-                        this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh);
+                        this.model.addToFreeformPath((mouseX-ox) / ow, (mouseY-oy) / oh, event.shiftKey);
                         this.model.setFreeformTarget("OVERLAY");
                     }
                     this.savedState = this.currentState;

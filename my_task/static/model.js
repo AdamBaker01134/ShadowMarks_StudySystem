@@ -555,8 +555,31 @@ Model.prototype.addShadowMark = function (widthRatio, heightRatio, video) {
     this.notifySubscribers();
 }
 
-Model.prototype.addToFreeformPath = function (widthRatio, heightRatio) {
-    if (this.shadowMarkType !== MARKS.FREEFORM && this.freeformPath.length > 1) {
+Model.prototype.addToFreeformPath = function (widthRatio, heightRatio, modifier) {
+    if (this.shadowMarkType === MARKS.LINE && this.freeformPath.length > 1 && modifier) {
+        const a = Math.abs(this.freeformPath[0].widthRatio-widthRatio);
+        const b = Math.abs(this.freeformPath[0].heightRatio-heightRatio);
+        const c = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));
+        const angle = Math.acos(a/c);
+        if (angle > Math.PI/4) {
+            this.freeformPath = [
+                this.freeformPath[0],
+                {
+                    widthRatio: this.freeformPath[0].widthRatio,
+                    heightRatio: heightRatio,
+                }
+            ];
+        } else {
+            this.freeformPath = [
+                this.freeformPath[0],
+                {
+                    widthRatio: widthRatio,
+                    heightRatio: this.freeformPath[0].heightRatio,
+                }
+            ];
+        }
+    }
+    else if (this.shadowMarkType !== MARKS.FREEFORM && this.freeformPath.length > 1) {
         this.freeformPath = [
             this.freeformPath[0],
             {
