@@ -101,7 +101,7 @@ ctSummary <- Data %>%
 ctSummary
 
 ggplot(ctSummary, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(12,12,11), size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
@@ -167,7 +167,7 @@ accSummary <- Data %>%
 accSummary
 
 ggplot(accSummary, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(0.5,0.5,0.45), size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
@@ -233,7 +233,7 @@ DifferenceData <- DataFull %>% filter(attempt==1) %>%
 DifferenceData
 
 ggplot(DifferenceData, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), width=0.5) +
+  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = 2.2, size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
@@ -318,7 +318,7 @@ tlxSummary <- tlxData %>%
 tlxSummary
 
 ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
-  geom_col(position=position_dodge(width=0.8), width=0.7) +
+  geom_col(position=position_dodge(width=0.8), color="black", width=0.7) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se),width=0.2,
                 position=position_dodge(width=0.8)) +
   xlab(label='\nNASA TLX Question') +
@@ -343,7 +343,7 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
 ggsave("task3/tlx-3.png", width=20, height=20, units="cm", type="cairo-png")
 
 ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
-  geom_col(position=position_dodge(width=0.8), width=0.7) +
+  geom_col(position=position_dodge(width=0.8), color="black", width=0.7) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se),width=0.2,
                 position=position_dodge(width=0.8)) +
   xlab(label='\nUX Question') +
@@ -419,7 +419,7 @@ preferenceSummary <- preferenceData %>%
 preferenceSummary
 
 ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
-  geom_col(position=position_dodge(width=0.8), width=0.7) +
+  geom_col(position=position_dodge(width=0.8), color="black", width=0.7) +
   geom_label(aes(label = paste(n)), nudge_x = c(-0.265,0,0.265), nudge_y = 2, size = 6,
              label.size = 0, label.r = unit(0, "pt"), fill="white") +
   scale_y_continuous(limits=c(0, 30), breaks=c(0,10,20,30)) +
