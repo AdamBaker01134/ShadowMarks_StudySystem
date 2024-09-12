@@ -101,13 +101,13 @@ ctSummary <- Data %>%
 ctSummary
 
 ggplot(ctSummary, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
+  geom_col(fill=c("#FF9980","#99CCFF","#00C000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(12,12,11), size = 4,
+  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(12.5,13,11), size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
-                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                   labels=c("Small-\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
   ylab(label='Mean Completion Time (sec)')
 
@@ -116,8 +116,8 @@ ggsave("task3/ct-by-technique-task3.png", width=10, height=10, units="cm", type=
 # ggplot(Data, aes(x=pID,y=elapsedTime, color=technique)) +
 #   geom_jitter(size=2.0) +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-#                      values=c("#FF3300","#0066CC","#00F000"),
-#                      labels=c("Small\nMultiples", "Overlays", "Shadow\nMarks")) +
+#                      values=c("#FF9980","#99CCFF","#00C000"),
+#                      labels=c("Small-\nMultiples", "Overlays", "Shadow\nMarks")) +
 #   new_theme
 # 
 # ggsave("task3/ct-outliers.png", width=30, height=10, units="cm", type="cairo-png")
@@ -137,8 +137,8 @@ ggsave("task3/ct-by-technique-task3.png", width=10, height=10, units="cm", type=
 #   ylab(label='Mean Completion Time (sec)') +
 #   labs(color = "Technique") +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-#                      values=c("#FF3300","#0066CC","#00F000"),
-#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#                      values=c("#FF9980","#99CCFF","#00C000"),
+#                      labels=c("Small-Multiples","Overlays","Shadow Marks")) +
 #   scale_x_discrete(expand = c(0.1,0.1)) +
 #   scale_y_continuous(limits = c(0, 150)) +
 #   new_theme +
@@ -167,13 +167,13 @@ accSummary <- Data %>%
 accSummary
 
 ggplot(accSummary, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
+  geom_col(fill=c("#FF9980","#99CCFF","#00C000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
   geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(0.5,0.5,0.45), size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
-                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                   labels=c("Small-\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
   ylab(label='Mean Errors per Trial')
 
@@ -181,8 +181,8 @@ ggsave("task3/acc-by-technique-task3.png", width=10, height=10, units="cm", type
 
 # ggplot(Data, aes(x=pID,y=errors, color=technique)) +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-#                      values=c("#FF3300","#0066CC","#00F000"),
-#                      labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+#                      values=c("#FF9980","#99CCFF","#00C000"),
+#                      labels=c("Small-\nMultiples","Overlays","Shadow\nMarks")) +
 #   geom_jitter(size=2.0) +
 #   new_theme
 # 
@@ -203,8 +203,8 @@ ggsave("task3/acc-by-technique-task3.png", width=10, height=10, units="cm", type
 #   ylab(label='Mean Errors per Trial') +
 #   labs(color = "Technique") +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-#                      values=c("#FF3300","#0066CC","#00F000"),
-#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#                      values=c("#FF9980","#99CCFF","#00C000"),
+#                      labels=c("Small-Multiples","Overlays","Shadow Marks")) +
 #   scale_x_discrete(expand = c(0.1,0.1)) +
 #   scale_y_continuous(limits = c(0, 4)) +
 #   new_theme +
@@ -233,13 +233,13 @@ DifferenceData <- DataFull %>% filter(attempt==1) %>%
 DifferenceData
 
 ggplot(DifferenceData, aes(x=technique, y=mean)) +
-  geom_col(fill=c("#FF3300","#0066CC","#00F000"), color="black", width=0.5) +
+  geom_col(fill=c("#FF9980","#99CCFF","#00C000"), color="black", width=0.5) +
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width = 0.2) +
-  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = 2.2, size = 4,
+  geom_label(aes(label = paste(round(mean,digits=2))), nudge_y = c(2.2,2.5,2.5), size = 4,
              label.size = 0, label.r = unit(0, "pt")) +
   new_theme +
   scale_x_discrete(limits=c("smallMultiples","overlays","shadowMarkers"),
-                   labels=c("Small\nMultiples","Overlays","Shadow\nMarks")) +
+                   labels=c("Small-\nMultiples","Overlays","Shadow\nMarks")) +
   xlab(label='Technique') +
   ylab(label='Mean Error Distance (pixels)')
 
@@ -260,8 +260,8 @@ ggsave("task3/error-distance-by-technique-task3.png", width=10, height=10, units
 #   ylab(label='Mean Error Distance (pixels)') +
 #   labs(color = "Technique") +
 #   scale_color_manual(limits=c("smallMultiples", "overlays", "shadowMarkers"),
-#                      values=c("#FF3300","#0066CC","#00F000"),
-#                      labels=c("Small Multiples","Overlays","Shadow Marks")) +
+#                      values=c("#FF9980","#99CCFF","#00C000"),
+#                      labels=c("Small-Multiples","Overlays","Shadow Marks")) +
 #   scale_x_discrete(expand = c(0.1,0.1)) +
 #   scale_y_continuous(limits=c(1,30)) +
 #   new_theme +
@@ -330,8 +330,8 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
                    labels=c("Mental Demand \u2193","Physical Demand \u2193","Temporal Demand \u2193",
                             "Performance \u2191","Effort \u2193","Frustration \u2193")) +
   scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
-                    values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
+                    values=c("#FF9980","#99CCFF","#00C000"),
+                    labels=c("Small-Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="bottom",
         axis.title=element_text(size=24),
@@ -355,8 +355,8 @@ ggplot(data=tlxSummary, aes(x=question, y=mean, fill=technique)) +
                    labels=c("Guessing \u2193","Perceived Accuracy \u2191","Task Difficulty \u2193",
                             "Technique Difficulty \u2193")) +
   scale_fill_manual(limits=c("smallmultiples", "overlays", "shadowmarkers"),
-                    values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
+                    values=c("#FF9980","#99CCFF","#00C000"),
+                    labels=c("Small-Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="bottom",
         axis.title=element_text(size=24),
@@ -428,8 +428,8 @@ ggplot(data=preferenceSummary, aes(x=question, y=n, fill=answer)) +
   scale_x_discrete(limits=c("speed","accuracy","preference"),
                    labels=c("Fastest","Most\nAccurate","Preferred\nOverall")) +
   scale_fill_manual(limits=c("Small Multiples", "Overlays", "Shadow Marks"),
-                    values=c("#FF3300","#0066CC","#00F000"),
-                    labels=c("Small Multiples","Overlays","Shadow Marks")) +
+                    values=c("#FF9980","#99CCFF","#00C000"),
+                    labels=c("Small-Multiples","Overlays","Shadow Marks")) +
   new_theme +
   theme(legend.position="bottom",
         axis.title=element_text(size=24),
